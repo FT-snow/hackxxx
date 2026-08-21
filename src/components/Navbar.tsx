@@ -4,78 +4,75 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
 
+const LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/notebook', label: 'Notes' },
+  { href: '/mesh', label: 'Mesh' },
+  { href: '/paper-checker', label: 'Grader' },
+  {
+    href: 'https://github.com/FT-snow/hackxxx',
+    label: 'Source',
+    external: true,
+  },
+];
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-sm border-b border-[#00ff88]/20">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16">
+    <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black/90 backdrop-blur-md">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex h-16 items-center justify-between">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-1.5 sm:space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-2.5"
           >
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#00ff88] rounded-full"></div>
+            <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
             <Link
               href="/"
-              className="text-lg sm:text-xl font-bold tracking-wide text-white hover:text-[#00ff88] transition-colors"
-              style={{
-                fontFamily: 'Geometrisk, Inter, system-ui, sans-serif',
-              }}
+              className="font-display text-lg text-white tracking-[0.18em] hover:text-[#00ff88]"
             >
-              grader.ai
+              MIMIR
             </Link>
           </motion.div>
 
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-            <Link
-              href="/"
-              className="text-white hover:text-[#00ff88] transition-colors text-sm xl:text-base"
-            >
-              Home
-            </Link>
-            <Link
-              href="https://github.com/FT-snow/grAIder"
-              className="text-white hover:text-[#00ff88] transition-colors text-sm xl:text-base"
-            >
-              Source Code
-            </Link>
-            <Link
-              href="/paper-checker"
-              className="text-white hover:text-[#00ff88] transition-colors text-sm xl:text-base"
-            >
-              Paper Checker
-            </Link>
-            <Link
-              href="/notebook"
-              className="text-white hover:text-[#00ff88] transition-colors text-sm xl:text-base"
-            >
-              Notes
-            </Link>
+          <div className="hidden items-center gap-8 lg:flex">
+            {LINKS.map((l) => (
+              <Link
+                key={l.label}
+                href={l.href}
+                {...('external' in l && l.external
+                  ? { target: '_blank', rel: 'noreferrer' }
+                  : {})}
+                className="label-meta text-gray-400 hover:text-white"
+              >
+                {l.label}
+              </Link>
+            ))}
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.98 }}
               type="button"
-              className="cursor-pointer bg-[#00ff88] text-black px-4 py-2 xl:px-6 xl:py-3 rounded-full font-medium hover:bg-[#00e87a] transition-colors text-sm xl:text-base"
+              className="label-meta cursor-pointer rounded-md border border-white/15 bg-white px-4 py-2 text-black hover:bg-gray-200"
               onClick={() => {
-                window.location.href = '/paper-checker';
+                window.location.href = '/notebook';
               }}
             >
-              Get Started
+              Start Writing
             </motion.button>
           </div>
 
-          {/* Mobile menu button */}
           <button
-            className="lg:hidden text-white p-1"
+            className="p-1 text-white lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             type="button"
+            aria-label="Toggle menu"
           >
             <motion.svg
               animate={{ rotate: isMenuOpen ? 90 : 0 }}
               transition={{ duration: 0.2 }}
-              className="w-5 h-5 sm:w-6 sm:h-6"
+              className="h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -83,7 +80,7 @@ export default function Navbar() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 d={
                   isMenuOpen
                     ? 'M6 18L18 6M6 6l12 12'
@@ -94,44 +91,28 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile menu */}
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden bg-black/95 border-t border-[#00ff88]/20 py-4"
+            transition={{ duration: 0.25 }}
+            className="border-t border-white/[0.08] py-4 lg:hidden"
           >
-            <div className="flex flex-col space-y-3">
-              <Link
-                href="/"
-                className="text-gray-300 hover:text-[#00ff88] transition-colors px-3 py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="https://github.com/FT-snow/grAIder"
-                className="text-gray-300 hover:text-[#00ff88] transition-colors px-3 py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Source Code
-              </Link>
-              <Link
-                href="/paper-checker"
-                className="text-gray-300 hover:text-[#00ff88] transition-colors px-3 py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Paper Checker
-              </Link>
-              <Link
-                href="/notebook"
-                className="text-gray-300 hover:text-[#00ff88] transition-colors px-3 py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Notes
-              </Link>
+            <div className="flex flex-col gap-1">
+              {LINKS.map((l) => (
+                <Link
+                  key={l.label}
+                  href={l.href}
+                  {...('external' in l && l.external
+                    ? { target: '_blank', rel: 'noreferrer' }
+                    : {})}
+                  className="label-meta rounded-md px-3 py-2.5 text-gray-300 hover:bg-white/5 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              ))}
             </div>
           </motion.div>
         )}

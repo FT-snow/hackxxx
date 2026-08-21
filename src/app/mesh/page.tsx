@@ -41,22 +41,16 @@ export default function MeshPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="mb-4 inline-flex items-center space-x-2 rounded-full border border-[#00ff88]/30 bg-[#00ff88]/10 px-4 py-2">
-              <div className="h-2 w-2 rounded-full bg-[#00ff88]" />
-              <span className="text-sm text-gray-300">
-                Semantic Concept Index
+            <div className="mb-4 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+              <span className="label-meta text-gray-400">
+                Semantic concept index
               </span>
             </div>
-            <h1 className="mb-2 text-4xl font-bold sm:text-5xl">
-              <span className="text-white">Concept</span>{' '}
-              <span
-                className="text-[#00ff88]"
-                style={{ fontFamily: 'Geometrisk, system-ui, sans-serif' }}
-              >
-                Mesh
-              </span>
+            <h1 className="font-display mb-2 text-3xl sm:text-5xl">
+              Concept <span className="text-gray-400">Mesh</span>
             </h1>
-            <p className="mx-auto max-w-xl text-sm text-gray-400">
+            <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-500">
               Topics as nodes. Semantic similarity as edges. Your notebook,
               connected.
             </p>

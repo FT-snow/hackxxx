@@ -1,15 +1,27 @@
 import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
+import { Cinzel } from 'next/font/google';
 import ConvexClientProvider from '@/components/ConvexClientProvider';
 import './globals.css';
 
-const outfit = Outfit({ subsets: ['latin'] });
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['700', '900'],
+  variable: '--font-cinzel',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: 'grader.ai',
+  title: 'Mimir — your notes, connected',
   description:
-    'Grader.ai is an AI-powered platform that helps you grade your papers faster and easier.',
-  keywords: ['AI', 'education', 'learning', 'tutoring', 'programming', 'study'],
+    'Mimir digitizes handwritten notes into a searchable, self-linking concept mesh. OCR, concept tagging, and semantic recall for engineering notebooks.',
+  keywords: [
+    'handwritten notes',
+    'OCR',
+    'concept index',
+    'knowledge graph',
+    'revision',
+    'AI',
+  ],
   authors: [{ name: 'Syndication' }],
   viewport: 'width=device-width, initial-scale=1',
 };
@@ -20,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`h-full ${cinzel.variable}`}>
       <body
-        className={`h-full antialiased text-white ${outfit.className}`}
+        className="h-full antialiased text-white"
         style={{ backgroundColor: '#000000' }}
       >
         <ConvexClientProvider>

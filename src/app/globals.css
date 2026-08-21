@@ -43,6 +43,7 @@
 	--background: #000000;
 	--foreground: #ffffff;
 	--card: #111111;
+	--line: rgba(255, 255, 255, 0.08);
 	--border: #222222;
 	--muted: #0a0a0a;
 	--muted-foreground: #666666;
@@ -62,12 +63,14 @@
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
+	--color-line: var(--line);
 	--color-border: var(--border);
 	--color-muted: var(--muted);
 	--color-muted-foreground: var(--muted-foreground);
 	--color-success: var(--success);
 	--color-warning: var(--warning);
 	--color-error: var(--error);
+	--font-display: var(--font-cinzel), 'Cinzel', Georgia, serif;
 }
 
 /* Dark theme is now the default */
@@ -97,16 +100,36 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--accent);
+	background: #2a2a2a;
 	border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--accent-hover);
+	background: #3a3a3a;
 }
 
-/* Smooth transitions */
-* {
+/* Display typography — Cinzel Black */
+.font-display {
+	font-family: var(--font-cinzel), Georgia, serif;
+	font-weight: 900;
+	letter-spacing: -0.01em;
+	line-height: 1.1;
+}
+
+/* Small-caps meta labels */
+.label-meta {
+	font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', monospace;
+	font-size: 0.6875rem;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+}
+
+/* Smooth transitions — scoped to interactive elements only */
+a,
+button,
+input,
+textarea,
+[role='button'] {
 	transition:
 		color 0.2s ease,
 		background-color 0.2s ease,
@@ -146,19 +169,6 @@ body {
 
 .animate-slide-up {
 	animation: slideUp 0.4s ease-out;
-}
-
-@keyframes glow {
-	0%, 100% {
-		text-shadow: 0 0 10px var(--accent);
-	}
-	50% {
-		text-shadow: 0 0 20px var(--accent), 0 0 30px var(--accent);
-	}
-}
-
-.animate-glow {
-	animation: glow 2s ease-in-out infinite;
 }
 
 /* Font utility classes */

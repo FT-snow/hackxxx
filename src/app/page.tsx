@@ -1,125 +1,149 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import Squares from '@/components/ui/SquareBg';
 import Navbar from '@/components/Navbar';
+import Squares from '@/components/ui/SquareBg';
+
+const STEPS = [
+  {
+    n: '01',
+    title: 'Capture',
+    body: 'Photograph any notebook page. Handwriting, derivations, diagrams — transcribed with structure and LaTeX intact.',
+    href: '/notebook',
+    cta: 'Upload pages',
+  },
+  {
+    n: '02',
+    title: 'Connect',
+    body: 'Pages are chunked, tagged, and embedded. Notes on the same topic link across days into concept threads.',
+    href: '/mesh',
+    cta: 'Open the mesh',
+  },
+  {
+    n: '03',
+    title: 'Recall',
+    body: 'Browse the concept mesh or test yourself — practice questions generated from your own linked notes.',
+    href: '/paper-checker',
+    cta: 'Test me',
+  },
+];
 
 export default function Home() {
-  const [_isMenuOpen, _setIsMenuOpen] = useState(false);
-
-  const stats: Array<{ number: string; label: string }> = [
-  ];
-
   return (
-    <div className="h-full bg-transparent text-white overflow-x-hidden overflow-y-hidden">
-      <Navbar></Navbar>
-      <div className="absolute w-full h-full z-[-10]">
+    <div className="h-full overflow-x-hidden text-white">
+      <Navbar />
+      <div className="absolute z-[-10] h-full w-full">
         <Squares
-          speed={0.5}
-          squareSize={40}
+          speed={0.4}
+          squareSize={48}
           direction="diagonal"
-          borderColor="#0B4424"
-          hoverFillColor="#222"
+          borderColor="#12281c"
+          hoverFillColor="#1a1a1a"
         />
       </div>
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 pb-8 sm:pt-32 sm:pb-16">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5 z-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%2300ff88'%3E01%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
 
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full relative z-20">
-          <div className="max-w-full lg:max-w-4xl xl:max-w-5xl text-center sm:text-left">
-            {/* AI Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-gray-900/50 border border-gray-700 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-8 sm:mb-8"
-            >
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#00ff88] rounded-full"></div>
-              <span className="text-xs sm:text-sm text-gray-300">
-                AI in Education
-              </span>
-            </motion.div>
+      <section className="relative flex min-h-screen items-center pt-16">
+        <div className="relative z-20 mx-auto w-full max-w-6xl px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-10 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+            <span className="label-meta text-gray-400">
+              Handwritten notes · Concept index · SIH 26
+            </span>
+          </motion.div>
 
-            {/* Main Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold leading-[0.9] mb-8 sm:mb-8 break-words"
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08 }}
+            className="font-display mb-8 max-w-4xl text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5.25rem]"
+          >
+            Your notebook,
+            <br />
+            <span className="text-gray-400">finally</span> remembered.
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16 }}
+            className="mb-12 max-w-xl text-base leading-relaxed text-gray-400 sm:text-lg"
+          >
+            Mimir reads your handwritten engineering notes, tags every
+            derivation and diagram, and links what you wrote weeks apart into
+            one searchable concept mesh.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24 }}
+            className="mb-24 flex flex-col gap-3 sm:flex-row sm:gap-4"
+          >
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = '/notebook';
+              }}
+              className="label-meta rounded-md bg-white px-7 py-3.5 text-black hover:bg-gray-200 active:scale-[0.98] sm:w-auto"
             >
-              <span className="font-raleway-regular">AI: </span>
-              <span className="font-raleway-light"> The </span>
-              <span
-                className="text-[#00ff88]"
-                style={{ fontFamily: 'Geometrisk, system-ui, sans-serif' }}
+              Digitize my notes
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = '/mesh';
+              }}
+              className="label-meta rounded-md border border-white/[0.14] px-7 py-3.5 text-white hover:border-white/30 active:scale-[0.98] sm:w-auto"
+            >
+              Explore the mesh
+            </button>
+          </motion.div>
+
+          <div className="grid gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
+            {STEPS.map((s, i) => (
+              <motion.div
+                key={s.n}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.55,
+                  delay: 0.35 + i * 0.09,
+                }}
+                className="group flex min-h-[13rem] flex-col justify-between bg-black p-7 hover:bg-[#0a0f0c]"
               >
-                Future
-              </span>
-              <span className="font-raleway-light"> of Education</span>
-            </motion.h1>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-base sm:text-lg lg:text-xl text-gray-400 mb-10 sm:mb-10 lg:mb-12 max-w-full lg:max-w-2xl leading-relaxed mx-auto sm:mx-0"
-            >
-              Revolutionize your learning with AI.
-            </motion.p>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mb-16 sm:mb-16 lg:mb-20"
-            >
-              <button
-                type="button"
-                className="cursor-pointer bg-white text-black px-6 py-3 sm:px-8 sm:py-4 rounded-full font-medium text-base sm:text-lg hover:bg-gray-200 transition-colors flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto justify-center sm:justify-start"
-                onClick={() => {window.location.href = "/notebook"}}
-              >
-                <span>Digitize my notes</span>
-              </button>
-              <button
-                type="button"
-                className="mt-3 sm:mt-0 sm:ml-4 cursor-pointer bg-transparent text-white border border-gray-600 px-6 py-3 sm:px-8 sm:py-4 rounded-full font-medium text-base sm:text-lg hover:border-[#00ff88] hover:text-[#00ff88] transition-colors flex items-center w-full sm:w-auto justify-center sm:justify-start"
-                onClick={() => {window.location.href = "/paper-checker"}}
-              >
-                <span>Paper Checker</span>
-              </button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-6 sm:gap-8 lg:gap-12 xl:gap-16"
-            >
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center sm:text-left">
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#00ff88] mb-1 sm:mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-xs sm:text-sm text-gray-400 uppercase tracking-wide">
-                    {stat.label}
-                  </div>
+                <div>
+                  <span className="label-meta text-[#00ff88]/70">{s.n}</span>
+                  <h3 className="font-display mt-3 text-xl text-white">
+                    {s.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-500">
+                    {s.body}
+                  </p>
                 </div>
-              ))}
-            </motion.div>
+                <a
+                  href={s.href}
+                  className="label-meta mt-6 inline-block text-gray-500 group-hover:text-[#00ff88]"
+                >
+                  {s.cta} →
+                </a>
+              </motion.div>
+            ))}
           </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+            className="label-meta mt-10 pb-10 text-gray-600"
+          >
+            Built on grAIder · OCR by qwen3-vl · embeddings local · backend
+            Convex
+          </motion.p>
         </div>
       </section>
     </div>

@@ -20,35 +20,30 @@ export default function NotebookPage() {
 
       {/* Main Content */}
       <div className="relative z-20 min-h-screen">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pt-20 pb-8 sm:pt-24 sm:pb-8">
+        <div className="mx-auto max-w-6xl px-6 pb-16 pt-28">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-8"
+            className="mb-10 max-w-2xl"
           >
-            <div className="inline-flex items-center space-x-2 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-full px-4 py-2 mb-6">
-              <div className="w-2 h-2 bg-[#00ff88] rounded-full"></div>
-              <span className="text-sm text-gray-300">
-                Handwritten Notes Digitizer
+            <div className="mb-5 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+              <span className="label-meta text-gray-400">
+                Handwritten notes digitizer
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
-              <span className="text-white">AI</span>{' '}
-              <span
-                className="text-[#00ff88]"
-                style={{ fontFamily: 'Geometrisk, system-ui, sans-serif' }}
-              >
-                Notes
-              </span>
-              <span className="text-white"> Digitizer</span>{' '}
+            <h1 className="font-display mb-4 text-4xl leading-tight sm:text-5xl">
+              Capture a page.
+              <br />
+              <span className="text-gray-400">Grow the mesh.</span>
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4 sm:px-0">
-              Snap your handwritten notes. We OCR every page, chunk and tag the
-              concepts, embed them, and grow your personal concept mesh.
+            <p className="text-base leading-relaxed text-gray-500">
+              Snap your handwritten pages. Mimir transcribes each one, tags
+              every concept, and links it into your personal index.
             </p>
           </motion.div>
 

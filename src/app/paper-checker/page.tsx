@@ -25,37 +25,29 @@ export default function PaperCheckerPage() {
 
       {/* Main Content */}
       <div className="relative z-20 min-h-screen">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pt-20 pb-8 sm:pt-24 sm:pb-8">
+        <div className="mx-auto max-w-6xl px-6 pb-16 pt-28">
           {/* Header */}
           {currentStep === 'input' && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-8"
+              className="mb-10 max-w-2xl"
             >
-              <div className="inline-flex items-center space-x-2 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-full px-4 py-2 mb-6">
-                <div className="w-2 h-2 bg-[#00ff88] rounded-full"></div>
-                <span className="text-sm text-gray-300">
-                  Smart Assessment System
+              <div className="mb-5 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+                <span className="label-meta text-gray-400">
+                  AI paper evaluation
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
-                <span className="text-white">AI</span>{' '}
-                <span
-                  className="text-[#00ff88]"
-                  style={{ fontFamily: 'Geometrisk, system-ui, sans-serif' }}
-                >
-                  Answer Sheet
-                </span>
-                <span className="text-white"> Checker</span>{' '}
+              <h1 className="font-display mb-4 text-4xl leading-tight sm:text-5xl">
+                Answer-sheet <span className="text-gray-400">checker</span>
               </h1>
 
-              <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4 sm:px-0">
-                Upload your question papers, answer keys, and student responses.
-                Our advanced AI will provide detailed evaluations and grading in
-                seconds.
+              <p className="text-base leading-relaxed text-gray-500">
+                Upload the question paper, answer key, and student responses.
+                Every answer scored against your key, with feedback.
               </p>
             </motion.div>
           )}

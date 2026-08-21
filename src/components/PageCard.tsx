@@ -60,12 +60,12 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`rounded-xl border p-4 bg-[#181414] transition-colors ${
+      className={`rounded-lg border border-white/[0.08] bg-[#0c0f0d] p-4 ${
         page.status === 'error'
           ? 'border-red-500/50'
           : page.status === 'done'
-            ? 'border-[#00ff88]/40'
-            : 'border-gray-700'
+            ? 'border-[#00ff88]/30'
+            : ''
       }`}
     >
       <div className="flex items-start space-x-3">
@@ -87,7 +87,7 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
             {page.fileName}
           </p>
           <span
-            className={`inline-flex items-center mt-2 px-2.5 py-1 rounded-full text-xs font-medium border ${status.chip}`}
+            className={`label-meta inline-flex items-center mt-2 rounded px-2 py-1 border ${status.chip}`}
           >
             {status.label}
           </span>
