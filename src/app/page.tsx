@@ -49,33 +49,33 @@ const reveal = {
 const FEATURES = [
   {
     rune: 'ᚠ',
-    title: 'Structure-aware OCR',
-    body: 'A vision model reads your handwriting the way it is written — headings, numbered questions and derivations come back as clean text with LaTeX math intact.',
+    title: 'It reads your scrawl better than you do',
+    body: 'Chaotic handwriting in, surgical precision out. Derivations rebuilt as clean LaTeX, headings reconstructed, every numbered question accounted for.',
   },
   {
     rune: 'ᚱ',
-    title: 'Automatic concept tagging',
-    body: 'Every page splits into chunks classified as question, derivation, definition or diagram — each one labeled with its concept before you lift a finger.',
+    title: 'Every line, filed in milliseconds',
+    body: 'Your page detonates into tagged chunks — question, derivation, definition, diagram — each one labeled with its concept before you even blink.',
   },
   {
     rune: 'ᛗ',
-    title: 'Cross-day semantic linking',
-    body: 'Embeddings computed on-device connect what you wrote weeks apart. Your revision summaries find their original derivations automatically.',
+    title: 'It remembers what you forgot you wrote',
+    body: 'Week-old derivations and this morning\u2019s revision find each other on their own. Mimir links them across time by meaning, not keywords.',
   },
   {
     rune: 'ᚦ',
-    title: '3D concept mesh',
-    body: 'Your entire syllabus rendered as an interactive graph — clusters per topic, threads of similarity, drill in from any node.',
+    title: 'Your syllabus as a living constellation',
+    body: 'Every topic you have ever touched, hanging in a 3D mesh of clusters and threads. Grab a node. Everything it touches lights up.',
   },
   {
     rune: 'ᚨ',
-    title: 'grAIder paper checker',
-    body: 'Practice questions generated strictly from your own notes, handwritten answer sheets graded with partial credit and constructive feedback.',
+    title: 'An examiner built from your own notes',
+    body: 'grAIder interrogates you with questions mined from your pages, then grades your handwritten answers with partial credit — coldly, fairly, instantly.',
   },
   {
     rune: 'ᛁ',
-    title: 'Instant revision notes',
-    body: 'Each digitized page is distilled into TL;DR, key points, formulas and recall questions the moment processing finishes.',
+    title: 'Chaos to cheat sheet in seconds',
+    body: 'The moment a page is digitized, Mimir distills it into a TL;DR, key points, formulas and recall questions. Revision material you never had to write.',
   },
 ];
 
@@ -209,8 +209,8 @@ export default function Home() {
           <div className="mt-24">
             <span className="label-meta text-[#C8A45C]">What Mimir does</span>
             <h2 className="font-display mt-3 mb-8 text-2xl sm:text-3xl">
-              Built for the way you{' '}
-              <span className="text-gray-400">actually study</span>
+              Six weapons against{' '}
+              <span className="text-gray-400">forgetting</span>
             </h2>
             <BentoGrid cols={3}>
               {FEATURES.map((f) => (
