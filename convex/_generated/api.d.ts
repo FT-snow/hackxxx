@@ -8,24 +8,24 @@
  * @module
  */
 
-import type * as auth from '../auth.js';
-import type * as chunks from '../chunks.js';
-import type * as concepts from '../concepts.js';
-import type * as consts from '../consts.js';
-import type * as evaluate from '../evaluate.js';
-import type * as helpers from '../helpers.js';
-import type * as http from '../http.js';
-import type * as ingest from '../ingest.js';
-import type * as openrouter from '../openrouter.js';
-import type * as pages from '../pages.js';
-import type * as stats from '../stats.js';
-import type * as subjects from '../subjects.js';
+import type * as auth from "../auth.js";
+import type * as chunks from "../chunks.js";
+import type * as concepts from "../concepts.js";
+import type * as consts from "../consts.js";
+import type * as evaluate from "../evaluate.js";
+import type * as helpers from "../helpers.js";
+import type * as http from "../http.js";
+import type * as ingest from "../ingest.js";
+import type * as openrouter from "../openrouter.js";
+import type * as pages from "../pages.js";
+import type * as stats from "../stats.js";
+import type * as subjects from "../subjects.js";
 
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
-} from 'convex/server';
+} from "convex/server";
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
@@ -52,7 +52,7 @@ declare const fullApi: ApiFromModules<{
  */
 export declare const api: FilterApi<
   typeof fullApi,
-  FunctionReference<any, 'public'>
+  FunctionReference<any, "public">
 >;
 
 /**
@@ -65,7 +65,7 @@ export declare const api: FilterApi<
  */
 export declare const internal: FilterApi<
   typeof fullApi,
-  FunctionReference<any, 'internal'>
+  FunctionReference<any, "internal">
 >;
 
 export declare const components: {};
