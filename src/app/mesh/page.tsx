@@ -35,7 +35,7 @@ export default function MeshPage() {
         }}
       />
       <div className="relative z-20 pt-20">
-        <div className="mx-auto max-w-7xl px-4 text-center">
+        <div className="mr-auto ml-0 max-w-5xl px-6 sm:px-10 lg:px-20">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -43,16 +43,14 @@ export default function MeshPage() {
           >
             <div className="mb-4 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
-              <span className="label-meta text-gray-400">
-                Semantic concept index
-              </span>
+              <span className="label-meta text-gray-400">02 · Connect</span>
             </div>
             <h1 className="font-display mb-2 text-3xl sm:text-5xl">
               Concept <span className="text-gray-400">Mesh</span>
             </h1>
-            <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-500">
-              Topics as nodes. Threads of similarity between them —
-              every revision you ever wrote, woven in.
+            <p className="max-w-xl text-sm leading-relaxed text-gray-500">
+              Topics as nodes. Threads of similarity between them — every
+              revision you ever wrote, woven in.
             </p>
           </motion.div>
         </div>

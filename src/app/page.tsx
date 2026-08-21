@@ -43,7 +43,7 @@ export default function Home() {
       </div>
 
       <section className="relative flex min-h-screen items-center pt-16">
-        <div className="relative z-20 mx-auto w-full max-w-6xl px-6">
+        <div className="relative z-20 mr-auto ml-0 w-full max-w-5xl px-6 sm:px-10 lg:px-20">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -134,16 +134,6 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-            className="label-meta mt-10 pb-10 text-gray-600"
-          >
-            Built on grAIder · OCR by qwen3-vl · embeddings local · backend
-            Convex
-          </motion.p>
         </div>
       </section>
     </div>
