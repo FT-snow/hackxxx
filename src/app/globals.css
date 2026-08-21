@@ -35,8 +35,8 @@
 :root {
 	--primary: #000000;
 	--secondary: #111111;
-	--accent: #5FD6C4;
-	--accent-hover: #3FB39F;
+	--accent: #E9C468;
+	--accent-hover: #D4AF53;
 	--text: #ffffff;
 	--text-muted: #888888;
 	--text-light: #cccccc;
@@ -47,7 +47,7 @@
 	--border: #222222;
 	--muted: #0a0a0a;
 	--muted-foreground: #666666;
-	--success: #5FD6C4;
+	--success: #E9C468;
 	--warning: #ffd700;
 	--error: #ff4444;
 }
@@ -247,13 +247,13 @@ textarea,
 	font-weight: 700;
 }
 
-/* Utility classes for the black/green theme */
+/* Utility classes for the black/gold theme */
 .bg-gradient-dark {
 	background: linear-gradient(135deg, #000000 0%, #111111 100%);
 }
 
 .text-gradient-green {
-	background: linear-gradient(90deg, var(--accent) 0%, #3FB39F 100%);
+	background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;

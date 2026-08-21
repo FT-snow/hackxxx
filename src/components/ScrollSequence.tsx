@@ -10,7 +10,18 @@ const FRAME_COUNT = 48;
 const frameUrl = (i: number) =>
   `/frames/ezgif-frame-${String(i + 1).padStart(3, '0')}.png`;
 
-export default function ScrollSequence() {
+const ASCII_RAMP = ' .:-=+*#%@ᚠᚱᛗ';
+const RUNE_COUNT = 3;
+const CELL_CSS_PX = 9;
+const ASCII_CACHE_MAX = 40;
+const INK = '#e8e8e8';
+const RUNE_INK = '#a9e8de';
+
+interface ScrollSequenceProps {
+  children?: React.ReactNode;
+}
+
+export default function ScrollSequence({ children }: ScrollSequenceProps) {
   const wrapRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
@@ -29,22 +40,131 @@ export default function ScrollSequence() {
     if (!ctx) return;
 
     let rendered = -1;
-    const drawCover = (img: HTMLImageElement) => {
-      const cw = canvas.width;
-      const ch = canvas.height;
+    let curDpr = 1;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const srcCanvas = document.createElement('canvas');
+    const srcCtx = srcCanvas.getContext('2d');
+    const sampleCanvas = document.createElement('canvas');
+    const sampleCtx = sampleCanvas.getContext('2d', { willReadFrequently: true });
+    const asciiCache = new Map<number, HTMLCanvasElement>();
+
+    const paintCover = (
+      g: CanvasRenderingContext2D,
+      w: number,
+      h: number,
+      img: HTMLImageElement,
+    ): boolean => {
       const iw = img.naturalWidth || img.width;
       const ih = img.naturalHeight || img.height;
-      if (!iw || !ih) return;
-      const scale = Math.max(cw / iw, ch / ih);
-      ctx.clearRect(0, 0, cw, ch);
-      ctx.drawImage(img, (cw - iw * scale) / 2, (ch - ih * scale) / 2, iw * scale, ih * scale);
+      if (!iw || !ih || !w || !h) return false;
+      const scale = Math.max(w / iw, h / ih);
+      g.clearRect(0, 0, w, h);
+      g.drawImage(img, (w - iw * scale) / 2, (h - ih * scale) / 2, iw * scale, ih * scale);
+      return true;
     };
+
+    const buildAscii = (i: number): HTMLCanvasElement | null => {
+      if (!srcCtx || !sampleCtx) return null;
+      const cw = canvas.width;
+      const chh = canvas.height;
+      const img = frames[i];
+      if (!cw || !chh || !img) return null;
+      if (!paintCover(srcCtx, cw, chh, img)) return null;
+
+      const cellW = Math.max(4, Math.round(CELL_CSS_PX * curDpr));
+      const cellH = cellW * 2;
+      const cols = Math.max(1, Math.round(cw / cellW));
+      const rows = Math.max(1, Math.round(chh / cellH));
+
+      if (sampleCanvas.width !== cols || sampleCanvas.height !== rows) {
+        sampleCanvas.width = cols;
+        sampleCanvas.height = rows;
+      }
+      sampleCtx.imageSmoothingEnabled = true;
+      sampleCtx.imageSmoothingQuality = 'medium';
+      sampleCtx.clearRect(0, 0, cols, rows);
+      sampleCtx.drawImage(srcCanvas, 0, 0, cols, rows);
+
+      const data = sampleCtx.getImageData(0, 0, cols, rows).data;
+      const out = document.createElement('canvas');
+      out.width = cw;
+      out.height = chh;
+      const octx = out.getContext('2d');
+      if (!octx) return null;
+
+      octx.fillStyle = '#000000';
+      octx.fillRect(0, 0, cw, chh);
+      octx.textAlign = 'center';
+      octx.textBaseline = 'middle';
+      octx.font = `${Math.floor(cellW * 1.55)}px ui-monospace, Menlo, Consolas, monospace`;
+
+      const maxIdx = ASCII_RAMP.length - 1;
+      const runeStart = maxIdx - RUNE_COUNT + 1;
+
+      for (let pass = 0; pass < 2; pass++) {
+        octx.fillStyle = pass === 0 ? INK : RUNE_INK;
+        for (let y = 0; y < rows; y++) {
+          const gy = y * cellH + cellH * 0.5;
+          for (let x = 0; x < cols; x++) {
+            const p = (y * cols + x) * 4;
+            const lum =
+              0.2126 * data[p] + 0.7152 * data[p + 1] + 0.0722 * data[p + 2];
+            const idx = Math.min(maxIdx, Math.round((lum / 255) * maxIdx));
+            if (pass === 0 ? idx >= runeStart : idx < runeStart) continue;
+            const glyph = ASCII_RAMP[idx];
+            if (glyph === ' ') continue;
+            octx.fillText(glyph, x * cellW + cellW * 0.5, gy);
+          }
+        }
+      }
+      return out;
+    };
+
+    const getAscii = (i: number): HTMLCanvasElement | null => {
+      const hit = asciiCache.get(i);
+      if (hit) return hit;
+      const built = buildAscii(i);
+      if (!built) return null;
+      asciiCache.set(i, built);
+      while (asciiCache.size > ASCII_CACHE_MAX) {
+        let farKey = -1;
+        let farDist = -1;
+        for (const k of asciiCache.keys()) {
+          const d = Math.abs(k - i);
+          if (d > farDist) {
+            farDist = d;
+            farKey = k;
+          }
+        }
+        if (farKey === i || farKey < 0) break;
+        asciiCache.delete(farKey);
+      }
+      return built;
+    };
+
+    const renderRaw = (i: number) => {
+      const img = frames[i];
+      if (img) paintCover(ctx, canvas.width, canvas.height, img);
+    };
+
     const render = (f: number) => {
       if (frames.length === 0) return;
       const i = Math.max(0, Math.min(frames.length - 1, Math.round(f)));
       if (i === rendered || !frames[i]) return;
       rendered = i;
-      drawCover(frames[i]);
+      if (reducedMotion.matches) {
+        renderRaw(i);
+        return;
+      }
+      const ascii = getAscii(i);
+      if (!ascii) {
+        renderRaw(i);
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(ascii, 0, 0);
     };
     const tick = () => {
       state.current += (state.target - state.current) * 0.14;
@@ -59,6 +179,8 @@ export default function ScrollSequence() {
       if (!wrap) return;
       canvas.width = Math.round(wrap.clientWidth * dpr);
       canvas.height = Math.round(wrap.clientHeight * dpr);
+      curDpr = dpr;
+      asciiCache.clear();
       rendered = -1;
     };
     const onResize = () => {
@@ -66,6 +188,12 @@ export default function ScrollSequence() {
       render(state.current);
     };
     window.addEventListener('resize', onResize);
+
+    const onMotionChange = () => {
+      rendered = -1;
+      render(state.current);
+    };
+    reducedMotion.addEventListener('change', onMotionChange);
 
     (async () => {
       let loadedCount = 0;
@@ -112,6 +240,7 @@ export default function ScrollSequence() {
       killed = true;
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
+      reducedMotion.removeEventListener('change', onMotionChange);
       st?.kill();
     };
   }, []);
@@ -123,11 +252,9 @@ export default function ScrollSequence() {
           <canvas ref={canvasRef} className="block h-full w-full" />
         </div>
 
-        <div className="pointer-events-none absolute bottom-[6vh] left-[6vw] z-[3]">
-          <span className="label-meta text-gray-500">02 · Connect</span>
-          <h2 className="font-display mt-2 text-xl text-white sm:text-3xl">
-            Every page, remembered.
-          </h2>
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
+        <div className="absolute inset-0 z-[3] flex items-center">
+          <div className="w-full max-w-5xl px-6 sm:px-10 lg:px-20">{children}</div>
         </div>
 
         {!ready && (

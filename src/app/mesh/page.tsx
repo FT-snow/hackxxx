@@ -11,9 +11,7 @@ import type { MeshNode } from '@/lib/types';
 
 export default function MeshPage() {
   const [selected, setSelected] = useState<MeshNode | null>(null);
-  const payload = useQuery(api.concepts.meshPayload, {
-    ownerId: 'demo-user',
-  });
+  const payload = useQuery(api.concepts.meshPayload, {});
 
   const active =
     payload && payload.nodes.length > 0 ? payload : null;

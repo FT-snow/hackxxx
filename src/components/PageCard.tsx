@@ -38,7 +38,7 @@ const STATUS_STYLES: Record<PageStatus, { chip: string; label: string }> = {
     label: 'Tagged',
   },
   done: {
-    chip: 'bg-[#5FD6C4]/10 border-[#5FD6C4]/40 text-[#5FD6C4]',
+    chip: 'bg-[#E9C468]/10 border-[#E9C468]/40 text-[#E9C468]',
     label: 'Done',
   },
   error: {
@@ -64,7 +64,7 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
         page.status === 'error'
           ? 'border-red-500/50'
           : page.status === 'done'
-            ? 'border-[#5FD6C4]/30'
+            ? 'border-[#E9C468]/30'
             : ''
       }`}
     >

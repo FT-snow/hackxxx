@@ -104,7 +104,11 @@ function PageEmbedder({ pageId }: { pageId: Id<'pages'> }) {
   return null;
 }
 
-export default function NotebookCapture() {
+interface NotebookCaptureProps {
+  subjectId: Id<'subjects'> | null;
+}
+
+export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [previews, setPreviews] = useState<LocalPreview[]>([]);
@@ -118,10 +122,16 @@ export default function NotebookCapture() {
   const processTextPage = useAction(api.ingest.processTextPage);
   const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
 
-  const pages = useQuery(
+  const sessionPages = useQuery(
     api.pages.listBySession,
-    sessionId ? { sessionId } : 'skip',
+    !subjectId && sessionId ? { sessionId } : 'skip',
   ) as NotebookPage[] | undefined;
+  const subjectPages = useQuery(
+    api.pages.listBySubject,
+    subjectId ? { subjectId } : 'skip',
+  ) as NotebookPage[] | undefined;
+
+  const pages = subjectId ? subjectPages : sessionPages;
 
   useEffect(() => {
     return () => {
@@ -131,7 +141,7 @@ export default function NotebookCapture() {
   }, []);
 
   const handleSubmit = async () => {
-    if (files.length === 0 || submitting) return;
+    if (files.length === 0 || submitting || !subjectId) return;
 
     const sid = crypto.randomUUID();
     const batchFiles = files;

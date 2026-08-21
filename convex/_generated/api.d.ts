@@ -8,14 +8,18 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
 import type * as chunks from "../chunks.js";
 import type * as concepts from "../concepts.js";
 import type * as consts from "../consts.js";
 import type * as evaluate from "../evaluate.js";
 import type * as helpers from "../helpers.js";
+import type * as http from "../http.js";
 import type * as ingest from "../ingest.js";
 import type * as openrouter from "../openrouter.js";
 import type * as pages from "../pages.js";
+import type * as stats from "../stats.js";
+import type * as subjects from "../subjects.js";
 
 import type {
   ApiFromModules,
@@ -24,14 +28,18 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
   chunks: typeof chunks;
   concepts: typeof concepts;
   consts: typeof consts;
   evaluate: typeof evaluate;
   helpers: typeof helpers;
+  http: typeof http;
   ingest: typeof ingest;
   openrouter: typeof openrouter;
   pages: typeof pages;
+  stats: typeof stats;
+  subjects: typeof subjects;
 }>;
 
 /**

@@ -1,5 +1,6 @@
 import { v } from 'convex/values';
 import { internalMutation, mutation, query } from './_generated/server';
+import { DEMO_USER_ID } from './consts';
 
 const chunkShape = {
   text: v.string(),
@@ -14,13 +15,15 @@ export const insertChunks = internalMutation({
   args: {
     pageId: v.id('pages'),
     ownerId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
     chunks: v.array(v.object(chunkShape)),
   },
-  handler: async (ctx, { pageId, ownerId, chunks }) => {
+  handler: async (ctx, { pageId, ownerId, subjectId, chunks }) => {
     for (const c of chunks) {
       await ctx.db.insert('chunks', {
         pageId,
         ownerId,
+        subjectId,
         text: c.text,
         kind: normalizeKind(c.kind),
         conceptLabel: c.conceptLabel ?? 'Untitled',
@@ -69,10 +72,22 @@ export const chunksByPage = query({
 });
 
 export const allForOwner = query({
-  args: { ownerId: v.string() },
-  handler: async (ctx, { ownerId }) =>
-    ctx.db
+  args: { ownerId: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = args.ownerId ?? identity?.subject ?? DEMO_USER_ID;
+    return ctx.db
       .query('chunks')
       .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
+      .collect();
+  },
+});
+
+export const allForSubject = query({
+  args: { subjectId: v.id('subjects') },
+  handler: async (ctx, { subjectId }) =>
+    ctx.db
+      .query('chunks')
+      .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
       .collect(),
 });

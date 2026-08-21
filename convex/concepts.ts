@@ -5,7 +5,7 @@ import type { Id } from './_generated/dataModel';
 import { DEMO_USER_ID } from './consts';
 
 const PALETTE = [
-  '#5FD6C4',
+  '#E9C468',
   '#8CB0C4',
   '#D4A574',
   '#C48CB0',
@@ -30,11 +30,17 @@ interface Cluster {
 }
 
 export const rebuildConcepts = action({
-  args: {},
-  handler: async (ctx) => {
-    const chunks = (await ctx.runQuery(api.chunks.allForOwner, {
-      ownerId: DEMO_USER_ID,
-    })) as ChunkDoc[];
+  args: { subjectId: v.optional(v.id('subjects')) },
+  handler: async (ctx, { subjectId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const chunks = subjectId
+      ? ((await ctx.runQuery(api.chunks.allForSubject, {
+          subjectId,
+        })) as ChunkDoc[])
+      : ((await ctx.runQuery(api.chunks.allForOwner, {
+          ownerId,
+        })) as ChunkDoc[]);
     const embedded = chunks.filter((c) => c.embedding);
 
     const parent = new Map<string, string>();
@@ -67,7 +73,7 @@ export const rebuildConcepts = action({
         {
           vector: chunk.embedding,
           limit: 6,
-          filter: (q) => q.eq('ownerId', DEMO_USER_ID),
+          filter: (q) => q.eq('ownerId', ownerId),
         },
       );
       for (const hit of hits) {
@@ -103,7 +109,8 @@ export const rebuildConcepts = action({
     }
 
     await ctx.runMutation(internal.concepts.upsertConcepts, {
-      ownerId: DEMO_USER_ID,
+      ownerId,
+      subjectId,
       clusters,
     });
     return { clusterCount: clusters.length };
@@ -113,6 +120,7 @@ export const rebuildConcepts = action({
 export const upsertConcepts = internalMutation({
   args: {
     ownerId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
     clusters: v.array(
       v.object({
         label: v.string(),
@@ -122,41 +130,61 @@ export const upsertConcepts = internalMutation({
       }),
     ),
   },
-  handler: async (ctx, { ownerId, clusters }) => {
-    const existing = await ctx.db
-      .query('concepts')
-      .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
-      .collect();
+  handler: async (ctx, { ownerId, subjectId, clusters }) => {
+    const existing = subjectId
+      ? await ctx.db
+          .query('concepts')
+          .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
+          .collect()
+      : await ctx.db
+          .query('concepts')
+          .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
+          .collect();
     for (const doc of existing) await ctx.db.delete(doc._id);
     for (const c of clusters) {
-      await ctx.db.insert('concepts', { ownerId, ...c });
+      await ctx.db.insert('concepts', { ownerId, subjectId, ...c });
     }
   },
 });
 
 export const listConcepts = query({
-  args: { ownerId: v.string() },
-  handler: async (ctx, { ownerId }) =>
-    ctx.db
+  args: { ownerId: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = args.ownerId ?? identity?.subject ?? DEMO_USER_ID;
+    return ctx.db
       .query('concepts')
       .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
       .order('desc')
-      .collect(),
+      .collect();
+  },
 });
 
 export const meshPayload = query({
-  args: { ownerId: v.string() },
-  handler: async (ctx, { ownerId }) => {
-    const concepts = await ctx.db
-      .query('concepts')
-      .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
-      .collect();
+  args: { subjectId: v.optional(v.id('subjects')) },
+  handler: async (ctx, { subjectId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const concepts = subjectId
+      ? await ctx.db
+          .query('concepts')
+          .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
+          .collect()
+      : await ctx.db
+          .query('concepts')
+          .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
+          .collect();
     if (!concepts.length) return { nodes: [], edges: [] };
 
-    const allChunks = await ctx.db
-      .query('chunks')
-      .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
-      .collect();
+    const allChunks = subjectId
+      ? await ctx.db
+          .query('chunks')
+          .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
+          .collect()
+      : await ctx.db
+          .query('chunks')
+          .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
+          .collect();
     const chunkToConcept = new Map<string, string>();
     concepts.forEach((c, i) => {
       for (const cid of c.chunkIds) chunkToConcept.set(cid, `${c._id}:${i}`);

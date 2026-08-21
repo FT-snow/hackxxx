@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useAuthActions } from '@convex-dev/auth/react';
+import { useConvexAuth } from 'convex/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const LINKS = [
@@ -9,6 +12,7 @@ const LINKS = [
   { href: '/notebook', label: 'Notes' },
   { href: '/mesh', label: 'Mesh' },
   { href: '/paper-checker', label: 'Grader' },
+  { href: '/profile', label: 'Profile' },
   {
     href: 'https://github.com/FT-snow/hackxxx',
     label: 'Source',
@@ -18,6 +22,9 @@ const LINKS = [
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated } = useConvexAuth();
+  const { signOut } = useAuthActions();
+  const router = useRouter();
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black/90 backdrop-blur-md">
@@ -31,9 +38,9 @@ export default function Navbar() {
           >
             <Link
               href="/"
-              className="font-display flex items-center gap-2 text-lg tracking-[0.18em] text-white hover:text-[#5FD6C4]"
+              className="font-display flex items-center gap-2 text-lg tracking-[0.18em] text-white hover:text-[#E9C468]"
             >
-              <span className="text-[#5FD6C4]">ᛗ</span> MIMIR
+              <span className="text-[#E9C468]">ᛗ</span> MIMIR
             </Link>
           </motion.div>
 
@@ -53,13 +60,26 @@ export default function Navbar() {
             <motion.button
               whileTap={{ scale: 0.98 }}
               type="button"
-              className="label-meta cursor-pointer rounded-md border border-white/15 bg-white px-4 py-2 text-black hover:bg-gray-200"
+              className="label-meta cursor-pointer rounded-md border border-white/[0.14] bg-transparent px-4 py-2 text-white hover:border-white/30"
               onClick={() => {
-                window.location.href = '/notebook';
+                window.location.href = isAuthenticated ? '/notebook' : '/login';
               }}
             >
-              Start Writing
+              {isAuthenticated ? 'Notes' : 'Sign in'}
             </motion.button>
+            {isAuthenticated && (
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                className="label-meta cursor-pointer rounded-md bg-[#E9C468] px-4 py-2 text-black hover:bg-[#F0D284]"
+                onClick={async () => {
+                  await signOut();
+                  router.push('/');
+                }}
+              >
+                Sign out
+              </motion.button>
+            )}
           </div>
 
           <button

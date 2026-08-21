@@ -20,14 +20,16 @@ async function conceptTexts(
   ctx: ActionCtx,
   conceptId: string,
 ): Promise<string[]> {
+  const identity = await ctx.auth.getUserIdentity();
+  const ownerId = identity?.subject ?? DEMO_USER_ID;
   const concepts: ConceptLike[] = await ctx.runQuery(
     api.concepts.listConcepts,
-    { ownerId: DEMO_USER_ID },
+    { ownerId },
   );
   const target = concepts.find((c) => c._id === conceptId);
   if (!target) throw new Error('Concept not found');
   const chunks: ChunkLike[] = await ctx.runQuery(api.chunks.allForOwner, {
-    ownerId: DEMO_USER_ID,
+    ownerId,
   });
   const ids = new Set<string>(target.chunkIds);
   return chunks.filter((c) => ids.has(c._id)).map((c) => c.text);

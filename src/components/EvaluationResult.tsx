@@ -1,13 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 interface EvaluationResultProps {
   result: string;
+  subjectId?: Id<'subjects'> | null;
 }
 
-export default function EvaluationResult({ result }: EvaluationResultProps) {
+export default function EvaluationResult({
+  result,
+  subjectId,
+}: EvaluationResultProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const recordAttempt = useMutation(api.stats.recordAttempt);
+  const recordedRef = useRef(false);
 
   const parseResult = (text: string) => {
     const lines = text.split('\n').filter((line) => line.trim());
@@ -80,6 +89,22 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
       ? Math.round((totalAchievedScore / totalPossibleScore) * 100)
       : 0;
 
+  useEffect(() => {
+    if (!result || recordedRef.current) return;
+    if (totalPossibleScore <= 0) return;
+    recordedRef.current = true;
+    recordAttempt({
+      subjectId: subjectId ?? undefined,
+      mode: 'paper-checker',
+      totalQuestions: sections.length,
+      score: totalAchievedScore,
+      totalMarks: totalPossibleScore,
+    }).catch(() => {
+      recordedRef.current = false;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result]);
+
   const getScoreColor = (_scoreText: string) => {
     return 'text-white';
   };
@@ -94,7 +119,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
       <div className="bg-[#0c0f0d] p-6 border-b border-white/[0.08]">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="font-display text-2xl text-white mb-2">
               Evaluation Results
             </h2>
             <div className="flex items-center space-x-6">
@@ -149,7 +174,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
                   className="bg-[#0c0f0d] rounded-lg p-4 border border-white/[0.08]"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="font-display text-lg text-white">
                       Question {index + 1}
                     </h3>
                     {section.score && (
@@ -213,7 +238,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">
+              <h3 className="font-display text-lg text-white mb-2">
                 Raw Evaluation Result
               </h3>
               <div className="text-left bg-[#0c0f0d] p-4 rounded-lg border border-white/[0.08]">

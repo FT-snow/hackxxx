@@ -6,6 +6,9 @@
 <title>Mimir — Scroll Sequence</title>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&display=swap" rel="stylesheet" />
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: auto; }
@@ -49,7 +52,7 @@
     pointer-events: none;
   }
   .sequence-caption h2 {
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
     font-weight: 400;
     font-size: clamp(1.4rem, 3.5vw, 2.5rem);
     letter-spacing: 0.01em;
@@ -76,7 +79,7 @@
   .loader-fill {
     height: 100%;
     width: 0%;
-    background: #5FD6C4;
+    background: #E9C468;
     transition: width 0.25s ease;
   }
   .loader-error { color: #E9C468; font-size: 12px; letter-spacing: 0.08em; max-width: 70vw; text-align: center; }

@@ -58,9 +58,7 @@ export default function PaperCheckerInterface({
     readingSheet: false,
   });
 
-  const chunkTopics = useQuery(api.chunks.allForOwner, {
-    ownerId: 'demo-user',
-  });
+  const chunkTopics = useQuery(api.chunks.allForOwner, {});
   const topics = [
     ...new Set(
       (chunkTopics ?? [])

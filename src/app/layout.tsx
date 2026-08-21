@@ -13,7 +13,7 @@ const cinzel = Cinzel({
 export const metadata: Metadata = {
   title: 'Mimir — your notes, connected',
   description:
-    'Mimir digitizes handwritten notes into a searchable, self-linking concept mesh. OCR, concept tagging, and semantic recall for engineering notebooks.',
+    'Mimir digitizes handwritten notes into a searchable, self-linking concept mesh. OCR, concept tagging, and semantic recall for every subject.',
   keywords: [
     'handwritten notes',
     'OCR',

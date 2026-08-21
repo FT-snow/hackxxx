@@ -8,14 +8,27 @@ export const createPage = mutation({
     fileName: v.string(),
     mimeType: v.string(),
     sessionId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
   },
-  handler: async (ctx, args) =>
-    ctx.db.insert('pages', {
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    return ctx.db.insert('pages', {
       ...args,
-      ownerId: DEMO_USER_ID,
+      ownerId: identity?.subject ?? DEMO_USER_ID,
       capturedAt: Date.now(),
       status: 'queued',
-    }),
+    });
+  },
+});
+
+export const listBySubject = query({
+  args: { subjectId: v.id('subjects') },
+  handler: async (ctx, { subjectId }) =>
+    ctx.db
+      .query('pages')
+      .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
+      .order('desc')
+      .take(200),
 });
 
 export const updateStatus = mutation({

@@ -1,9 +1,19 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
+import { authTables } from '@convex-dev/auth/server';
 
 export default defineSchema({
+  ...authTables,
+
+  subjects: defineTable({
+    userId: v.string(),
+    name: v.string(),
+    createdAt: v.number(),
+  }).index('by_user', ['userId']),
+
   pages: defineTable({
     ownerId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
     storageId: v.id('_storage'),
     fileName: v.string(),
     mimeType: v.string(),
@@ -22,11 +32,13 @@ export default defineSchema({
     error: v.optional(v.string()),
   })
     .index('by_owner', ['ownerId'])
-    .index('by_session', ['sessionId']),
+    .index('by_session', ['sessionId'])
+    .index('by_subject', ['subjectId']),
 
   chunks: defineTable({
     pageId: v.id('pages'),
     ownerId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
     text: v.string(),
     kind: v.union(
       v.literal('question'),
@@ -48,14 +60,37 @@ export default defineSchema({
       filterFields: ['ownerId'],
     })
     .index('by_page', ['pageId'])
-    .index('by_owner', ['ownerId']),
+    .index('by_owner', ['ownerId'])
+    .index('by_subject', ['subjectId']),
+
+  quizAttempts: defineTable({
+    userId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
+    mode: v.string(),
+    totalQuestions: v.number(),
+    score: v.number(),
+    totalMarks: v.number(),
+    percentage: v.number(),
+    takenAt: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_subject', ['subjectId']),
+
+  studyDays: defineTable({
+    userId: v.string(),
+    day: v.string(),
+    count: v.number(),
+  }).index('by_user_day', ['userId', 'day']),
 
   concepts: defineTable({
     ownerId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
     label: v.string(),
     chunkIds: v.array(v.id('chunks')),
     pageCount: v.number(),
     summary: v.optional(v.string()),
     lastActiveAt: v.number(),
-  }).index('by_owner', ['ownerId']),
+  })
+    .index('by_owner', ['ownerId'])
+    .index('by_subject', ['subjectId']),
 });

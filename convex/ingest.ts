@@ -3,6 +3,7 @@ import { action } from './_generated/server';
 import { api, internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { callOpenRouter, callVision } from './openrouter';
+import { DEMO_USER_ID } from './consts';
 import { MODELS, TaggingResult } from '../src/lib/types';
 
 const OCR_PROMPT = `Transcribe ALL text from this handwritten notebook page.
@@ -52,6 +53,8 @@ async function tagAndEmbed(
   pageId: Id<'pages'>,
   ocrText: string,
   ocrConfidence?: number,
+  subjectId?: Id<'subjects'>,
+  ownerId: string = DEMO_USER_ID,
 ) {
   const texts = splitChunks(ocrText);
   let tagged: Array<{
@@ -84,7 +87,8 @@ async function tagAndEmbed(
 
   await ctx.runMutation(internal.chunks.insertChunks, {
     pageId,
-    ownerId: 'demo-user',
+    ownerId,
+    subjectId,
     chunks,
   });
   await ctx.runMutation(api.pages.updateStatus, {
@@ -100,8 +104,11 @@ export const processFile = action({
     fileName: v.string(),
     mimeType: v.string(),
     sessionId: v.string(),
+    subjectId: v.optional(v.id('subjects')),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = identity?.subject ?? DEMO_USER_ID;
     const bin = atob(args.base64Image);
     const bytes = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -113,6 +120,7 @@ export const processFile = action({
       fileName: args.fileName,
       mimeType: args.mimeType,
       sessionId: args.sessionId,
+      subjectId: args.subjectId,
     });
 
     try {
@@ -138,7 +146,7 @@ export const processFile = action({
         ocrConfidence,
       });
 
-      const chunkCount = await tagAndEmbed(ctx, pageId, ocrText, ocrConfidence);
+      const chunkCount = await tagAndEmbed(ctx, pageId, ocrText, ocrConfidence, args.subjectId, ownerId);
       return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {
@@ -172,8 +180,11 @@ export const processTextPage = action({
     fileName: v.string(),
     sessionId: v.string(),
     text: v.string(),
+    subjectId: v.optional(v.id('subjects')),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = identity?.subject ?? DEMO_USER_ID;
     const storageId = await ctx.storage.store(
       new Blob([args.text], { type: 'text/plain' }),
     );
@@ -182,6 +193,7 @@ export const processTextPage = action({
       fileName: args.fileName,
       mimeType: 'application/pdf',
       sessionId: args.sessionId,
+      subjectId: args.subjectId,
     });
 
     try {
@@ -193,7 +205,7 @@ export const processTextPage = action({
         id: pageId,
         ocrText: args.text,
       });
-      const chunkCount = await tagAndEmbed(ctx, pageId, args.text);
+      const chunkCount = await tagAndEmbed(ctx, pageId, args.text, undefined, args.subjectId, ownerId);
       return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {

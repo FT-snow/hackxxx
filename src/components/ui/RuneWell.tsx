@@ -19,7 +19,7 @@ export default function RuneWell({ className = '' }: { className?: string }) {
 
         <circle cx="320" cy="320" r="284" fill="none" stroke="rgba(255,255,255,0.05)" />
         <circle cx="320" cy="320" r="226" fill="none" stroke="rgba(255,255,255,0.04)" />
-        <circle cx="320" cy="320" r="160" fill="none" stroke="rgba(95,214,196,0.10)" />
+        <circle cx="320" cy="320" r="160" fill="none" stroke="rgba(233,196,104,0.10)" />
 
         <g className="animate-rspin-slow" style={{ transformOrigin: '320px 320px' }}>
           <text fontSize="24" letterSpacing="14" fill="#3a3a3a">
@@ -34,10 +34,10 @@ export default function RuneWell({ className = '' }: { className?: string }) {
         </g>
 
         <g style={{ transformOrigin: '320px 320px' }}>
-          <circle cx="320" cy="320" r="70" fill="none" stroke="rgba(95,214,196,0.5)" className="well-ripple" />
-          <circle cx="320" cy="320" r="70" fill="none" stroke="rgba(95,214,196,0.35)" className="well-ripple well-ripple-late" />
+          <circle cx="320" cy="320" r="70" fill="none" stroke="rgba(233,196,104,0.5)" className="well-ripple" />
+          <circle cx="320" cy="320" r="70" fill="none" stroke="rgba(233,196,104,0.35)" className="well-ripple well-ripple-late" />
         </g>
-        <circle cx="320" cy="320" r="4.5" fill="#5FD6C4" className="well-eye" />
+        <circle cx="320" cy="320" r="4.5" fill="#E9C468" className="well-eye" />
       </svg>
     </div>
   );
