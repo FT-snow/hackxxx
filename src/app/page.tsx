@@ -66,23 +66,20 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 z-[2] h-40 bg-gradient-to-t from-black to-transparent" />
 
         <div className="relative z-[3] w-full max-w-5xl px-6 sm:px-10 lg:px-20">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8 inline-flex items-center gap-2.5 rounded-md border border-white/[0.14] bg-black/40 px-3 py-1.5 backdrop-blur-sm"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#E9C468]" />
-            <span className="label-meta text-gray-300">
-              Handwritten notes · The well of memory
-            </span>
-          </motion.div>
-
           <motion.h1
+            initial={{ opacity: 0, y: 24, filter: 'blur(16px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display mb-4 text-[4.5rem] leading-none sm:text-[7rem] lg:text-[9rem] xl:text-[11rem]"
+          >
+            Mimir
+          </motion.h1>
+
+          <motion.h2
             initial="hidden"
             animate="show"
-            transition={{ staggerChildren: 0.07, delayChildren: 0.08 }}
-            className="font-display mb-6 max-w-4xl text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5rem]"
+            transition={{ staggerChildren: 0.07, delayChildren: 0.15 }}
+            className="font-display mb-8 max-w-3xl text-xl leading-snug sm:text-2xl lg:text-3xl"
           >
             {HERO_WORDS.map(([word, muted], i) => (
               <motion.span
@@ -101,18 +98,7 @@ export default function Home() {
                 {word}
               </motion.span>
             ))}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.16 }}
-            className="mb-8 max-w-xl text-base leading-relaxed text-gray-300 sm:text-lg"
-          >
-            Mimir reads your handwritten notes, tags every derivation and
-            diagram, and links what you wrote weeks apart into one searchable
-            concept mesh.
-          </motion.p>
+          </motion.h2>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
