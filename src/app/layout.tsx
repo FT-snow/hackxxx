@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Cinzel } from 'next/font/google';
 import ConvexClientProvider from '@/components/ConvexClientProvider';
 import './globals.css';
@@ -23,7 +23,11 @@ export const metadata: Metadata = {
     'AI',
   ],
   authors: [{ name: 'Syndication' }],
-  viewport: 'width=device-width, initial-scale=1',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -33,10 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cinzel.variable}>
-      <body
-        className="antialiased text-white"
-        style={{ backgroundColor: '#000000' }}
-      >
+      <body className="antialiased bg-black text-white">
         <ConvexClientProvider>
           <div id="root">
             {children}

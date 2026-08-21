@@ -12,10 +12,10 @@ const frameUrl = (i: number) =>
 
 const ASCII_RAMP = ' .:-=+*#%@ᚠᚱᛗ';
 const RUNE_COUNT = 3;
-const CELL_CSS_PX = 9;
+const CELL_CSS_PX = 11;
 const ASCII_CACHE_MAX = 40;
-const INK = '#e8e8e8';
-const RUNE_INK = '#a9e8de';
+const INK = '#f2f2ec';
+const RUNE_INK = '#7de8d8';
 
 interface ScrollSequenceProps {
   children?: React.ReactNode;
@@ -111,7 +111,8 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
             const p = (y * cols + x) * 4;
             const lum =
               0.2126 * data[p] + 0.7152 * data[p + 1] + 0.0722 * data[p + 2];
-            const idx = Math.min(maxIdx, Math.round((lum / 255) * maxIdx));
+            const norm = Math.min(1, (lum / 255) ** 0.75 * 1.25);
+            const idx = Math.min(maxIdx, Math.round(norm * maxIdx));
             if (pass === 0 ? idx >= runeStart : idx < runeStart) continue;
             const glyph = ASCII_RAMP[idx];
             if (glyph === ' ') continue;
@@ -144,7 +145,12 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
       return built;
     };
 
-    const renderRaw = (i: number) => {
+    let rawWarned = false;
+    const renderRaw = (i: number, why?: string) => {
+      if (!rawWarned && why) {
+        console.warn(`[ScrollSequence] ASCII off: ${why}`);
+        rawWarned = true;
+      }
       const img = frames[i];
       if (img) paintCover(ctx, canvas.width, canvas.height, img);
     };
@@ -155,12 +161,12 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
       if (i === rendered || !frames[i]) return;
       rendered = i;
       if (reducedMotion.matches) {
-        renderRaw(i);
+        renderRaw(i, 'prefers-reduced-motion is enabled');
         return;
       }
       const ascii = getAscii(i);
       if (!ascii) {
-        renderRaw(i);
+        renderRaw(i, 'ASCII build failed');
         return;
       }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
