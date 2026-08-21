@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Squares from '@/components/ui/SquareBg';
 import RuneWell from '@/components/ui/RuneWell';
+import ScrollSequence from '@/components/ScrollSequence';
 import { BentoCard, BentoGrid } from '@/components/ui/Bento';
 
 const HERO_WORDS: Array<[string, boolean]> = [
@@ -164,6 +165,8 @@ export default function Home() {
 
         <RuneWell className="absolute top-1/2 right-[4%] z-10 hidden w-[36rem] -translate-y-1/2 opacity-80 xl:block 2xl:w-[42rem]" />
       </section>
+
+      <ScrollSequence />
     </div>
   );
 }
