@@ -19,9 +19,7 @@ export default function ConvexClientProvider({
 }) {
   return (
     <ConvexProvider client={convex}>
-      <ConvexAuthProvider client={convex}>
-        {children}
-      </ConvexAuthProvider>
+      <ConvexAuthProvider client={convex}>{children}</ConvexAuthProvider>
     </ConvexProvider>
   );
 }

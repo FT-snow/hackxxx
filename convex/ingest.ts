@@ -20,7 +20,9 @@ CONFIDENCE: <float 0.0-1.0>`;
 
 function splitChunks(ocrText: string): string[] {
   const parts = ocrText
-    .split(/\n(?=\s*(?:\[DIAGRAM|(?:Q(?:uestion)?\.?\s*)?\d{1,2}[.)]\s|[A-Z][A-Za-z ]{3,40}:))/g)
+    .split(
+      /\n(?=\s*(?:\[DIAGRAM|(?:Q(?:uestion)?\.?\s*)?\d{1,2}[.)]\s|[A-Z][A-Za-z ]{3,40}:))/g,
+    )
     .map((s) => s.trim())
     .filter(Boolean);
   const merged: string[] = [];
@@ -35,7 +37,9 @@ function splitChunks(ocrText: string): string[] {
   return merged.length ? merged : [ocrText];
 }
 
-const TAG_PROMPT = (chunks: string[]) => `You label chunks from a student's handwritten notes.
+const TAG_PROMPT = (
+  chunks: string[],
+) => `You label chunks from a student's handwritten notes.
 For EACH numbered chunk return an object in "chunks" (same order, same count):
 {"text": <chunk text verbatim>, "kind": one of question|derivation|definition|example|diagram|general,
 "conceptLabel": <short concept name e.g. "Laplace Transform">,
@@ -146,7 +150,14 @@ export const processFile = action({
         ocrConfidence,
       });
 
-      const chunkCount = await tagAndEmbed(ctx, pageId, ocrText, ocrConfidence, args.subjectId, ownerId);
+      const chunkCount = await tagAndEmbed(
+        ctx,
+        pageId,
+        ocrText,
+        ocrConfidence,
+        args.subjectId,
+        ownerId,
+      );
       return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {
@@ -205,7 +216,14 @@ export const processTextPage = action({
         id: pageId,
         ocrText: args.text,
       });
-      const chunkCount = await tagAndEmbed(ctx, pageId, args.text, undefined, args.subjectId, ownerId);
+      const chunkCount = await tagAndEmbed(
+        ctx,
+        pageId,
+        args.text,
+        undefined,
+        args.subjectId,
+        ownerId,
+      );
       return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {

@@ -17,7 +17,8 @@ export const recordAttempt = mutation({
   },
   handler: async (ctx, a) => {
     const userId = await currentUserId(ctx);
-    const pct = a.totalMarks > 0 ? Math.round((a.score / a.totalMarks) * 100) : 0;
+    const pct =
+      a.totalMarks > 0 ? Math.round((a.score / a.totalMarks) * 100) : 0;
     const id = await ctx.db.insert('quizAttempts', {
       userId,
       subjectId: a.subjectId,
@@ -52,7 +53,8 @@ export const bumpStudyDay = mutation({
       .query('studyDays')
       .withIndex('by_user_day', (q) => q.eq('userId', userId).eq('day', day))
       .first();
-    if (existing) await ctx.db.patch(existing._id, { count: existing.count + 1 });
+    if (existing)
+      await ctx.db.patch(existing._id, { count: existing.count + 1 });
     else await ctx.db.insert('studyDays', { userId, day, count: 1 });
   },
 });
@@ -62,11 +64,23 @@ export const dashboard = query({
   handler: async (ctx) => {
     const userId = await currentUserId(ctx);
 
-    const [subjects, pages, attempts, days] = await Promise.all([
-      ctx.db.query('subjects').withIndex('by_user', (q) => q.eq('userId', userId)).collect(),
-      ctx.db.query('pages').withIndex('by_owner', (q) => q.eq('ownerId', userId)).take(1000),
-      ctx.db.query('quizAttempts').withIndex('by_user', (q) => q.eq('userId', userId)).collect(),
-      ctx.db.query('studyDays').withIndex('by_user_day', (q) => q.eq('userId', userId)).collect(),
+    const [subjects, pages, attempts, _days] = await Promise.all([
+      ctx.db
+        .query('subjects')
+        .withIndex('by_user', (q) => q.eq('userId', userId))
+        .collect(),
+      ctx.db
+        .query('pages')
+        .withIndex('by_owner', (q) => q.eq('ownerId', userId))
+        .take(1000),
+      ctx.db
+        .query('quizAttempts')
+        .withIndex('by_user', (q) => q.eq('userId', userId))
+        .collect(),
+      ctx.db
+        .query('studyDays')
+        .withIndex('by_user_day', (q) => q.eq('userId', userId))
+        .collect(),
     ]);
 
     const perSubject = subjects.map((sub) => ({
@@ -91,7 +105,8 @@ export const dashboard = query({
         avgScore:
           attempts.length > 0
             ? Math.round(
-                attempts.reduce((s, a) => s + a.percentage, 0) / attempts.length,
+                attempts.reduce((s, a) => s + a.percentage, 0) /
+                  attempts.length,
               )
             : 0,
         bestScore:

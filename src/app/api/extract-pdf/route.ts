@@ -5,10 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get('content-type') ?? '';
     if (!contentType.includes('multipart/form-data')) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
@@ -47,9 +44,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to extract PDF text',
+          error instanceof Error ? error.message : 'Failed to extract PDF text',
       },
       { status: 500 },
     );

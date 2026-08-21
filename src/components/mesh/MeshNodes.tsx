@@ -2,13 +2,7 @@
 
 import { Html } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import type { MeshNode, MeshPayload } from '@/lib/types';
 import { computeLayout } from './layout';
@@ -75,10 +69,7 @@ export default function MeshNodes({
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
     geo.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
-    geo.setAttribute(
-      'aHighlight',
-      new THREE.BufferAttribute(highlights, 1),
-    );
+    geo.setAttribute('aHighlight', new THREE.BufferAttribute(highlights, 1));
     return geo;
   }, [payload, layout]);
 
@@ -107,15 +98,18 @@ export default function MeshNodes({
     }
   });
 
-  const setHighlight = useCallback((id: string | null, value: number) => {
-    const idx = payload.nodes.findIndex((n) => n.id === id);
-    if (idx === -1 || !pointsRef.current) return;
-    const attr = pointsRef.current.geometry.getAttribute(
-      'aHighlight',
-    ) as THREE.BufferAttribute;
-    attr.setX(idx, value);
-    attr.needsUpdate = true;
-  }, [payload.nodes]);
+  const setHighlight = useCallback(
+    (id: string | null, value: number) => {
+      const idx = payload.nodes.findIndex((n) => n.id === id);
+      if (idx === -1 || !pointsRef.current) return;
+      const attr = pointsRef.current.geometry.getAttribute(
+        'aHighlight',
+      ) as THREE.BufferAttribute;
+      attr.setX(idx, value);
+      attr.needsUpdate = true;
+    },
+    [payload.nodes],
+  );
 
   const handleOver = useCallback(
     (id: string) => {
@@ -135,11 +129,7 @@ export default function MeshNodes({
 
   return (
     <group>
-      <points
-        ref={pointsRef}
-        geometry={geometry}
-        material={material}
-      />
+      <points ref={pointsRef} geometry={geometry} material={material} />
       {payload.nodes.map((n) => {
         const p = layout.get(n.id) ?? [0, 0, 0];
         return (
@@ -163,21 +153,26 @@ export default function MeshNodes({
           </mesh>
         );
       })}
-      {hovered && (() => {
-        const p = layout.get(hovered.id) ?? [0, 0, 0];
-        return (
-          <Html position={p as [number, number, number]} center distanceFactor={14}>
-            <div className="pointer-events-none rounded-lg border border-[#5FD6C4]/40 bg-black/85 px-3 py-1.5 text-center whitespace-nowrap">
-              <div className="text-sm font-medium text-white">
-                {hovered.label}
+      {hovered &&
+        (() => {
+          const p = layout.get(hovered.id) ?? [0, 0, 0];
+          return (
+            <Html
+              position={p as [number, number, number]}
+              center
+              distanceFactor={14}
+            >
+              <div className="pointer-events-none rounded-lg border border-[#5FD6C4]/40 bg-black/85 px-3 py-1.5 text-center whitespace-nowrap">
+                <div className="text-sm font-medium text-white">
+                  {hovered.label}
+                </div>
+                <div className="text-[10px] tracking-wide text-[#5FD6C4] uppercase">
+                  {hovered.kind} · {hovered.size} pages
+                </div>
               </div>
-              <div className="text-[10px] tracking-wide text-[#5FD6C4] uppercase">
-                {hovered.kind} · {hovered.size} pages
-              </div>
-            </div>
-          </Html>
-        );
-      })()}
+            </Html>
+          );
+        })()}
     </group>
   );
 }

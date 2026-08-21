@@ -13,8 +13,7 @@ export default function MeshPage() {
   const [selected, setSelected] = useState<MeshNode | null>(null);
   const payload = useQuery(api.concepts.meshPayload, {});
 
-  const active =
-    payload && payload.nodes.length > 0 ? payload : null;
+  const active = payload && payload.nodes.length > 0 ? payload : null;
   const usingDemo = !payload || payload.nodes.length === 0;
 
   const legend = [
@@ -95,7 +94,8 @@ export default function MeshPage() {
               className="absolute top-1/4 right-4 z-30 w-72 rounded-lg border border-white/[0.08] bg-black/80 p-4 backdrop-blur"
             >
               <button
-                type="button" onClick={() => setSelected(null)}
+                type="button"
+                onClick={() => setSelected(null)}
                 className="absolute top-2 right-3 text-gray-500 hover:text-white"
                 aria-label="Close"
               >

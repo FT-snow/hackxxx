@@ -1,13 +1,70 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
+import type { Id } from '@/convex/_generated/dataModel';
 
 interface EvaluationResultProps {
   result: string;
   subjectId?: Id<'subjects'> | null;
+}
+
+interface ParsedSection {
+  question: string;
+  answer: string;
+  score: string;
+  feedback: string;
+}
+
+function parseResult(text: string): ParsedSection[] {
+  const lines = text.split('\n').filter((line) => line.trim());
+  const sections: ParsedSection[] = [];
+
+  let currentSection = {
+    question: '',
+    answer: '',
+    score: '',
+    feedback: '',
+  };
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+
+    if (trimmedLine.toLowerCase().startsWith('question:')) {
+      if (currentSection.question) {
+        sections.push({ ...currentSection });
+        currentSection = {
+          question: '',
+          answer: '',
+          score: '',
+          feedback: '',
+        };
+      }
+      currentSection.question = trimmedLine.substring(9).trim();
+    } else if (
+      trimmedLine.toLowerCase().startsWith("student's answer:") ||
+      trimmedLine.toLowerCase().startsWith('student answer:')
+    ) {
+      const startIndex = trimmedLine.toLowerCase().indexOf('answer:') + 7;
+      currentSection.answer = trimmedLine.substring(startIndex).trim();
+    } else if (trimmedLine.toLowerCase().startsWith('score:')) {
+      currentSection.score = trimmedLine.substring(6).trim();
+    } else if (trimmedLine.toLowerCase().startsWith('feedback:')) {
+      currentSection.feedback = trimmedLine.substring(9).trim();
+    } else if (
+      currentSection.feedback &&
+      !trimmedLine.toLowerCase().includes('question:')
+    ) {
+      currentSection.feedback += ` ${trimmedLine}`;
+    }
+  }
+
+  if (currentSection.question) {
+    sections.push(currentSection);
+  }
+
+  return sections;
 }
 
 export default function EvaluationResult({
@@ -18,62 +75,7 @@ export default function EvaluationResult({
   const recordAttempt = useMutation(api.stats.recordAttempt);
   const recordedRef = useRef(false);
 
-  const parseResult = (text: string) => {
-    const lines = text.split('\n').filter((line) => line.trim());
-    const sections: Array<{
-      question: string;
-      answer: string;
-      score: string;
-      feedback: string;
-    }> = [];
-
-    let currentSection = {
-      question: '',
-      answer: '',
-      score: '',
-      feedback: '',
-    };
-
-    for (const line of lines) {
-      const trimmedLine = line.trim();
-
-      if (trimmedLine.toLowerCase().startsWith('question:')) {
-        if (currentSection.question) {
-          sections.push({ ...currentSection });
-          currentSection = {
-            question: '',
-            answer: '',
-            score: '',
-            feedback: '',
-          };
-        }
-        currentSection.question = trimmedLine.substring(9).trim();
-      } else if (
-        trimmedLine.toLowerCase().startsWith("student's answer:") ||
-        trimmedLine.toLowerCase().startsWith('student answer:')
-      ) {
-        const startIndex = trimmedLine.toLowerCase().indexOf('answer:') + 7;
-        currentSection.answer = trimmedLine.substring(startIndex).trim();
-      } else if (trimmedLine.toLowerCase().startsWith('score:')) {
-        currentSection.score = trimmedLine.substring(6).trim();
-      } else if (trimmedLine.toLowerCase().startsWith('feedback:')) {
-        currentSection.feedback = trimmedLine.substring(9).trim();
-      } else if (
-        currentSection.feedback &&
-        !trimmedLine.toLowerCase().includes('question:')
-      ) {
-        currentSection.feedback += ` ${trimmedLine}`;
-      }
-    }
-
-    if (currentSection.question) {
-      sections.push(currentSection);
-    }
-
-    return sections;
-  };
-
-  const sections = parseResult(result);
+  const sections = useMemo(() => parseResult(result), [result]);
   const totalPossibleScore = sections.reduce((sum, section) => {
     const scoreMatch = section.score.match(/\d+\/(\d+)/);
     return sum + (scoreMatch ? parseInt(scoreMatch[1]) : 0);

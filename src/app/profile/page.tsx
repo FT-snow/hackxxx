@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import Navbar from '@/components/Navbar';
@@ -51,7 +52,8 @@ function buildHeatmapWeeks(counts: Record<string, number>) {
   const dow = (today.getDay() + 6) % 7;
   currentWeekMonday.setDate(today.getDate() - dow);
 
-  const weeks: Array<Array<{ key: string; count: number; future: boolean }>> = [];
+  const weeks: Array<Array<{ key: string; count: number; future: boolean }>> =
+    [];
   for (let w = WEEKS - 1; w >= 0; w--) {
     const week: Array<{ key: string; count: number; future: boolean }> = [];
     for (let r = 0; r < 7; r++) {
@@ -101,13 +103,15 @@ function relativeDate(ts: number | null): string {
 export default function ProfilePage() {
   const data = useQuery(api.stats.dashboard, {}) as Dashboard | undefined;
 
-  const counts: Record<string, number> = {};
-  let activeDays = 0;
-  for (const h of data?.heatmap ?? []) {
-    counts[h.day] = h.count;
-    if (h.count > 0) activeDays++;
-  }
-  const weeks = buildHeatmapWeeks(counts);
+  const { weeks, activeDays } = useMemo(() => {
+    const counts: Record<string, number> = {};
+    let days = 0;
+    for (const h of data?.heatmap ?? []) {
+      counts[h.day] = h.count;
+      if (h.count > 0) days++;
+    }
+    return { weeks: buildHeatmapWeeks(counts), activeDays: days };
+  }, [data]);
   const isEmpty =
     data !== undefined &&
     data.totals.subjects === 0 &&
@@ -140,8 +144,7 @@ export default function ProfilePage() {
               Study <span className="text-gray-400">Stats</span>
             </h1>
             <p className="max-w-xl text-sm leading-relaxed text-gray-500">
-              Every page captured and every quiz graded — your effort,
-              measured.
+              Every page captured and every quiz graded — your effort, measured.
             </p>
           </motion.div>
         </div>
@@ -264,7 +267,9 @@ export default function ProfilePage() {
                           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
                             <div
                               className={`h-full rounded-full ${tier.bar}`}
-                              style={{ width: `${Math.min(sub.avgScore, 100)}%` }}
+                              style={{
+                                width: `${Math.min(sub.avgScore, 100)}%`,
+                              }}
                             />
                           </div>
                           <span

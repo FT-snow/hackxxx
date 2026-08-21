@@ -147,7 +147,9 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
     const batchFiles = files;
 
     setSessionId(sid);
-    setPreviews(batchFiles.map((f) => ({ name: f.name, url: URL.createObjectURL(f) })));
+    setPreviews(
+      batchFiles.map((f) => ({ name: f.name, url: URL.createObjectURL(f) })),
+    );
     setBatchError(null);
     setSubmitting(true);
     setFiles([]);
@@ -360,7 +362,9 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
               >
                 <PageCard
                   page={page}
-                  previewUrl={previews.find((p) => p.name === page.fileName)?.url}
+                  previewUrl={
+                    previews.find((p) => p.name === page.fileName)?.url
+                  }
                 />
               </motion.div>
             ))}

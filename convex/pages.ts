@@ -32,7 +32,11 @@ export const listBySubject = query({
 });
 
 export const updateStatus = mutation({
-  args: { id: v.id('pages'), status: v.string(), error: v.optional(v.string()) },
+  args: {
+    id: v.id('pages'),
+    status: v.string(),
+    error: v.optional(v.string()),
+  },
   handler: async (ctx, { id, status, error }) => {
     const patch: Record<string, unknown> = { status };
     if (error !== undefined) patch.error = error;

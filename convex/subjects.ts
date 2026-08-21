@@ -19,7 +19,11 @@ export const add = mutation({
       .filter((q) => q.eq(q.field('name'), clean))
       .first();
     if (dupe) return dupe._id;
-    return ctx.db.insert('subjects', { userId, name: clean, createdAt: Date.now() });
+    return ctx.db.insert('subjects', {
+      userId,
+      name: clean,
+      createdAt: Date.now(),
+    });
   },
 });
 

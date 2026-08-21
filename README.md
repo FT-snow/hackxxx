@@ -1,108 +1,116 @@
-# 🎓 grader.ai
-Revolutionizing the traditional grading process.  
-  
-![AI Education Platform](https://img.shields.io/badge/AI-Education-00ff88?style=for-the-badge&logo=openai&logoColor=white)
-![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+# Mimir
 
-## ✨ Features
+Your notes, connected.
 
-### 📝 Smart Paper Evaluation System
+Mimir digitizes handwritten engineering notes into a searchable, self-linking concept index. Pages are transcribed with structure-aware OCR, split into classified concept chunks, and interlinked across days by semantic similarity - so a revision summary written in week 6 automatically connects back to the derivation it revised from week 1.
 
-grAIder's flagship feature is its intelligent automated paper evaluation system that revolutionizes the traditional grading process. Our advanced AI analyzes student responses with human-like understanding while providing detailed, constructive feedback.
+Built for Problem Statement 9 (EDUTECH - AI OCR Handwritten Notes Digitizer and Concept Tagger) at HackX, by Team Vulpix.
 
+## Team Vulpix
 
-#### 🎓 **Educational Benefits**
-- **Time Savings**: Reduce grading time by 90%
-- **Consistency**: Eliminate human bias and grading variations
-- **Immediate Feedback**: Students get instant results and improvement suggestions
-- **Detailed Analytics**: Teachers gain deeper insights into student performance
-- **Scalability**: Handle large classes without additional workload
+- Bikram Singh - Team Leader
+- Prakhar Upadhyay
 
-#### 🔍 **Advanced Document Processing**
-- **Multi-format Support**: Seamlessly handles PDF, DOC, DOCX, TXT, JPG, JPEG, PNG files
-- **Intelligent OCR**: State-of-the-art Optical Character Recognition that accurately extracts text from:
-  - Handwritten student responses
-  - Scanned documents and images
-  - Mixed content (text + diagrams + equations)
-  - Poor quality scans with noise reduction
-- **Smart Text Preprocessing**: Automatically cleans and structures extracted content
-- **Batch Processing**: Handle multiple student papers simultaneously
+## The Problem
 
-#### 🎯 **Intelligent Feedback Generation**
-- **Detailed Performance Breakdown**:
-  - Question-by-question analysis
+Engineering students rely on handwritten derivations and diagrams that remain trapped in physical notebooks - no digital searchability, no revision indexing, no backups. Existing OCR tools transcribe text but understand nothing about structure, concepts, or the relationships between notes taken on different days.
 
-- **Constructive Feedback**:
-  - Specific improvement suggestions
-  - Concept clarification
+## How It Works
 
+1. **Capture** - Upload notebook photos or PDFs into subject-scoped sessions.
+2. **Transcribe** - A vision model preserves headings, LaTeX math, numbered questions, struck-through corrections, and diagrams.
+3. **Chunk and tag** - Each page splits into concept chunks classified as question, derivation, definition, example, or diagram, each labeled with its concept and tagged.
+4. **Embed and link** - Chunks are embedded locally (384-dim) and matched via vector search against every prior chunk, linking revisions to originals across days.
+5. **Visualize** - The Concept Mesh renders your syllabus as an interactive 3D knowledge graph of clusters and similarity threads.
 
-#### 🔄 **Three-Step Evaluation Process**:
-1. **Upload Phase**:
-   - Drag-and-drop interface for easy file uploads
-   - Multiple document type support
-   - Real-time upload progress tracking
+## Features
 
-2. **AI Processing Phase**:
-   - Advanced OCR text extraction
-   - Natural language processing
-   - Intelligent scoring algorithms
-   - Quality assurance checks
+### Notebook Capture
+- Drag-and-drop images and PDFs, organized by subject
+- Realtime pipeline status per page: queued, OCR, embedding, tagged, done
+- Structure-preserving transcription: LaTeX math, `[DIAGRAM: type: caption]` records, `[struck]...[/struck]` corrections, `[?]` illegibility flags, per-page confidence scores
 
-3. **Results Generation**:
-   - Comprehensive evaluation reports
+### Concept Mesh
+- Interactive Three.js graph of concept clusters colored by dominant kind
+- Live data from your own notes; demo dataset when empty
+- Node inspector showing kind, linked page count, and cluster membership
 
-### 🎨 Modern Design & UX
-- **Matrix-inspired animations**: with Cyberpunk aesthetics
-- **Responsive design**: optimized for all devices
-- **Custom fonts**: Geometrisk and Raleway for premium typography
-- **Smooth animations** powered by Framer Motion
-- **Glass-morphism effects** and modern UI components
+### grAIder Paper Checker
+- Auto mode: generates exam-style quizzes from your own notes, accepts handwritten answer sheets, grades with partial credit against reference notes
+- Manual mode: full paper evaluation from question paper, answer key, and student answers
+- Question-by-question feedback with scores and constructive comments
 
-### 📊 Progress Tracking & Achievements
-- **Learning Analytics**: Track sessions, messages, and subjects
-- **Achievement System**: Unlock badges for milestones
-- **Streak Tracking**: Maintain daily learning habits
-- **Performance Insights**: Monitor learning progress
+### Profile Analytics
+- Contribution-style study heatmap over the last 16 weeks
+- Per-subject page counts, attempt counts, average score bars, last-attempt recency
+- Recent attempt history with score breakdowns
 
-## 🚀 Quick Start
+## Handling What OCR Struggles With
 
-### Installation
+- **Handwriting variance** - every page carries a confidence score; low-confidence words are flagged inline rather than silently misread
+- **Diagrams** - never forced into prose; extracted as structured records typed as circuit, free-body, graph, block, flowchart, or table, searchable by type
+- **Scribbled corrections** - crossed-out text is captured and marked as revision work, which is precisely the signal that drives cross-day revision linking
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/FT-snow/grAIder.git
-   cd grAIder
-   ```
+## Tech Stack
 
-2. **Install dependencies**
-   ```bash
-   bun install
-   ```
+| Layer | Choice |
+| --- | --- |
+| Runtime and tooling | Bun |
+| Framework | Next.js 15 (App Router), TypeScript |
+| Styling | Tailwind CSS v4, GSAP ScrollTrigger, Framer Motion |
+| Database, vector search, auth | Convex (schema-validated, indexed queries, 384-dim vector index, password auth) |
+| OCR | Qwen3 VL 8B via OpenRouter |
+| Concept tagging | GPT-OSS-20B via OpenRouter |
+| Grading | Gemini 2.5 Flash via OpenRouter |
+| Embeddings | Computed locally - no per-page API cost, notes never leave the stack |
 
-3. **Environment Setup**
-   Create a `.env.local` file in the root directory:
-   ```env
-   OPENROUTER_API_KEY=your_openrouter_api_key_here
-   ```
+## Getting Started
 
+```bash
+bun install
 
-4. **Start the development server**
-   ```bash
-   bun dev
-   ```
+# start Convex (provisions a dev deployment)
+bunx convex dev
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+# in a second terminal
+bun run dev
+```
 
-## 🙏 Credits
+Open http://localhost:3000.
 
-This project wouldn't be possible without the following services and libraries:
+### Environment Variables
 
-- **[OpenRouter](https://openrouter.ai/)** - For providing unified access to various AI models through a single API, enabling the intelligent paper evaluation features
+`.env.local`:
 
----
+```
+OPENROUTER_API_KEY=your_openrouter_key
+NEXT_PUBLIC_CONVEX_URL=https://<deployment>.convex.cloud
+NEXT_PUBLIC_CONVEX_SITE_URL=https://<deployment>.convex.site
+```
 
-**Team Lua ❤️ MUJ**
+Convex functions read the OpenRouter key from the deployment's own environment:
+
+```bash
+bunx convex env set OPENROUTER_API_KEY your_openrouter_key
+```
+
+## Project Structure
+
+```
+convex/                  schema, queries, mutations, AI actions
+  ingest.ts              OCR + chunking + tagging + embedding pipeline
+  concepts.ts            concept clustering and mesh payload
+  evaluate.ts            quiz generation and grading
+  stats.ts               dashboard aggregation
+src/
+  app/
+    page.tsx             landing with scroll-driven ASCII frame sequence
+    notebook/            capture interface
+    mesh/                3D concept mesh
+    paper-checker/       grader UI
+    profile/             analytics dashboard
+    login/               auth
+  components/            UI components
+src/lib/                 shared types, schemas, demo data
+public/frames/           landing sequence frames
+```

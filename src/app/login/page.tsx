@@ -58,8 +58,8 @@ export default function LoginPage() {
             {flow === 'signUp' ? 'Claim your well' : 'Enter the well'}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-gray-500">
-            One account. Every subject, every page, every concept thread —
-            kept separately and remembered together.
+            One account. Every subject, every page, every concept thread — kept
+            separately and remembered together.
           </p>
 
           {isAuthenticated && (
@@ -70,7 +70,10 @@ export default function LoginPage() {
 
           <form onSubmit={submit} className="mt-7 space-y-4">
             <div>
-              <label htmlFor="email" className="label-meta mb-2 block text-gray-500">
+              <label
+                htmlFor="email"
+                className="label-meta mb-2 block text-gray-500"
+              >
                 Email
               </label>
               <input
@@ -84,7 +87,10 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="label-meta mb-2 block text-gray-500">
+              <label
+                htmlFor="password"
+                className="label-meta mb-2 block text-gray-500"
+              >
                 Password
               </label>
               <input
@@ -99,9 +105,7 @@ export default function LoginPage() {
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-300">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-300">{error}</p>}
 
             <button
               type="submit"
@@ -112,11 +116,7 @@ export default function LoginPage() {
                   : 'cursor-pointer bg-[#E9C468] text-black hover:bg-[#F0D284]'
               }`}
             >
-              {busy
-                ? '…'
-                : flow === 'signUp'
-                  ? 'Create account'
-                  : 'Sign in'}
+              {busy ? '…' : flow === 'signUp' ? 'Create account' : 'Sign in'}
             </button>
           </form>
 

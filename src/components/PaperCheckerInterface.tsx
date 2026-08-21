@@ -22,7 +22,11 @@ interface PaperCheckerState {
   uploadingType: 'question' | 'answer' | 'student' | null;
   lastUpdated: 'question' | 'answer' | 'student' | null;
   mode: 'auto' | 'manual';
-  quiz: Array<{ question: string; expectedAnswer: string; marks: number }> | null;
+  quiz: Array<{
+    question: string;
+    expectedAnswer: string;
+    marks: number;
+  }> | null;
   generatingQuiz: boolean;
   quizError: string | null;
   answersText: string;
@@ -94,7 +98,10 @@ export default function PaperCheckerInterface({
     try {
       const fd = new FormData();
       files.forEach((f) => fd.append('files', f));
-      const res = await fetch('/api/ingest-sheet', { method: 'POST', body: fd });
+      const res = await fetch('/api/ingest-sheet', {
+        method: 'POST',
+        body: fd,
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not read sheet');
       updateState({ answersText: data.text, readingSheet: false });
@@ -411,8 +418,9 @@ export default function PaperCheckerInterface({
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-gray-500">
                 Five questions drawn from your own captured notes
-                {topics.length > 0 && ` — ${topics.length} topic${topics.length !== 1 ? 's' : ''} detected`}.
-                No question paper, no answer key. The well sets the paper.
+                {topics.length > 0 &&
+                  ` — ${topics.length} topic${topics.length !== 1 ? 's' : ''} detected`}
+                . No question paper, no answer key. The well sets the paper.
               </p>
               {state.quiz ? (
                 <ol className="mt-6 space-y-5">

@@ -2,7 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { callOpenRouter } from '@/../convex/openrouter';
 import { MODELS } from '@/lib/types';
 
-const QUIZ_PROMPT = (topics: string[]) => `You are an examiner setting a surprise test for an engineering student.
+const QUIZ_PROMPT = (
+  topics: string[],
+) => `You are an examiner setting a surprise test for an engineering student.
 Write exactly 5 questions drawn ONLY from these topics from the student's own notes:
 ${topics.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 
@@ -35,7 +37,11 @@ export async function POST(request: NextRequest) {
     );
 
     const parsed = JSON.parse(raw) as {
-      questions?: Array<{ question: string; expectedAnswer: string; marks?: number }>;
+      questions?: Array<{
+        question: string;
+        expectedAnswer: string;
+        marks?: number;
+      }>;
     };
     const questions = (parsed.questions ?? [])
       .filter((q) => q.question && q.expectedAnswer)

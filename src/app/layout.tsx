@@ -39,9 +39,7 @@ export default function RootLayout({
     <html lang="en" className={cinzel.variable}>
       <body className="antialiased bg-black text-white">
         <ConvexClientProvider>
-          <div id="root">
-            {children}
-          </div>
+          <div id="root">{children}</div>
         </ConvexClientProvider>
       </body>
     </html>

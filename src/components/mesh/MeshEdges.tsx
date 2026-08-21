@@ -68,9 +68,6 @@ function buildSegments(
     pts.push(...a, ...b);
   }
   const geo = new THREE.BufferGeometry();
-  geo.setAttribute(
-    'position',
-    new THREE.Float32BufferAttribute(pts, 3),
-  );
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
   return { geometry: geo };
 }

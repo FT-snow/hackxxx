@@ -47,7 +47,9 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
     const srcCanvas = document.createElement('canvas');
     const srcCtx = srcCanvas.getContext('2d');
     const sampleCanvas = document.createElement('canvas');
-    const sampleCtx = sampleCanvas.getContext('2d', { willReadFrequently: true });
+    const sampleCtx = sampleCanvas.getContext('2d', {
+      willReadFrequently: true,
+    });
     const asciiCache = new Map<number, HTMLCanvasElement>();
 
     const paintCover = (
@@ -61,7 +63,13 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
       if (!iw || !ih || !w || !h) return false;
       const scale = Math.max(w / iw, h / ih);
       g.clearRect(0, 0, w, h);
-      g.drawImage(img, (w - iw * scale) / 2, (h - ih * scale) / 2, iw * scale, ih * scale);
+      g.drawImage(
+        img,
+        (w - iw * scale) / 2,
+        (h - ih * scale) / 2,
+        iw * scale,
+        ih * scale,
+      );
       return true;
     };
 
@@ -174,7 +182,8 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
     };
     const tick = () => {
       state.current += (state.target - state.current) * 0.14;
-      if (Math.abs(state.target - state.current) < 0.002) state.current = state.target;
+      if (Math.abs(state.target - state.current) < 0.002)
+        state.current = state.target;
       render(state.current);
       raf = requestAnimationFrame(tick);
     };
@@ -206,13 +215,15 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
       let failed = 0;
       const results = await Promise.all(
         Array.from({ length: FRAME_COUNT }, (_, i) =>
-          new Promise<{ ok: boolean; img: HTMLImageElement | null }>((resolve) => {
-            const img = new Image();
-            img.decoding = 'async';
-            img.onload = () => resolve({ ok: true, img });
-            img.onerror = () => resolve({ ok: false, img: null });
-            img.src = frameUrl(i);
-          }).then((r) => {
+          new Promise<{ ok: boolean; img: HTMLImageElement | null }>(
+            (resolve) => {
+              const img = new Image();
+              img.decoding = 'async';
+              img.onload = () => resolve({ ok: true, img });
+              img.onerror = () => resolve({ ok: false, img: null });
+              img.src = frameUrl(i);
+            },
+          ).then((r) => {
             loadedCount++;
             if (!r.ok) failed++;
             setProgress(Math.round((loadedCount / FRAME_COUNT) * 100));
@@ -260,7 +271,9 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
 
         <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
         <div className="absolute inset-0 z-[3] flex items-center">
-          <div className="w-full max-w-5xl px-6 sm:px-10 lg:px-20">{children}</div>
+          <div className="w-full max-w-5xl px-6 sm:px-10 lg:px-20">
+            {children}
+          </div>
         </div>
 
         {!ready && (

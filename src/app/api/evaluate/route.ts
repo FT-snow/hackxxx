@@ -2,10 +2,6 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-  console.log(
-    'Attempting to use OpenRouter API Key:',
-    OPENROUTER_API_KEY ? `...${OPENROUTER_API_KEY.slice(-4)}` : 'Not Found',
-  );
 
   try {
     const { questionPaper, answerKey, studentAnswers } = await request.json();

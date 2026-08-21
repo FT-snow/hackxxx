@@ -67,15 +67,11 @@ export const rebuildConcepts = action({
 
     for (const chunk of embedded) {
       if (!chunk.embedding) continue;
-      const hits = await ctx.vectorSearch(
-        'chunks',
-        'by_embedding',
-        {
-          vector: chunk.embedding,
-          limit: 6,
-          filter: (q) => q.eq('ownerId', ownerId),
-        },
-      );
+      const hits = await ctx.vectorSearch('chunks', 'by_embedding', {
+        vector: chunk.embedding,
+        limit: 6,
+        filter: (q) => q.eq('ownerId', ownerId),
+      });
       for (const hit of hits) {
         if (hit._id !== chunk._id && hit._score >= 0.55) {
           union(chunk._id, hit._id);
@@ -190,10 +186,7 @@ export const meshPayload = query({
       for (const cid of c.chunkIds) chunkToConcept.set(cid, `${c._id}:${i}`);
     });
 
-    const kindCounts = new Map<
-      string,
-      Map<string, number>
-    >();
+    const kindCounts = new Map<string, Map<string, number>>();
     for (const c of allChunks) {
       const cid = chunkToConcept.get(c._id);
       if (!cid) continue;

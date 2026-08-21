@@ -139,7 +139,11 @@ export default function Home() {
         <div className="relative z-20 mr-auto ml-0 w-full max-w-5xl px-6 sm:px-10 lg:px-20">
           <BentoGrid>
             {STEPS.map((s, i) => (
-              <motion.div key={s.n} {...reveal} transition={{ duration: 0.6, delay: i * 0.08 }}>
+              <motion.div
+                key={s.n}
+                {...reveal}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+              >
                 <BentoCard n={s.n} title={s.title} className="min-h-[13rem]">
                   {s.body}
                   <a
@@ -155,8 +159,12 @@ export default function Home() {
 
           <div className="mt-14 overflow-hidden border-t border-white/[0.08] pt-5">
             <div className="rune-marquee-track flex w-max whitespace-nowrap">
-              <span className="label-meta pr-8 text-gray-700">{MARQUEE.repeat(4)}</span>
-              <span className="label-meta pr-8 text-gray-700">{MARQUEE.repeat(4)}</span>
+              <span className="label-meta pr-8 text-gray-700">
+                {MARQUEE.repeat(4)}
+              </span>
+              <span className="label-meta pr-8 text-gray-700">
+                {MARQUEE.repeat(4)}
+              </span>
             </div>
           </div>
         </div>

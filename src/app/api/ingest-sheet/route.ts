@@ -41,7 +41,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No files provided' }, { status: 400 });
     }
     const formData = await request.formData();
-    const files = formData.getAll('files').filter((f): f is File => f instanceof File);
+    const files = formData
+      .getAll('files')
+      .filter((f): f is File => f instanceof File);
     if (files.length === 0) {
       return NextResponse.json({ error: 'No files provided' }, { status: 400 });
     }
@@ -77,7 +79,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error ? error.message : 'Failed to read answer sheet',
+          error instanceof Error
+            ? error.message
+            : 'Failed to read answer sheet',
       },
       { status: 500 },
     );

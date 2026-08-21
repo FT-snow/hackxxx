@@ -75,9 +75,7 @@ export default function SubjectPicker({ value, onChange }: SubjectPickerProps) {
           onBlur={() => {
             if (!draft.trim() && !isEmptyList) setAdding(false);
           }}
-          placeholder={
-            isEmptyList ? 'Add your first subject' : 'New subject…'
-          }
+          placeholder={isEmptyList ? 'Add your first subject' : 'New subject…'}
           aria-label="Subject name"
           className="label-meta w-48 rounded-md border border-white/[0.08] bg-[#0c0f0d] px-3.5 py-1.5 text-gray-200 placeholder:text-gray-600 focus:border-[#E9C468]/60 focus:outline-none"
         />
