@@ -32,13 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`h-full ${cinzel.variable}`}>
+    <html lang="en" className={cinzel.variable}>
       <body
-        className="h-full antialiased text-white"
+        className="antialiased text-white"
         style={{ backgroundColor: '#000000' }}
       >
         <ConvexClientProvider>
-          <div id="root" className="h-full">
+          <div id="root">
             {children}
           </div>
         </ConvexClientProvider>

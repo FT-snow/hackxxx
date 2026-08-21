@@ -43,7 +43,7 @@ const STEPS = [
 
 export default function Home() {
   return (
-    <div className="h-full overflow-x-hidden text-white">
+    <div className="overflow-x-clip text-white">
       <Navbar />
       <div className="absolute z-[-10] h-full w-full">
         <Squares

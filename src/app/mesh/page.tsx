@@ -26,7 +26,7 @@ export default function MeshPage() {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-white">
+    <div className="relative min-h-screen overflow-x-clip bg-black text-white">
       <Navbar />
       <div
         className="pointer-events-none absolute inset-0 z-10 opacity-5"
