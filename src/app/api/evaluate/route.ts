@@ -70,7 +70,7 @@ Feedback: xyz
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'mistralai/mixtral-8x7b-instruct',
+          model: 'openai/gpt-oss-20b:free',
           messages,
           max_tokens: 10000,
           temperature: 0.3,

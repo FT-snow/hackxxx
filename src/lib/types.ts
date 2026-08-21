@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const MODELS = {
   ocr: 'qwen/qwen3-vl-8b-instruct',
   utility: 'openai/gpt-oss-20b:free',
-  grading: 'google/gemini-2.5-flash',
+  grading: 'openai/gpt-oss-20b:free',
 } as const;
 
 export const EMBEDDING_DIMS = 384;

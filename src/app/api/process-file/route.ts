@@ -61,7 +61,7 @@ async function detectTextWithQwen(imageUrl: string): Promise<string> {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'qwen/qwen-2-vl-7b-instruct',
+          model: 'qwen/qwen3-vl-8b-instruct',
           messages,
           max_tokens: 4096,
           temperature: 0.1,
