@@ -3,12 +3,27 @@
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import { motion } from 'framer-motion';
-import { BrainCircuit, Loader2 } from 'lucide-react';
+import { BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useAction, useMutation, useQuery } from 'convex/react';
 import FileUploader from '@/components/FileUploader';
 import PageCard, { type NotebookPage } from '@/components/PageCard';
+
+const RUNE_CYCLE = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ'];
+
+function RuneSpinner() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((v) => (v + 1) % RUNE_CYCLE.length), 140);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <span className="inline-block w-4 text-center text-[#5FD6C4]">
+      {RUNE_CYCLE[i]}
+    </span>
+  );
+}
 
 interface LocalPreview {
   name: string;
@@ -205,7 +220,7 @@ export default function NotebookCapture() {
         >
           {submitting ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <RuneSpinner />
               <span className="text-sm">Digitizing pages…</span>
             </>
           ) : (
@@ -365,7 +380,7 @@ export default function NotebookCapture() {
                   : 'bg-[#5FD6C4] text-black hover:bg-[#4FC2B1] cursor-pointer'
               }`}
             >
-              {rebuilding && <Loader2 className="w-4 h-4 animate-spin" />}
+              {rebuilding && <RuneSpinner />}
               <span>Rebuild Concept Mesh</span>
             </motion.button>
           </div>

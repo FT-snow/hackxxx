@@ -3,7 +3,18 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Squares from '@/components/ui/SquareBg';
+import RuneWell from '@/components/ui/RuneWell';
 import { BentoCard, BentoGrid } from '@/components/ui/Bento';
+
+const HERO_WORDS: Array<[string, boolean]> = [
+  ['Your', false],
+  ['notebook,', false],
+  ['finally', true],
+  ['remembered.', false],
+];
+
+const MARQUEE =
+  'ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ · MIMIR · THE WELL REMEMBERS · ';
 
 const STEPS = [
   {
@@ -58,14 +69,28 @@ export default function Home() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08 }}
+            initial="hidden"
+            animate="show"
+            transition={{ staggerChildren: 0.07, delayChildren: 0.08 }}
             className="font-display mb-8 max-w-4xl text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5.25rem]"
           >
-            Your notebook,
-            <br />
-            <span className="text-gray-400">finally</span> remembered.
+            {HERO_WORDS.map(([word, muted], i) => (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: '0.4em', filter: 'blur(12px)' },
+                  show: {
+                    opacity: 1,
+                    y: '0em',
+                    filter: 'blur(0px)',
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className={`mr-[0.28em] inline-block ${muted ? 'text-gray-400' : ''}`}
+              >
+                {word}
+              </motion.span>
+            ))}
           </motion.h1>
 
           <motion.p
@@ -128,7 +153,16 @@ export default function Home() {
               </motion.div>
             ))}
           </BentoGrid>
+
+          <div className="mt-14 overflow-hidden border-t border-white/[0.08] pt-5">
+            <div className="rune-marquee-track flex w-max whitespace-nowrap">
+              <span className="label-meta pr-8 text-gray-700">{MARQUEE.repeat(4)}</span>
+              <span className="label-meta pr-8 text-gray-700">{MARQUEE.repeat(4)}</span>
+            </div>
+          </div>
         </div>
+
+        <RuneWell className="absolute top-1/2 right-[4%] z-10 hidden w-[36rem] -translate-y-1/2 opacity-80 xl:block 2xl:w-[42rem]" />
       </section>
     </div>
   );

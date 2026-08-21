@@ -142,6 +142,66 @@ textarea,
 	outline-offset: 2px;
 }
 
+/* Norse well animations */
+@keyframes rspin-cw {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes rspin-ccw {
+	to {
+		transform: rotate(-360deg);
+	}
+}
+
+.animate-rspin-slow {
+	animation: rspin-cw 140s linear infinite;
+}
+
+.animate-rspin-fast {
+	animation: rspin-ccw 90s linear infinite;
+}
+
+@keyframes well-ripple {
+	from {
+		transform: scale(0.15);
+		opacity: 0.7;
+	}
+	to {
+		transform: scale(1.6);
+		opacity: 0;
+	}
+}
+
+.well-ripple {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: well-ripple 5s ease-out infinite;
+}
+
+.well-ripple-late {
+	animation-delay: 2.5s;
+}
+
+.well-eye {
+	animation: fadeIn 2s ease-out;
+}
+
+@keyframes rune-marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.rune-marquee-track {
+	animation: rune-marquee 60s linear infinite;
+	will-change: transform;
+}
+
 /* Animation classes */
 @keyframes fadeIn {
 	from {
