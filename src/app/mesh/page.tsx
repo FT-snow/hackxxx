@@ -31,7 +31,7 @@ export default function MeshPage() {
       <div
         className="pointer-events-none absolute inset-0 z-10 opacity-5"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%2300ff88'%3E01%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235FD6C4' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%235FD6C4'%3E01%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
       />
       <div className="relative z-20 pt-20">
@@ -42,7 +42,7 @@ export default function MeshPage() {
             transition={{ duration: 0.5 }}
           >
             <div className="mb-4 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
               <span className="label-meta text-gray-400">
                 Semantic concept index
               </span>
@@ -51,8 +51,8 @@ export default function MeshPage() {
               Concept <span className="text-gray-400">Mesh</span>
             </h1>
             <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-500">
-              Topics as nodes. Semantic similarity as edges. Your notebook,
-              connected.
+              Topics as nodes. Threads of similarity between them —
+              every revision you ever wrote, woven in.
             </p>
           </motion.div>
         </div>
@@ -96,7 +96,7 @@ export default function MeshPage() {
             <motion.aside
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
-              className="absolute top-1/4 right-4 z-30 w-72 rounded-xl border border-[#00ff88]/20 bg-black/80 p-4 backdrop-blur"
+              className="absolute top-1/4 right-4 z-30 w-72 rounded-xl border border-[#5FD6C4]/20 bg-black/80 p-4 backdrop-blur"
             >
               <button
                 type="button" onClick={() => setSelected(null)}
@@ -107,7 +107,7 @@ export default function MeshPage() {
               </button>
               <h3 className="pr-4 text-lg font-semibold">{selected.label}</h3>
               <div className="mt-2 flex items-center gap-2">
-                <span className="rounded-full bg-[#00ff88]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#00ff88] uppercase">
+                <span className="rounded-full bg-[#5FD6C4]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#5FD6C4] uppercase">
                   {selected.kind}
                 </span>
                 <span className="text-xs text-gray-400">
@@ -117,7 +117,7 @@ export default function MeshPage() {
               <button
                 type="button"
                 disabled
-                className="mt-4 w-full cursor-not-allowed rounded-lg border border-[#00ff88]/20 px-3 py-2 text-sm text-gray-500"
+                className="mt-4 w-full cursor-not-allowed rounded-lg border border-[#5FD6C4]/20 px-3 py-2 text-sm text-gray-500"
               >
                 Drill-in view coming soon
               </button>

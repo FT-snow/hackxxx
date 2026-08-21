@@ -5,7 +5,7 @@ import type { Id } from './_generated/dataModel';
 import { DEMO_USER_ID } from './consts';
 
 const PALETTE = [
-  '#00ff88',
+  '#5FD6C4',
   '#8CB0C4',
   '#D4A574',
   '#C48CB0',

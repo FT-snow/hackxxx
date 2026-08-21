@@ -78,8 +78,8 @@ export default function FileUploader({
         type="button"
         className={`w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
           isDragOver
-            ? 'border-[#00ff88] bg-[#00ff88]/10'
-            : 'border-gray-600 hover:border-[#00ff88]'
+            ? 'border-[#5FD6C4] bg-[#5FD6C4]/10'
+            : 'border-gray-600 hover:border-[#5FD6C4]'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -133,7 +133,7 @@ export default function FileUploader({
               className="flex items-center justify-between bg-gray-900 border border-gray-700 rounded-lg p-3"
             >
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-[#00ff88] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#5FD6C4] rounded-lg flex items-center justify-center">
                   <svg
                     className="w-4 h-4 text-black"
                     fill="none"
@@ -160,7 +160,7 @@ export default function FileUploader({
               <button
                 type="button"
                 onClick={() => removeFile(index)}
-                className="text-gray-400 hover:text-[#00ff88] transition-colors"
+                className="text-gray-400 hover:text-[#5FD6C4] transition-colors"
               >
                 <svg
                   className="w-5 h-5"

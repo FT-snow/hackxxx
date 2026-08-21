@@ -177,7 +177,7 @@ export default function NotebookCapture() {
         className="bg-[#181414] rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-700"
       >
         <div className="flex items-center space-x-3 mb-6">
-          <div className="p-2 bg-[#00ff88] rounded-xl">
+          <div className="p-2 bg-[#5FD6C4] rounded-xl">
             <ScanText className="w-5 h-5 text-black" />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-white">
@@ -201,7 +201,7 @@ export default function NotebookCapture() {
           disabled={files.length === 0 || submitting}
           className={`mt-6 w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
             files.length > 0 && !submitting
-              ? 'bg-[#00ff88] hover:bg-[#00e87a] text-black cursor-pointer'
+              ? 'bg-[#5FD6C4] hover:bg-[#4FC2B1] text-black cursor-pointer'
               : 'bg-[#181414] border border-gray-700 text-gray-500 cursor-not-allowed'
           }`}
         >
@@ -292,7 +292,7 @@ export default function NotebookCapture() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg sm:text-xl font-bold text-white">
               Pages{' '}
-              <span className="text-[#00ff88]">
+              <span className="text-[#5FD6C4]">
                 {doneCount}/{pageList.length}
               </span>{' '}
               digitized
@@ -304,7 +304,7 @@ export default function NotebookCapture() {
                   width: `${pageList.length > 0 ? (doneCount / pageList.length) * 100 : 0}%`,
                 }}
                 transition={{ duration: 0.5 }}
-                className="h-full bg-[#00ff88] rounded-full"
+                className="h-full bg-[#5FD6C4] rounded-full"
               />
             </div>
           </div>
@@ -353,7 +353,7 @@ export default function NotebookCapture() {
             {meshReady && (
               <Link
                 href="/mesh"
-                className="px-6 py-3 bg-[#00ff88] hover:bg-[#00e87a] text-black rounded-full font-medium transition-colors text-sm"
+                className="px-6 py-3 bg-[#5FD6C4] hover:bg-[#4FC2B1] text-black rounded-full font-medium transition-colors text-sm"
               >
                 View Mesh →
               </Link>

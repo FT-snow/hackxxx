@@ -52,7 +52,7 @@ export default function MeshScene({
           size={2}
           speed={0.3}
           opacity={0.4}
-          color="#00ff88"
+          color="#5FD6C4"
         />
       </Suspense>
       <OrbitControls

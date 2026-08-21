@@ -50,9 +50,9 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="mb-10 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
             <span className="label-meta text-gray-400">
-              Handwritten notes · Concept index · SIH 26
+              Handwritten notes · The well of memory
             </span>
           </motion.div>
 
@@ -117,7 +117,7 @@ export default function Home() {
                 className="group flex min-h-[13rem] flex-col justify-between bg-black p-7 hover:bg-[#0a0f0c]"
               >
                 <div>
-                  <span className="label-meta text-[#00ff88]/70">{s.n}</span>
+                  <span className="label-meta text-[#C8A45C]">{s.n}</span>
                   <h3 className="font-display mt-3 text-xl text-white">
                     {s.title}
                   </h3>
@@ -127,7 +127,7 @@ export default function Home() {
                 </div>
                 <a
                   href={s.href}
-                  className="label-meta mt-6 inline-block text-gray-500 group-hover:text-[#00ff88]"
+                  className="label-meta mt-6 inline-block text-gray-500 group-hover:text-[#5FD6C4]"
                 >
                   {s.cta} →
                 </a>

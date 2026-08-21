@@ -29,10 +29,10 @@ export default function Navbar() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2.5"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
             <Link
               href="/"
-              className="font-display text-lg text-white tracking-[0.18em] hover:text-[#00ff88]"
+              className="font-display text-lg text-white tracking-[0.18em] hover:text-[#5FD6C4]"
             >
               MIMIR
             </Link>

@@ -35,8 +35,8 @@
 :root {
 	--primary: #000000;
 	--secondary: #111111;
-	--accent: #00ff88;
-	--accent-hover: #00cc6a;
+	--accent: #5FD6C4;
+	--accent-hover: #3FB39F;
 	--text: #ffffff;
 	--text-muted: #888888;
 	--text-light: #cccccc;
@@ -47,7 +47,7 @@
 	--border: #222222;
 	--muted: #0a0a0a;
 	--muted-foreground: #666666;
-	--success: #00ff88;
+	--success: #5FD6C4;
 	--warning: #ffd700;
 	--error: #ff4444;
 }
@@ -193,7 +193,7 @@ textarea,
 }
 
 .text-gradient-green {
-	background: linear-gradient(90deg, var(--accent) 0%, #00cc6a 100%);
+	background: linear-gradient(90deg, var(--accent) 0%, #3FB39F 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
