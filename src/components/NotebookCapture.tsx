@@ -174,6 +174,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
             fileName: file.name,
             sessionId: sid,
             text: data.text,
+            subjectId,
           });
         }
         const base64Image = await fileToBase64(file);
@@ -182,6 +183,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
           fileName: file.name,
           mimeType: file.type,
           sessionId: sid,
+          subjectId,
         });
       }),
     );
