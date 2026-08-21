@@ -141,7 +141,11 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   }, []);
 
   const handleSubmit = async () => {
-    if (files.length === 0 || submitting || !subjectId) return;
+    if (files.length === 0 || submitting) return;
+    if (!subjectId) {
+      setBatchError('Pick a subject above (or create one) before digitizing.');
+      return;
+    }
 
     const sid = crypto.randomUUID();
     const batchFiles = files;
@@ -242,8 +246,8 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
         />
 
         <motion.button
-          whileHover={{ scale: files.length > 0 && !submitting ? 1.02 : 1 }}
-          whileTap={{ scale: files.length > 0 && !submitting ? 0.98 : 1 }}
+          whileHover={{ scale: files.length > 0 && subjectId && !submitting ? 1.02 : 1 }}
+          whileTap={{ scale: files.length > 0 && subjectId && !submitting ? 0.98 : 1 }}
           type="button"
           onClick={handleSubmit}
           disabled={files.length === 0 || submitting}
@@ -260,8 +264,9 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
             </>
           ) : (
             <span className="text-sm">
-              Digitize {files.length > 0 ? `${files.length} ` : ''}Page
-              {files.length !== 1 ? 's' : ''}
+              {files.length > 0 && !subjectId
+                ? 'Select a subject first'
+                : `Digitize ${files.length > 0 ? `${files.length} ` : ''}Page${files.length !== 1 ? 's' : ''}`}
             </span>
           )}
         </motion.button>
