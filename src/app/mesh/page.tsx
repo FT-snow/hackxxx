@@ -65,7 +65,7 @@ export default function MeshPage() {
           ) : (
             <>
               {usingDemo && (
-                <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-1.5 text-xs text-amber-300">
+                <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-md border border-white/[0.08] bg-black/70 px-4 py-1.5 label-meta text-gray-400">
                   Demo data — upload notebook pages to populate your mesh
                 </div>
               )}
@@ -77,7 +77,7 @@ export default function MeshPage() {
                 {legend.map(([color, label]) => (
                   <span
                     key={color}
-                    className="flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-gray-300"
+                    className="flex items-center gap-1.5 rounded-md bg-black/60 px-2.5 py-1 text-[10px] text-gray-300"
                   >
                     <span
                       className="h-2 w-2 rounded-full"
@@ -94,7 +94,7 @@ export default function MeshPage() {
             <motion.aside
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
-              className="absolute top-1/4 right-4 z-30 w-72 rounded-xl border border-[#5FD6C4]/20 bg-black/80 p-4 backdrop-blur"
+              className="absolute top-1/4 right-4 z-30 w-72 rounded-lg border border-white/[0.08] bg-black/80 p-4 backdrop-blur"
             >
               <button
                 type="button" onClick={() => setSelected(null)}
@@ -105,7 +105,7 @@ export default function MeshPage() {
               </button>
               <h3 className="pr-4 text-lg font-semibold">{selected.label}</h3>
               <div className="mt-2 flex items-center gap-2">
-                <span className="rounded-full bg-[#5FD6C4]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#5FD6C4] uppercase">
+                <span className="rounded-md bg-[#5FD6C4]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#5FD6C4] uppercase">
                   {selected.kind}
                 </span>
                 <span className="text-xs text-gray-400">
@@ -115,7 +115,7 @@ export default function MeshPage() {
               <button
                 type="button"
                 disabled
-                className="mt-4 w-full cursor-not-allowed rounded-lg border border-[#5FD6C4]/20 px-3 py-2 text-sm text-gray-500"
+                className="mt-4 w-full cursor-not-allowed rounded-md border border-white/[0.08] px-3 py-2 text-sm text-gray-500"
               >
                 Drill-in view coming soon
               </button>

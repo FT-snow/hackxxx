@@ -89,9 +89,9 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
   };
 
   return (
-    <div className="bg-[#181414] border border-gray-700 rounded-2xl overflow-hidden">
+    <div className="bg-[#0c0f0d] border border-white/[0.08] rounded-lg overflow-hidden">
       {/* Header */}
-      <div className="bg-[#181414] p-6 border-b border-gray-700">
+      <div className="bg-[#0c0f0d] p-6 border-b border-white/[0.08]">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-white mb-2">
@@ -146,7 +146,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
               {sections.map((section, index) => (
                 <div
                   key={index}
-                  className="bg-[#181414] rounded-lg p-4 border border-gray-700"
+                  className="bg-[#0c0f0d] rounded-lg p-4 border border-white/[0.08]"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-semibold text-white">
@@ -177,7 +177,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
                       <h4 className="text-sm font-medium text-gray-400 mb-1">
                         Student's Answer:
                       </h4>
-                      <p className="text-gray-300 text-sm leading-relaxed bg-[#181414] p-3 rounded border border-gray-700">
+                      <p className="text-gray-300 text-sm leading-relaxed bg-[#0c0f0d] p-3 rounded border border-white/[0.08]">
                         {section.answer}
                       </p>
                     </div>
@@ -216,7 +216,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
               <h3 className="text-lg font-medium text-white mb-2">
                 Raw Evaluation Result
               </h3>
-              <div className="text-left bg-[#181414] p-4 rounded-lg border border-gray-700">
+              <div className="text-left bg-[#0c0f0d] p-4 rounded-lg border border-white/[0.08]">
                 <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
                   {result}
                 </pre>

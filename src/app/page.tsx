@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Squares from '@/components/ui/SquareBg';
+import { BentoCard, BentoGrid } from '@/components/ui/Bento';
 
 const STEPS = [
   {
@@ -104,7 +105,7 @@ export default function Home() {
             </button>
           </motion.div>
 
-          <div className="grid gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
+          <BentoGrid>
             {STEPS.map((s, i) => (
               <motion.div
                 key={s.n}
@@ -114,26 +115,19 @@ export default function Home() {
                   duration: 0.55,
                   delay: 0.35 + i * 0.09,
                 }}
-                className="group flex min-h-[13rem] flex-col justify-between bg-black p-7 hover:bg-[#0a0f0c]"
               >
-                <div>
-                  <span className="label-meta text-[#C8A45C]">{s.n}</span>
-                  <h3 className="font-display mt-3 text-xl text-white">
-                    {s.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-500">
-                    {s.body}
-                  </p>
-                </div>
-                <a
-                  href={s.href}
-                  className="label-meta mt-6 inline-block text-gray-500 group-hover:text-[#5FD6C4]"
-                >
-                  {s.cta} →
-                </a>
+                <BentoCard n={s.n} title={s.title} className="min-h-[13rem]">
+                  {s.body}
+                  <a
+                    href={s.href}
+                    className="label-meta mt-6 inline-block text-gray-500 group-hover:text-[#5FD6C4]"
+                  >
+                    {s.cta} →
+                  </a>
+                </BentoCard>
               </motion.div>
             ))}
-          </div>
+          </BentoGrid>
         </div>
       </section>
     </div>

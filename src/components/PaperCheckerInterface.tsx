@@ -303,7 +303,7 @@ export default function PaperCheckerInterface({
             className="lg:col-span-2 space-y-6 lg:space-y-8"
           >
             {/* Upload Card */}
-            <div className="bg-[#181414] rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-700">
+            <div className="bg-[#0c0f0d] rounded-lg p-4 sm:p-6 lg:p-8 border border-white/[0.08]">
               <div className="flex items-center space-x-3 mb-6 sm:mb-8">
                 <div className="p-2 bg-[#16e16e] rounded-xl">
                   <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
@@ -314,7 +314,7 @@ export default function PaperCheckerInterface({
               </div>
 
               <Tabs defaultValue="question" className="w-full">
-                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-[#181414] rounded-xl p-1 gap-1 sm:gap-0">
+                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-[#0c0f0d] rounded-xl p-1 gap-1 sm:gap-0">
                   <TabsTrigger
                     value="question"
                     className="data-[state=active]:bg-[#16e16e] data-[state=active]:text-black rounded-lg transition-all duration-300 text-xs sm:text-sm py-2 sm:py-1.5"
@@ -364,11 +364,11 @@ export default function PaperCheckerInterface({
                       label="Upload Question Paper"
                     />
                     <div className="relative flex py-2 items-center">
-                      <div className="flex-grow border-t border-gray-700"></div>
+                      <div className="flex-grow border-t border-white/[0.08]"></div>
                       <span className="flex-shrink mx-4 text-gray-500 text-sm">
                         OR
                       </span>
-                      <div className="flex-grow border-t border-gray-700"></div>
+                      <div className="flex-grow border-t border-white/[0.08]"></div>
                     </div>
                     <textarea
                       value={state.questionPaper}
@@ -376,7 +376,7 @@ export default function PaperCheckerInterface({
                         updateState({ questionPaper: e.target.value })
                       }
                       placeholder="Paste question paper text here"
-                      className="w-full bg-[#181414] border border-gray-700 rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
+                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
                     />
                   </div>
                 </TabsContent>
@@ -410,11 +410,11 @@ export default function PaperCheckerInterface({
                       label="Upload Answer Key"
                     />
                     <div className="relative flex py-2 items-center">
-                      <div className="flex-grow border-t border-gray-700"></div>
+                      <div className="flex-grow border-t border-white/[0.08]"></div>
                       <span className="flex-shrink mx-4 text-gray-500 text-sm">
                         OR
                       </span>
-                      <div className="flex-grow border-t border-gray-700"></div>
+                      <div className="flex-grow border-t border-white/[0.08]"></div>
                     </div>
                     <textarea
                       value={state.answerKey}
@@ -422,7 +422,7 @@ export default function PaperCheckerInterface({
                         updateState({ answerKey: e.target.value })
                       }
                       placeholder="Paste answer key text here"
-                      className="w-full bg-[#181414] border border-gray-700 rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
+                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
                     />
                   </div>
                 </TabsContent>
@@ -456,11 +456,11 @@ export default function PaperCheckerInterface({
                       label="Upload Student Answers"
                     />
                     <div className="relative flex py-2 items-center">
-                      <div className="flex-grow border-t border-gray-700"></div>
+                      <div className="flex-grow border-t border-white/[0.08]"></div>
                       <span className="flex-shrink mx-4 text-gray-500 text-sm">
                         OR
                       </span>
-                      <div className="flex-grow border-t border-gray-700"></div>
+                      <div className="flex-grow border-t border-white/[0.08]"></div>
                     </div>
                     <textarea
                       value={state.studentAnswers}
@@ -468,7 +468,7 @@ export default function PaperCheckerInterface({
                         updateState({ studentAnswers: e.target.value })
                       }
                       placeholder="Paste student answers text here"
-                      className="w-full bg-[#181414] border border-gray-700 rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
+                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
                     />
                   </div>
                 </TabsContent>
@@ -484,7 +484,7 @@ export default function PaperCheckerInterface({
             className="space-y-6 lg:space-y-8"
           >
             {/* Progress Card */}
-            <div className="bg-[#181414] rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-700">
+            <div className="bg-[#0c0f0d] rounded-lg p-4 sm:p-6 lg:p-8 border border-white/[0.08]">
               <div className="flex items-center space-x-3 mb-6 sm:mb-8">
                 <div className="w-3 h-3 bg-[#16e16e] rounded-full"></div>
                 <h3 className="text-lg sm:text-xl font-bold text-white">Progress</h3>
@@ -515,8 +515,8 @@ export default function PaperCheckerInterface({
                     transition={{ delay: 0.1 * index }}
                     className={`rounded-xl p-4 transition-all duration-300 ${
                       item.value
-                        ? 'bg-[#181414] border border-[#16e16e]'
-                        : 'bg-[#181414] border border-gray-600'
+                        ? 'bg-[#0c0f0d] border border-[#16e16e]'
+                        : 'bg-[#0c0f0d] border border-white/[0.14]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -534,7 +534,7 @@ export default function PaperCheckerInterface({
                           <CheckCircle className="w-5 h-5 text-[#16e16e]" />
                         </motion.div>
                       ) : (
-                        <div className="w-5 h-5 border-2 border-gray-600 rounded-full"></div>
+                        <div className="w-5 h-5 border-2 border-white/[0.14] rounded-full"></div>
                       )}
                     </div>
 
@@ -569,7 +569,7 @@ export default function PaperCheckerInterface({
                     %
                   </span>
                 </div>
-                <div className="h-2 bg-[#181414] rounded-full overflow-hidden">
+                <div className="h-2 bg-[#0c0f0d] rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{
@@ -592,10 +592,10 @@ export default function PaperCheckerInterface({
               type="button"
               onClick={handleEvaluation}
               disabled={!canEvaluate || state.isProcessing}
-              className={`w-full py-4 sm:py-6 px-6 sm:px-8 rounded-2xl font-bold text-lg sm:text-xl transition-all duration-300 ${
+              className={`w-full py-4 sm:py-6 px-6 sm:px-8 rounded-lg font-bold text-lg sm:text-xl transition-all duration-300 ${
                 canEvaluate && !state.isProcessing
                   ? 'bg-[#16e16e] hover:bg-[#12c65c] text-black'
-                  : 'bg-[#181414] text-gray-500 cursor-not-allowed'
+                  : 'bg-[#0c0f0d] text-gray-500 cursor-not-allowed'
               }`}
             >
               {state.isProcessing ? (
@@ -665,7 +665,7 @@ export default function PaperCheckerInterface({
                 whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={resetForm}
-                className="px-8 sm:px-10 py-4 sm:py-5 bg-[#16e16e] hover:bg-[#12c65c] text-black rounded-2xl font-bold text-lg sm:text-xl transition-all duration-300"
+                className="px-8 sm:px-10 py-4 sm:py-5 bg-[#16e16e] hover:bg-[#12c65c] text-black rounded-lg font-bold text-lg sm:text-xl transition-all duration-300"
               >
                 <span className="flex items-center space-x-3">
                   <span>New Evaluation</span>

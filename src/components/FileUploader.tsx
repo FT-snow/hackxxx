@@ -79,7 +79,7 @@ export default function FileUploader({
         className={`w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
           isDragOver
             ? 'border-[#5FD6C4] bg-[#5FD6C4]/10'
-            : 'border-gray-600 hover:border-[#5FD6C4]'
+            : 'border-white/[0.14] hover:border-[#5FD6C4]'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -130,7 +130,7 @@ export default function FileUploader({
           {files.map((file, index) => (
             <div
               key={index}
-              className="flex items-center justify-between bg-gray-900 border border-gray-700 rounded-lg p-3"
+              className="flex items-center justify-between bg-gray-900 border border-white/[0.08] rounded-lg p-3"
             >
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-[#5FD6C4] rounded-lg flex items-center justify-center">

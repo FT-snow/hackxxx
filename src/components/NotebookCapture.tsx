@@ -3,7 +3,7 @@
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import { motion } from 'framer-motion';
-import { BrainCircuit, Loader2, ScanText, Sparkles } from 'lucide-react';
+import { BrainCircuit, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useAction, useMutation, useQuery } from 'convex/react';
@@ -174,14 +174,12 @@ export default function NotebookCapture() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-[#181414] rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-700"
+        className="rounded-lg border border-white/[0.08] bg-black p-7"
       >
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-2 bg-[#5FD6C4] rounded-xl">
-            <ScanText className="w-5 h-5 text-black" />
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white">
-            Capture Notebook Pages
+        <div className="mb-6">
+          <span className="label-meta text-[#C8A45C]">01 · Capture</span>
+          <h2 className="font-display mt-3 text-xl text-white">
+            Capture notebook pages
           </h2>
         </div>
 
@@ -199,25 +197,22 @@ export default function NotebookCapture() {
           type="button"
           onClick={handleSubmit}
           disabled={files.length === 0 || submitting}
-          className={`mt-6 w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
+          className={`label-meta mt-6 flex w-full items-center justify-center space-x-3 rounded-md py-4 transition-colors duration-300 ${
             files.length > 0 && !submitting
-              ? 'bg-[#5FD6C4] hover:bg-[#4FC2B1] text-black cursor-pointer'
-              : 'bg-[#181414] border border-gray-700 text-gray-500 cursor-not-allowed'
+              ? 'bg-[#5FD6C4] text-black hover:bg-[#4FC2B1] cursor-pointer'
+              : 'bg-[#0c0f0d] border border-white/[0.08] text-gray-500 cursor-not-allowed'
           }`}
         >
           {submitting ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span className="text-base">Digitizing pages…</span>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="text-sm">Digitizing pages…</span>
             </>
           ) : (
-            <>
-              <Sparkles className="w-5 h-5" />
-              <span className="text-base">
-                Digitize {files.length > 0 ? `${files.length} ` : ''}Page
-                {files.length !== 1 ? 's' : ''}
-              </span>
-            </>
+            <span className="text-sm">
+              Digitize {files.length > 0 ? `${files.length} ` : ''}Page
+              {files.length !== 1 ? 's' : ''}
+            </span>
           )}
         </motion.button>
 
@@ -238,10 +233,10 @@ export default function NotebookCapture() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center"
+          className="rounded-lg border border-white/[0.08] bg-black p-12 text-center"
         >
-          <BrainCircuit className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-300 mb-2">
+          <BrainCircuit className="mx-auto mb-4 h-8 w-8 text-gray-600" />
+          <h3 className="font-display mb-2 text-lg text-gray-300">
             No pages yet
           </h3>
           <p className="text-sm text-gray-500 max-w-md mx-auto">
@@ -263,18 +258,18 @@ export default function NotebookCapture() {
                 opacity: { duration: 1.5, repeat: Infinity, delay: i * 0.2 },
                 y: { duration: 0.4 },
               }}
-              className="rounded-xl border border-gray-700 bg-[#181414] p-4"
+              className="rounded-lg border border-white/[0.08] bg-black p-4"
             >
               <div className="flex items-start space-x-3">
-                <div className="w-16 h-16 rounded-lg bg-gray-800 flex-shrink-0" />
+                <div className="h-16 w-16 flex-shrink-0 rounded-md bg-[#141a17]" />
                 <div className="flex-1 space-y-2 pt-1">
-                  <div className="h-3 bg-gray-800 rounded w-3/4" />
-                  <div className="h-5 bg-gray-800 rounded-full w-1/3" />
+                  <div className="h-3 bg-[#141a17] rounded w-3/4" />
+                  <div className="h-5 bg-[#141a17] rounded-full w-1/3" />
                 </div>
               </div>
               <div className="mt-4 space-y-2">
-                <div className="h-2 bg-gray-800 rounded w-full" />
-                <div className="h-2 bg-gray-800 rounded w-5/6" />
+                <div className="h-2 bg-[#141a17] rounded w-full" />
+                <div className="h-2 bg-[#141a17] rounded w-5/6" />
               </div>
             </motion.div>
           ))}
@@ -290,14 +285,14 @@ export default function NotebookCapture() {
           className="space-y-4"
         >
           <div className="flex items-center justify-between">
-            <h3 className="text-lg sm:text-xl font-bold text-white">
+            <h3 className="font-display text-lg text-white sm:text-xl">
               Pages{' '}
               <span className="text-[#5FD6C4]">
                 {doneCount}/{pageList.length}
               </span>{' '}
               digitized
             </h3>
-            <div className="h-2 w-32 sm:w-48 bg-[#181414] border border-gray-700 rounded-full overflow-hidden">
+            <div className="h-2 w-32 sm:w-48 overflow-hidden rounded-full border border-white/[0.08] bg-[#0c0f0d]">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{
@@ -338,10 +333,10 @@ export default function NotebookCapture() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-[#181414] rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="flex rounded-lg border border-white/[0.08] bg-black flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div>
-            <h3 className="text-lg font-bold text-white mb-1">
+            <h3 className="font-display mb-1 text-lg text-white">
               Concept Mesh
             </h3>
             <p className="text-sm text-gray-400">
@@ -353,7 +348,7 @@ export default function NotebookCapture() {
             {meshReady && (
               <Link
                 href="/mesh"
-                className="px-6 py-3 bg-[#5FD6C4] hover:bg-[#4FC2B1] text-black rounded-full font-medium transition-colors text-sm"
+                className="label-meta rounded-md bg-white px-5 py-2.5 text-xs text-black transition-colors hover:bg-gray-200"
               >
                 View Mesh →
               </Link>
@@ -364,10 +359,10 @@ export default function NotebookCapture() {
               type="button"
               onClick={handleRebuild}
               disabled={rebuilding}
-              className={`px-6 py-3 rounded-full font-medium transition-colors text-sm flex items-center space-x-2 ${
+              className={`label-meta flex items-center space-x-2 rounded-md px-5 py-2.5 text-xs transition-colors ${
                 rebuilding
-                  ? 'bg-gray-800 text-gray-400 cursor-wait'
-                  : 'bg-white text-black hover:bg-gray-200 cursor-pointer'
+                  ? 'bg-[#141a17] text-gray-400 cursor-wait'
+                  : 'bg-[#5FD6C4] text-black hover:bg-[#4FC2B1] cursor-pointer'
               }`}
             >
               {rebuilding && <Loader2 className="w-4 h-4 animate-spin" />}
