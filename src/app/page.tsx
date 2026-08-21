@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Squares from '@/components/ui/SquareBg';
-import ScrollSequence from '@/components/ScrollSequence';
+import { AsciiArt } from '@/components/ui/vignette-bloom';
 import { BentoCard, BentoGrid } from '@/components/ui/Bento';
 
 const HERO_WORDS: Array<[string, boolean]> = [
@@ -60,80 +60,87 @@ export default function Home() {
         />
       </div>
 
-      <ScrollSequence>
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 inline-flex items-center gap-2.5 rounded-md border border-white/[0.14] bg-black/40 px-3 py-1.5 backdrop-blur-sm"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#E9C468]" />
-          <span className="label-meta text-gray-300">
-            Handwritten notes · The well of memory
-          </span>
-        </motion.div>
+      <section className="relative flex h-screen items-center overflow-hidden">
+        <AsciiArt className="absolute inset-0" />
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-black/90 via-black/50 to-black/15" />
+        <div className="absolute inset-x-0 bottom-0 z-[2] h-40 bg-gradient-to-t from-black to-transparent" />
 
-        <motion.h1
-          initial="hidden"
-          animate="show"
-          transition={{ staggerChildren: 0.07, delayChildren: 0.08 }}
-          className="font-display mb-6 max-w-4xl text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5rem]"
-        >
-          {HERO_WORDS.map(([word, muted], i) => (
-            <motion.span
-              key={i}
-              variants={{
-                hidden: { opacity: 0, y: '0.4em', filter: 'blur(12px)' },
-                show: {
-                  opacity: 1,
-                  y: '0em',
-                  filter: 'blur(0px)',
-                  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                },
+        <div className="relative z-[3] w-full max-w-5xl px-6 sm:px-10 lg:px-20">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 inline-flex items-center gap-2.5 rounded-md border border-white/[0.14] bg-black/40 px-3 py-1.5 backdrop-blur-sm"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#E9C468]" />
+            <span className="label-meta text-gray-300">
+              Handwritten notes · The well of memory
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial="hidden"
+            animate="show"
+            transition={{ staggerChildren: 0.07, delayChildren: 0.08 }}
+            className="font-display mb-6 max-w-4xl text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-7xl xl:text-[5rem]"
+          >
+            {HERO_WORDS.map(([word, muted], i) => (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: '0.4em', filter: 'blur(12px)' },
+                  show: {
+                    opacity: 1,
+                    y: '0em',
+                    filter: 'blur(0px)',
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className={`mr-[0.28em] inline-block ${muted ? 'text-gray-400' : ''}`}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16 }}
+            className="mb-8 max-w-xl text-base leading-relaxed text-gray-300 sm:text-lg"
+          >
+            Mimir reads your handwritten notes, tags every derivation and
+            diagram, and links what you wrote weeks apart into one searchable
+            concept mesh.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24 }}
+            className="flex flex-col gap-3 sm:flex-row sm:gap-4"
+          >
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = '/notebook';
               }}
-              className={`mr-[0.28em] inline-block ${muted ? 'text-gray-400' : ''}`}
+              className="label-meta rounded-md bg-white px-7 py-3.5 text-black hover:bg-gray-200 active:scale-[0.98] sm:w-auto"
             >
-              {word}
-            </motion.span>
-          ))}
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.16 }}
-          className="mb-8 max-w-xl text-base leading-relaxed text-gray-300 sm:text-lg"
-        >
-          Mimir reads your handwritten notes, tags every derivation and diagram,
-          and links what you wrote weeks apart into one searchable concept mesh.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.24 }}
-          className="flex flex-col gap-3 sm:flex-row sm:gap-4"
-        >
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href = '/notebook';
-            }}
-            className="label-meta rounded-md bg-white px-7 py-3.5 text-black hover:bg-gray-200 active:scale-[0.98] sm:w-auto"
-          >
-            Digitize my notes
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href = '/mesh';
-            }}
-            className="label-meta rounded-md border border-white/[0.2] bg-black/30 px-7 py-3.5 text-white backdrop-blur-sm hover:border-white/40 active:scale-[0.98] sm:w-auto"
-          >
-            Explore the mesh
-          </button>
-        </motion.div>
-      </ScrollSequence>
+              Digitize my notes
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = '/mesh';
+              }}
+              className="label-meta rounded-md border border-white/[0.2] bg-black/30 px-7 py-3.5 text-white backdrop-blur-sm hover:border-white/40 active:scale-[0.98] sm:w-auto"
+            >
+              Explore the mesh
+            </button>
+          </motion.div>
+        </div>
+      </section>
 
       <section className="relative flex min-h-screen items-center pt-24 pb-20">
         <div className="relative z-20 mr-auto ml-0 w-full max-w-5xl px-6 sm:px-10 lg:px-20">
