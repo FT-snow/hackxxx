@@ -29,6 +29,7 @@ export default defineSchema({
     ),
     ocrText: v.optional(v.string()),
     ocrConfidence: v.optional(v.number()),
+    notes: v.optional(v.string()),
     error: v.optional(v.string()),
   })
     .index('by_owner', ['ownerId'])

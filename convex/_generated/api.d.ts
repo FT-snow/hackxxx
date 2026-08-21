@@ -16,6 +16,7 @@ import type * as evaluate from "../evaluate.js";
 import type * as helpers from "../helpers.js";
 import type * as http from "../http.js";
 import type * as ingest from "../ingest.js";
+import type * as notes from "../notes.js";
 import type * as openrouter from "../openrouter.js";
 import type * as pages from "../pages.js";
 import type * as stats from "../stats.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   helpers: typeof helpers;
   http: typeof http;
   ingest: typeof ingest;
+  notes: typeof notes;
   openrouter: typeof openrouter;
   pages: typeof pages;
   stats: typeof stats;

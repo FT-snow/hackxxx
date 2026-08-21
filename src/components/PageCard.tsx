@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FileImage } from 'lucide-react';
+import { FileImage, NotebookPen } from 'lucide-react';
+import { useState } from 'react';
 
 export type PageStatus =
   | 'queued'
@@ -17,6 +18,7 @@ export interface NotebookPage {
   mimeType: string;
   status: PageStatus;
   ocrText?: string;
+  notes?: string;
   error?: string;
 }
 
@@ -54,6 +56,7 @@ interface PageCardProps {
 
 export default function PageCard({ page, previewUrl }: PageCardProps) {
   const status = STATUS_STYLES[page.status] ?? STATUS_STYLES.queued;
+  const [showNotes, setShowNotes] = useState(false);
 
   return (
     <motion.div
@@ -114,6 +117,34 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
           {page.ocrText.slice(0, 180)}
           {page.ocrText.length > 180 ? '…' : ''}
         </motion.p>
+      )}
+
+      {page.status === 'done' && !page.notes && (
+        <p className="label-meta mt-3 animate-pulse text-gray-600">
+          Writing revision notes…
+        </p>
+      )}
+
+      {page.notes && (
+        <div className="mt-3 border-t border-white/[0.06] pt-3">
+          <button
+            type="button"
+            onClick={() => setShowNotes((v) => !v)}
+            className="label-meta flex cursor-pointer items-center gap-1.5 text-gray-400 transition-colors hover:text-[#E9C468]"
+          >
+            <NotebookPen className="h-3.5 w-3.5" />
+            Revision notes {showNotes ? '−' : '+'}
+          </button>
+          {showNotes && (
+            <motion.pre
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-2 whitespace-pre-wrap font-mono text-xs leading-relaxed text-gray-300"
+            >
+              {page.notes}
+            </motion.pre>
+          )}
+        </div>
       )}
     </motion.div>
   );

@@ -104,32 +104,44 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24 }}
-            className="flex flex-col gap-3 sm:flex-row sm:gap-4"
+            className="flex w-full max-w-lg flex-col gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] sm:flex-row"
           >
             <button
               type="button"
               onClick={() => {
                 window.location.href = '/notebook';
               }}
-              className="label-meta rounded-md bg-white px-7 py-3.5 text-black hover:bg-gray-200 active:scale-[0.98] sm:w-auto"
+              className="group flex-1 cursor-pointer bg-black p-6 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
             >
-              Digitize my notes
+              <span className="label-meta text-[#C8A45C]">01</span>
+              <span className="font-display mt-2 block text-lg text-white">
+                Digitize my notes
+              </span>
+              <span className="label-meta mt-4 inline-block text-gray-500 transition-colors group-hover:text-[#E9C468]">
+                Start →
+              </span>
             </button>
             <button
               type="button"
               onClick={() => {
                 window.location.href = '/mesh';
               }}
-              className="label-meta rounded-md border border-white/[0.2] bg-black/30 px-7 py-3.5 text-white backdrop-blur-sm hover:border-white/40 active:scale-[0.98] sm:w-auto"
+              className="group flex-1 cursor-pointer bg-black p-6 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
             >
-              Explore the mesh
+              <span className="label-meta text-[#C8A45C]">02</span>
+              <span className="font-display mt-2 block text-lg text-white">
+                Explore the mesh
+              </span>
+              <span className="label-meta mt-4 inline-block text-gray-500 transition-colors group-hover:text-[#E9C468]">
+                Open →
+              </span>
             </button>
           </motion.div>
         </div>
       </section>
 
       <section className="relative flex min-h-screen items-center pt-24 pb-20">
-        <div className="relative z-20 mr-auto ml-0 w-full max-w-5xl px-6 sm:px-10 lg:px-20">
+        <div className="relative z-20 mx-auto w-full max-w-5xl px-6 sm:px-10 lg:px-20">
           <BentoGrid>
             {STEPS.map((s, i) => (
               <motion.div

@@ -108,6 +108,17 @@ interface NotebookCaptureProps {
   subjectId: Id<'subjects'> | null;
 }
 
+function PageNotesWriter({ pageId }: { pageId: Id<'pages'> }) {
+  const generate = useAction(api.notes.generateForPage);
+  const startedRef = useRef(false);
+  useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    generate({ pageId }).catch(() => {});
+  }, [generate, pageId]);
+  return null;
+}
+
 export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -381,6 +392,13 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
           {taggedPages.map((page) => (
             <PageEmbedder key={page._id} pageId={page._id as Id<'pages'>} />
           ))}
+
+          {/* Auto revision-note writers for finished pages */}
+          {pageList
+            .filter((p) => p.status === 'done' && !p.notes)
+            .map((p) => (
+              <PageNotesWriter key={`notes-${p._id}`} pageId={p._id as Id<'pages'>} />
+            ))}
         </motion.div>
       )}
 
