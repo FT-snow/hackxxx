@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, FileText, Sparkles, Zap } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useQuery } from 'convex/react';
+import { useEffect, useState } from 'react';
 import EvaluationResult from '@/components/EvaluationResult';
+import { api } from '@/convex/_generated/api';
 import FileUploader from '@/components/FileUploader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -19,6 +21,13 @@ interface PaperCheckerState {
   currentStep: 'input' | 'processing' | 'results';
   uploadingType: 'question' | 'answer' | 'student' | null;
   lastUpdated: 'question' | 'answer' | 'student' | null;
+  mode: 'auto' | 'manual';
+  quiz: Array<{ question: string; expectedAnswer: string; marks: number }> | null;
+  generatingQuiz: boolean;
+  quizError: string | null;
+  answersText: string;
+  sheetFiles: File[];
+  readingSheet: boolean;
 }
 
 interface PaperCheckerInterfaceProps {
@@ -40,7 +49,87 @@ export default function PaperCheckerInterface({
     currentStep: 'input',
     uploadingType: null,
     lastUpdated: null,
+    mode: 'auto',
+    quiz: null,
+    generatingQuiz: false,
+    quizError: null,
+    answersText: '',
+    sheetFiles: [],
+    readingSheet: false,
   });
+
+  const chunkTopics = useQuery(api.chunks.allForOwner, {
+    ownerId: 'demo-user',
+  });
+  const topics = [
+    ...new Set(
+      (chunkTopics ?? [])
+        .map((c) => c.conceptLabel)
+        .filter((l): l is string => Boolean(l)),
+    ),
+  ];
+
+  const generateQuiz = async () => {
+    if (topics.length === 0 || state.generatingQuiz) return;
+    updateState({ generatingQuiz: true, quizError: null });
+    try {
+      const res = await fetch('/api/quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topics }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to generate');
+      updateState({ quiz: data.questions, generatingQuiz: false });
+    } catch (e) {
+      updateState({
+        quizError: e instanceof Error ? e.message : 'Generation failed',
+        generatingQuiz: false,
+      });
+    }
+  };
+
+  const handleSheetChange = async (files: File[]) => {
+    updateState({ sheetFiles: files });
+    if (files.length === 0) return;
+    updateState({ readingSheet: true });
+    try {
+      const fd = new FormData();
+      files.forEach((f) => fd.append('files', f));
+      const res = await fetch('/api/ingest-sheet', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not read sheet');
+      updateState({ answersText: data.text, readingSheet: false });
+    } catch (e) {
+      console.error(e);
+      updateState({ readingSheet: false });
+    }
+  };
+
+  const handleAutoGrade = async () => {
+    if (!state.quiz || !state.answersText.trim()) return;
+    updateState({ isProcessing: true, currentStep: 'processing' });
+    try {
+      const res = await fetch('/api/grade-auto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          questions: state.quiz,
+          answersText: state.answersText,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Grading failed');
+      updateState({
+        evaluationResult: data.evaluation,
+        currentStep: 'results',
+        isProcessing: false,
+      });
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Grading failed');
+      updateState({ isProcessing: false, currentStep: 'input' });
+    }
+  };
 
   const updateState = (updates: Partial<PaperCheckerState>) => {
     setState((prev) => ({ ...prev, ...updates }));
@@ -193,8 +282,18 @@ export default function PaperCheckerInterface({
       currentStep: 'input',
       uploadingType: null,
       lastUpdated: null,
+      mode: state.mode,
+      quiz: null,
+      generatingQuiz: false,
+      quizError: null,
+      answersText: '',
+      sheetFiles: [],
+      readingSheet: false,
     });
   };
+
+  const generatingDisabled =
+    state.generatingQuiz || chunkTopics === undefined || topics.length === 0;
 
   const canEvaluate =
     state.questionPaper && state.answerKey && state.studentAnswers;
@@ -286,8 +385,127 @@ export default function PaperCheckerInterface({
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-8 sm:py-12">
+        {/* Mode toggle */}
+        <div className="mb-8 inline-flex rounded-md border border-white/[0.08] bg-black p-1">
+          {(['auto', 'manual'] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => updateState({ mode: m })}
+              className={`label-meta cursor-pointer rounded-md px-4 py-2 transition-colors ${
+                state.mode === m
+                  ? 'bg-[#E9C468] text-black'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              {m === 'auto' ? 'Generate & grade' : 'Full paper'}
+            </button>
+          ))}
+        </div>
+
         {/* Main Interface Grid */}
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+        {state.mode === 'auto' && (
+          <div className="grid gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] lg:grid-cols-2">
+            <div className="bg-black p-7 hover:bg-[#0a0f0c]">
+              <span className="label-meta text-[#C8A45C]">03 · Recall</span>
+              <h2 className="font-display mt-3 text-xl text-white">
+                The surprise test
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-gray-500">
+                Five questions drawn from your own captured notes
+                {topics.length > 0 && ` — ${topics.length} topic${topics.length !== 1 ? 's' : ''} detected`}.
+                No question paper, no answer key. The well sets the paper.
+              </p>
+              {state.quiz ? (
+                <ol className="mt-6 space-y-5">
+                  {state.quiz.map((q, i) => (
+                    <li key={i} className="flex gap-4">
+                      <span className="label-meta mt-1 flex-shrink-0 text-[#E9C468]">
+                        Q{i + 1}
+                      </span>
+                      <div>
+                        <p className="text-sm leading-relaxed text-gray-200">
+                          {q.question}
+                        </p>
+                        <span className="label-meta mt-1 block text-gray-600">
+                          {q.marks} marks
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <button
+                  type="button"
+                  onClick={generateQuiz}
+                  disabled={generatingDisabled}
+                  className={`label-meta mt-6 inline-block rounded-md px-5 py-2.5 text-xs transition-colors ${
+                    generatingDisabled
+                      ? 'cursor-not-allowed border border-white/[0.08] bg-[#0c0f0d] text-gray-500'
+                      : 'cursor-pointer bg-white text-black hover:bg-gray-200'
+                  }`}
+                >
+                  {state.generatingQuiz
+                    ? 'Setting the paper…'
+                    : topics.length === 0
+                      ? 'Capture notebook pages first'
+                      : 'Generate from my notes'}
+                </button>
+              )}
+              {state.quizError && (
+                <p className="mt-4 text-sm text-red-300">{state.quizError}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col bg-black p-7 hover:bg-[#0a0f0c]">
+              <span className="label-meta text-[#C8A45C]">Answer sheet</span>
+              <h2 className="font-display mt-3 text-xl text-white">
+                Write it, scan it, done
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-gray-500">
+                Upload photos or a PDF of your handwritten answers. Handwriting
+                is read back and graded against the generated paper.
+              </p>
+              <div className="mt-6 flex-1">
+                <FileUploader
+                  files={state.sheetFiles}
+                  onFilesChange={handleSheetChange}
+                  accept=".pdf,application/pdf,image/png,image/jpeg,image/webp,.txt"
+                  multiple
+                  label="Upload your answer sheet"
+                />
+              </div>
+              {state.readingSheet && (
+                <p className="label-meta mt-4 text-gray-400">Reading sheet…</p>
+              )}
+              {state.answersText && (
+                <>
+                  <textarea
+                    value={state.answersText}
+                    onChange={(e) =>
+                      updateState({ answersText: e.target.value })
+                    }
+                    placeholder="Extracted answers — edit if needed"
+                    className="mt-4 h-28 w-full resize-none rounded-lg border border-white/[0.08] bg-[#0c0f0d] p-3 text-sm text-gray-300"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAutoGrade}
+                    className="label-meta mt-4 w-full rounded-md bg-[#E9C468] py-3.5 text-xs text-black transition-colors hover:bg-[#F0D284]"
+                  >
+                    Grade my answers →
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div
+          className={`grid gap-6 lg:grid-cols-3 lg:gap-8 ${
+            state.mode === 'manual' ? '' : 'hidden'
+          }`}
+        >
           {/* Upload Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -633,7 +851,7 @@ export default function PaperCheckerInterface({
               className="space-y-2 mb-8 lg:mb-12"
             >
               <h2 className="font-display text-2xl text-white sm:text-3xl lg:text-4xl">
-                Evaluation complete
+                {state.mode === 'auto' ? 'The verdict' : 'Evaluation complete'}
               </h2>
               <p className="text-gray-400 text-base sm:text-lg">
                 Your analysis is ready for review
