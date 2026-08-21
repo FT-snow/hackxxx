@@ -47,6 +47,53 @@ ${chunks.map((c, i) => `${i + 1}. ${c}`).join('\n\n')}
 
 Return ONLY JSON: {"chunks": [...]}`;
 
+async function tagAndEmbed(
+  ctx: { runMutation: Function },
+  pageId: Id<'pages'>,
+  ocrText: string,
+  ocrConfidence?: number,
+) {
+  const texts = splitChunks(ocrText);
+  let tagged: Array<{
+    text: string;
+    kind: string;
+    conceptLabel?: string;
+    tags?: string[];
+    isRevision?: boolean;
+    confidence?: number;
+  }> = [];
+  try {
+    const tagRaw = await callOpenRouter(
+      MODELS.utility,
+      [{ role: 'user', content: TAG_PROMPT(texts) }],
+      { json: true, temperature: 0.2, maxTokens: 8192 },
+    );
+    tagged = TaggingResult.parse(JSON.parse(tagRaw)).chunks;
+  } catch {
+    tagged = [];
+  }
+
+  const chunks = texts.map((text, i) => ({
+    text,
+    kind: tagged[i]?.kind ?? guessKind(text),
+    conceptLabel: tagged[i]?.conceptLabel ?? guessConcept(text),
+    tags: tagged[i]?.tags ?? [],
+    isRevision: tagged[i]?.isRevision ?? /\[struck\]/i.test(text),
+    confidence: tagged[i]?.confidence ?? ocrConfidence ?? 0.5,
+  }));
+
+  await ctx.runMutation(internal.chunks.insertChunks, {
+    pageId,
+    ownerId: 'demo-user',
+    chunks,
+  });
+  await ctx.runMutation(api.pages.updateStatus, {
+    id: pageId,
+    status: 'tagged',
+  });
+  return chunks.length;
+}
+
 export const processFile = action({
   args: {
     base64Image: v.string(),
@@ -91,45 +138,8 @@ export const processFile = action({
         ocrConfidence,
       });
 
-      const texts = splitChunks(ocrText);
-      let tagged: Array<{
-        text: string;
-        kind: string;
-        conceptLabel?: string;
-        tags?: string[];
-        isRevision?: boolean;
-        confidence?: number;
-      }> = [];
-      try {
-        const tagRaw = await callOpenRouter(
-          MODELS.utility,
-          [{ role: 'user', content: TAG_PROMPT(texts) }],
-          { json: true, temperature: 0.2, maxTokens: 8192 },
-        );
-        tagged = TaggingResult.parse(JSON.parse(tagRaw)).chunks;
-      } catch {
-        tagged = [];
-      }
-
-      const chunks = texts.map((text, i) => ({
-        text,
-        kind: tagged[i]?.kind ?? guessKind(text),
-        conceptLabel: tagged[i]?.conceptLabel ?? guessConcept(text),
-        tags: tagged[i]?.tags ?? [],
-        isRevision: tagged[i]?.isRevision ?? /\[struck\]/i.test(text),
-        confidence: tagged[i]?.confidence ?? ocrConfidence ?? 0.5,
-      }));
-
-      await ctx.runMutation(internal.chunks.insertChunks, {
-        pageId,
-        ownerId: 'demo-user',
-        chunks,
-      });
-      await ctx.runMutation(api.pages.updateStatus, {
-        id: pageId,
-        status: 'tagged',
-      });
-      return { pageId, chunkCount: chunks.length };
+      const chunkCount = await tagAndEmbed(ctx, pageId, ocrText, ocrConfidence);
+      return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {
         id: pageId,
@@ -156,3 +166,42 @@ function guessConcept(text: string): string {
   if (diag) return diag[1].trim().slice(0, 40);
   return 'Untitled';
 }
+
+export const processTextPage = action({
+  args: {
+    fileName: v.string(),
+    sessionId: v.string(),
+    text: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const storageId = await ctx.storage.store(
+      new Blob([args.text], { type: 'text/plain' }),
+    );
+    const pageId: Id<'pages'> = await ctx.runMutation(api.pages.createPage, {
+      storageId,
+      fileName: args.fileName,
+      mimeType: 'application/pdf',
+      sessionId: args.sessionId,
+    });
+
+    try {
+      await ctx.runMutation(api.pages.updateStatus, {
+        id: pageId,
+        status: 'ocr',
+      });
+      await ctx.runMutation(api.pages.setOcr, {
+        id: pageId,
+        ocrText: args.text,
+      });
+      const chunkCount = await tagAndEmbed(ctx, pageId, args.text);
+      return { pageId, chunkCount };
+    } catch (err) {
+      await ctx.runMutation(api.pages.updateStatus, {
+        id: pageId,
+        status: 'error',
+        error: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
+    }
+  },
+});

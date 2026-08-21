@@ -115,6 +115,7 @@ export default function NotebookCapture() {
   const [rebuildError, setRebuildError] = useState<string | null>(null);
 
   const processFile = useAction(api.ingest.processFile);
+  const processTextPage = useAction(api.ingest.processTextPage);
   const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
 
   const pages = useQuery(
@@ -143,6 +144,26 @@ export default function NotebookCapture() {
 
     const results = await Promise.allSettled(
       batchFiles.map(async (file) => {
+        if (
+          file.type === 'application/pdf' ||
+          file.name.toLowerCase().endsWith('.pdf')
+        ) {
+          const fd = new FormData();
+          fd.append('file', file);
+          const res = await fetch('/api/extract-pdf', {
+            method: 'POST',
+            body: fd,
+          });
+          const data = (await res.json()) as { text?: string; error?: string };
+          if (!res.ok || !data.text) {
+            throw new Error(data.error ?? 'PDF extraction failed');
+          }
+          return processTextPage({
+            fileName: file.name,
+            sessionId: sid,
+            text: data.text,
+          });
+        }
         const base64Image = await fileToBase64(file);
         return processFile({
           base64Image,
@@ -201,7 +222,7 @@ export default function NotebookCapture() {
         <FileUploader
           files={files}
           onFilesChange={setFiles}
-          accept="image/*"
+          accept="image/png,image/jpeg,image/webp,.pdf,application/pdf"
           multiple
           label="Upload notebook page photos"
         />
