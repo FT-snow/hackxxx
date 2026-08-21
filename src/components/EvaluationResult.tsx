@@ -85,7 +85,7 @@ export default function EvaluationResult({ result }: EvaluationResultProps) {
   };
 
   const getPercentageColor = (_percent: number) => {
-    return 'text-[#16e16e]';
+    return 'text-[#E9C468]';
   };
 
   return (

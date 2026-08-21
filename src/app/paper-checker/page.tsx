@@ -18,7 +18,7 @@ export default function PaperCheckerPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235FD6C4' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%235FD6C4'%3E01%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E9C468' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%23E9C468'%3E01%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
       </div>
@@ -35,7 +35,7 @@ export default function PaperCheckerPage() {
               className="mb-10 max-w-2xl"
             >
               <div className="mb-5 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#E9C468]" />
                 <span className="label-meta text-gray-400">
                   AI paper evaluation
                 </span>

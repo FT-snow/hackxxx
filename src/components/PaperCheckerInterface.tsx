@@ -1,14 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {
-  ArrowRight,
-  CheckCircle,
-  FileText,
-  Sparkles,
-  Upload,
-  Zap,
-} from 'lucide-react';
+import { ArrowRight, CheckCircle, FileText, Sparkles, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import EvaluationResult from '@/components/EvaluationResult';
 import FileUploader from '@/components/FileUploader';
@@ -227,9 +220,9 @@ export default function PaperCheckerInterface({
               }}
               className="relative w-24 h-24 mx-auto"
             >
-              <div className="relative w-24 h-24 border-4 border-[#16e16e] rounded-full">
+              <div className="relative w-24 h-24 border-4 border-[#E9C468] rounded-full">
                 <div className="w-full h-full bg-black rounded-full flex items-center justify-center">
-                  <Zap className="w-8 h-8 text-[#16e16e]" />
+                  <Zap className="w-8 h-8 text-[#E9C468]" />
                 </div>
               </div>
             </motion.div>
@@ -247,7 +240,7 @@ export default function PaperCheckerInterface({
                 }}
                 className="absolute inset-0"
               >
-                <div className="w-2 h-2 bg-[#16e16e] rounded-full absolute -top-1 left-1/2 transform -translate-x-1/2"></div>
+                <div className="w-2 h-2 bg-[#E9C468] rounded-full absolute -top-1 left-1/2 transform -translate-x-1/2"></div>
               </motion.div>
             ))}
           </div>
@@ -258,7 +251,7 @@ export default function PaperCheckerInterface({
             transition={{ delay: 0.3 }}
             className="space-y-4"
           >
-            <h2 className="text-3xl font-bold text-[#16e16e]">
+            <h2 className="text-3xl font-bold text-[#E9C468]">
               AI Analysis in Progress
             </h2>
             <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
@@ -280,7 +273,7 @@ export default function PaperCheckerInterface({
                     repeat: Infinity,
                     delay: i * 0.2,
                   }}
-                  className="w-2 h-2 bg-[#16e16e] rounded-full"
+                  className="w-2 h-2 bg-[#E9C468] rounded-full"
                 />
               ))}
             </div>
@@ -304,32 +297,34 @@ export default function PaperCheckerInterface({
           >
             {/* Upload Card */}
             <div className="bg-[#0c0f0d] rounded-lg p-4 sm:p-6 lg:p-8 border border-white/[0.08]">
-              <div className="flex items-center space-x-3 mb-6 sm:mb-8">
-                <div className="p-2 bg-[#16e16e] rounded-xl">
-                  <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
-                  Upload Documents
+              <div className="mb-6 sm:mb-8">
+                <span className="label-meta text-[#C8A45C]">03 · Recall</span>
+                <h2 className="font-display mt-3 text-xl text-white">
+                  Upload documents
                 </h2>
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-gray-500">
+                  Question paper, answer key, student answers — then let the
+                  well judge.
+                </p>
               </div>
 
               <Tabs defaultValue="question" className="w-full">
-                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-[#0c0f0d] rounded-xl p-1 gap-1 sm:gap-0">
+                <TabsList className="grid w-full grid-cols-1 gap-1 rounded-lg border border-white/[0.08] bg-black p-1 sm:grid-cols-3 sm:gap-0">
                   <TabsTrigger
                     value="question"
-                    className="data-[state=active]:bg-[#16e16e] data-[state=active]:text-black rounded-lg transition-all duration-300 text-xs sm:text-sm py-2 sm:py-1.5"
+                    className="data-[state=active]:bg-[#E9C468] data-[state=active]:text-black label-meta rounded-md py-2.5 transition-colors duration-300 data-[state=active]:font-medium"
                   >
                     Question Paper
                   </TabsTrigger>
                   <TabsTrigger
                     value="answer"
-                    className="data-[state=active]:bg-[#16e16e] data-[state=active]:text-black rounded-lg transition-all duration-300 text-xs sm:text-sm py-2 sm:py-1.5"
+                    className="data-[state=active]:bg-[#E9C468] data-[state=active]:text-black label-meta rounded-md py-2.5 transition-colors duration-300 data-[state=active]:font-medium"
                   >
                     Answer Key
                   </TabsTrigger>
                   <TabsTrigger
                     value="student"
-                    className="data-[state=active]:bg-[#16e16e] data-[state=active]:text-black rounded-lg transition-all duration-300 text-xs sm:text-sm py-2 sm:py-1.5"
+                    className="data-[state=active]:bg-[#E9C468] data-[state=active]:text-black label-meta rounded-md py-2.5 transition-colors duration-300 data-[state=active]:font-medium"
                   >
                     Student Answers
                   </TabsTrigger>
@@ -348,8 +343,8 @@ export default function PaperCheckerInterface({
                           animate={{ scale: 1 }}
                           className="flex items-center space-x-1"
                         >
-                          <CheckCircle className="w-5 h-5 text-[#16e16e]" />
-                          <span className="text-[#16e16e] text-sm">
+                          <CheckCircle className="w-5 h-5 text-[#E9C468]" />
+                          <span className="text-[#E9C468] text-sm">
                             Uploaded
                           </span>
                         </motion.div>
@@ -376,7 +371,7 @@ export default function PaperCheckerInterface({
                         updateState({ questionPaper: e.target.value })
                       }
                       placeholder="Paste question paper text here"
-                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
+                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#E9C468] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
                     />
                   </div>
                 </TabsContent>
@@ -394,8 +389,8 @@ export default function PaperCheckerInterface({
                           animate={{ scale: 1 }}
                           className="flex items-center space-x-1"
                         >
-                          <CheckCircle className="w-5 h-5 text-[#16e16e]" />
-                          <span className="text-[#16e16e] text-sm">
+                          <CheckCircle className="w-5 h-5 text-[#E9C468]" />
+                          <span className="text-[#E9C468] text-sm">
                             Uploaded
                           </span>
                         </motion.div>
@@ -422,7 +417,7 @@ export default function PaperCheckerInterface({
                         updateState({ answerKey: e.target.value })
                       }
                       placeholder="Paste answer key text here"
-                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
+                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#E9C468] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
                     />
                   </div>
                 </TabsContent>
@@ -440,8 +435,8 @@ export default function PaperCheckerInterface({
                           animate={{ scale: 1 }}
                           className="flex items-center space-x-1"
                         >
-                          <CheckCircle className="w-5 h-5 text-[#16e16e]" />
-                          <span className="text-[#16e16e] text-sm">
+                          <CheckCircle className="w-5 h-5 text-[#E9C468]" />
+                          <span className="text-[#E9C468] text-sm">
                             Uploaded
                           </span>
                         </motion.div>
@@ -468,7 +463,7 @@ export default function PaperCheckerInterface({
                         updateState({ studentAnswers: e.target.value })
                       }
                       placeholder="Paste student answers text here"
-                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#16e16e] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
+                      className="w-full bg-[#0c0f0d] border border-white/[0.08] rounded-lg p-4 h-32 focus:ring-2 focus:ring-[#E9C468] focus:border-transparent transition-all duration-300 text-gray-300 resize-none"
                     />
                   </div>
                 </TabsContent>
@@ -486,8 +481,8 @@ export default function PaperCheckerInterface({
             {/* Progress Card */}
             <div className="bg-[#0c0f0d] rounded-lg p-4 sm:p-6 lg:p-8 border border-white/[0.08]">
               <div className="flex items-center space-x-3 mb-6 sm:mb-8">
-                <div className="w-3 h-3 bg-[#16e16e] rounded-full"></div>
-                <h3 className="text-lg sm:text-xl font-bold text-white">Progress</h3>
+                <span className="label-meta text-[#C8A45C]">Status</span>
+                <h3 className="font-display text-lg text-white">Progress</h3>
               </div>
 
               <div className="space-y-4">
@@ -513,15 +508,15 @@ export default function PaperCheckerInterface({
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 * index }}
-                    className={`rounded-xl p-4 transition-all duration-300 ${
+                    className={`rounded-md p-4 transition-all duration-300 ${
                       item.value
-                        ? 'bg-[#0c0f0d] border border-[#16e16e]'
-                        : 'bg-[#0c0f0d] border border-white/[0.14]'
+                        ? 'bg-black border border-[#E9C468]/40'
+                        : 'bg-black border border-white/[0.08]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span
-                        className={`font-medium ${item.value ? 'text-[#16e16e]' : 'text-gray-400'}`}
+                        className={`font-medium ${item.value ? 'text-[#E9C468]' : 'text-gray-400'}`}
                       >
                         {item.label}
                       </span>
@@ -531,7 +526,7 @@ export default function PaperCheckerInterface({
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ type: 'spring', stiffness: 300 }}
                         >
-                          <CheckCircle className="w-5 h-5 text-[#16e16e]" />
+                          <CheckCircle className="w-5 h-5 text-[#E9C468]" />
                         </motion.div>
                       ) : (
                         <div className="w-5 h-5 border-2 border-white/[0.14] rounded-full"></div>
@@ -543,7 +538,7 @@ export default function PaperCheckerInterface({
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
-                        className="mt-2 h-1 bg-[#16e16e] rounded-full"
+                        className="mt-2 h-1 bg-[#E9C468] rounded-full"
                       />
                     )}
                   </motion.div>
@@ -556,7 +551,7 @@ export default function PaperCheckerInterface({
                   <span className="text-sm text-gray-400">
                     Overall Progress
                   </span>
-                  <span className="text-sm font-medium text-[#16e16e]">
+                  <span className="text-sm font-medium text-[#E9C468]">
                     {Math.round(
                       ([
                         state.questionPaper,
@@ -576,7 +571,7 @@ export default function PaperCheckerInterface({
                       width: `${([state.questionPaper, state.answerKey, state.studentAnswers].filter(Boolean).length / 3) * 100}%`,
                     }}
                     transition={{ duration: 0.5 }}
-                    className="h-full bg-[#16e16e] rounded-full"
+                    className="h-full bg-[#E9C468] rounded-full"
                   />
                 </div>
               </div>
@@ -592,10 +587,10 @@ export default function PaperCheckerInterface({
               type="button"
               onClick={handleEvaluation}
               disabled={!canEvaluate || state.isProcessing}
-              className={`w-full py-4 sm:py-6 px-6 sm:px-8 rounded-lg font-bold text-lg sm:text-xl transition-all duration-300 ${
+              className={`label-meta w-full rounded-md px-6 py-4 text-sm transition-colors duration-300 ${
                 canEvaluate && !state.isProcessing
-                  ? 'bg-[#16e16e] hover:bg-[#12c65c] text-black'
-                  : 'bg-[#0c0f0d] text-gray-500 cursor-not-allowed'
+                  ? 'bg-[#E9C468] text-black hover:bg-[#F0D284] cursor-pointer'
+                  : 'border border-white/[0.08] bg-[#0c0f0d] text-gray-500 cursor-not-allowed'
               }`}
             >
               {state.isProcessing ? (
@@ -607,15 +602,15 @@ export default function PaperCheckerInterface({
                       repeat: Infinity,
                       ease: 'linear',
                     }}
-                    className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-gray-400 border-t-transparent rounded-full"
+                    className="h-4 w-4 animate-spin"
                   />
-                  <span className="text-sm sm:text-base">Processing Documents...</span>
+                  <span>Evaluating…</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
-                  <span className="text-sm sm:text-base">Generate AI Evaluation</span>
-                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="flex items-center justify-center space-x-2.5">
+                  <Sparkles className="h-4 w-4" />
+                  <span>Grade the paper</span>
+                  <ArrowRight className="h-4 w-4" />
                 </div>
               )}
             </motion.button>
@@ -637,8 +632,8 @@ export default function PaperCheckerInterface({
               transition={{ delay: 0.5 }}
               className="space-y-2 mb-8 lg:mb-12"
             >
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-                Evaluation Complete
+              <h2 className="font-display text-2xl text-white sm:text-3xl lg:text-4xl">
+                Evaluation complete
               </h2>
               <p className="text-gray-400 text-base sm:text-lg">
                 Your analysis is ready for review
@@ -665,11 +660,11 @@ export default function PaperCheckerInterface({
                 whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={resetForm}
-                className="px-8 sm:px-10 py-4 sm:py-5 bg-[#16e16e] hover:bg-[#12c65c] text-black rounded-lg font-bold text-lg sm:text-xl transition-all duration-300"
+                className="label-meta rounded-md bg-white px-7 py-3.5 text-xs text-black transition-colors hover:bg-gray-200"
               >
-                <span className="flex items-center space-x-3">
-                  <span>New Evaluation</span>
-                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                <span className="flex items-center space-x-2.5">
+                  <span>New evaluation</span>
+                  <ArrowRight className="h-4 w-4" />
                 </span>
               </motion.button>
             </motion.div>
