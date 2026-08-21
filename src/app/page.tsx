@@ -46,6 +46,39 @@ const reveal = {
   viewport: { once: false, amount: 0.4 },
 };
 
+const FEATURES = [
+  {
+    rune: 'ᚠ',
+    title: 'Structure-aware OCR',
+    body: 'A vision model reads your handwriting the way it is written — headings, numbered questions and derivations come back as clean text with LaTeX math intact.',
+  },
+  {
+    rune: 'ᚱ',
+    title: 'Automatic concept tagging',
+    body: 'Every page splits into chunks classified as question, derivation, definition or diagram — each one labeled with its concept before you lift a finger.',
+  },
+  {
+    rune: 'ᛗ',
+    title: 'Cross-day semantic linking',
+    body: 'Embeddings computed on-device connect what you wrote weeks apart. Your revision summaries find their original derivations automatically.',
+  },
+  {
+    rune: 'ᚦ',
+    title: '3D concept mesh',
+    body: 'Your entire syllabus rendered as an interactive graph — clusters per topic, threads of similarity, drill in from any node.',
+  },
+  {
+    rune: 'ᚨ',
+    title: 'grAIder paper checker',
+    body: 'Practice questions generated strictly from your own notes, handwritten answer sheets graded with partial credit and constructive feedback.',
+  },
+  {
+    rune: 'ᛁ',
+    title: 'Instant revision notes',
+    body: 'Each digitized page is distilled into TL;DR, key points, formulas and recall questions the moment processing finishes.',
+  },
+];
+
 export default function Home() {
   return (
     <div className="overflow-x-clip text-white">
@@ -171,6 +204,33 @@ export default function Home() {
                 {MARQUEE.repeat(4)}
               </span>
             </div>
+          </div>
+
+          <div className="mt-24">
+            <span className="label-meta text-[#C8A45C]">What Mimir does</span>
+            <h2 className="font-display mt-3 mb-8 text-2xl sm:text-3xl">
+              Built for the way you{' '}
+              <span className="text-gray-400">actually study</span>
+            </h2>
+            <BentoGrid cols={3}>
+              {FEATURES.map((f) => (
+                <motion.div
+                  key={f.title}
+                  {...reveal}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="flex h-full flex-col bg-black p-6">
+                    <span className="mb-3 text-lg text-[#5FD6C4]">{f.rune}</span>
+                    <h3 className="font-display text-base text-white">
+                      {f.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-500">
+                      {f.body}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </BentoGrid>
           </div>
         </div>
       </section>
