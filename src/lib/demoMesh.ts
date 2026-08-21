@@ -1,0 +1,131 @@
+import type { MeshPayload } from './types';
+
+export const DEMO_MESH: MeshPayload = {
+  nodes: [
+    {
+      id: 'laplace-derivatives',
+      label: 'Laplace of derivatives',
+      kind: 'subject',
+      size: 5,
+      color: '#00ff88',
+      clusterId: 0,
+    },
+    {
+      id: 'laplace-integrals',
+      label: 'Laplace of integrals',
+      kind: 'subject',
+      size: 3,
+      color: '#00ff88',
+      clusterId: 0,
+    },
+    {
+      id: 'inverse-laplace',
+      label: 'Inverse Laplace',
+      kind: 'subject',
+      size: 2,
+      color: '#00ff88',
+      clusterId: 0,
+    },
+    {
+      id: 'fourier-coefficients',
+      label: 'Fourier coefficients',
+      kind: 'subject',
+      size: 4,
+      color: '#8CB0C4',
+      clusterId: 1,
+    },
+    {
+      id: 'convergence-gibbs',
+      label: 'Convergence & Gibbs',
+      kind: 'subject',
+      size: 3,
+      color: '#8CB0C4',
+      clusterId: 1,
+    },
+    {
+      id: 'parseval-theorem',
+      label: 'Parseval theorem',
+      kind: 'subject',
+      size: 2,
+      color: '#8CB0C4',
+      clusterId: 1,
+    },
+    {
+      id: 'characteristic-equation',
+      label: 'Characteristic equation',
+      kind: 'subject',
+      size: 4,
+      color: '#D4A574',
+      clusterId: 2,
+    },
+    {
+      id: 'damped-oscillation',
+      label: 'Damped oscillation',
+      kind: 'subject',
+      size: 3,
+      color: '#D4A574',
+      clusterId: 2,
+    },
+    {
+      id: 'resonance',
+      label: 'Resonance',
+      kind: 'subject',
+      size: 2,
+      color: '#D4A574',
+      clusterId: 2,
+    },
+  ],
+  edges: [
+    { source: 'laplace-derivatives', target: 'laplace-integrals', weight: 0.9 },
+    {
+      source: 'laplace-derivatives',
+      target: 'inverse-laplace',
+      weight: 0.85,
+    },
+    {
+      source: 'laplace-integrals',
+      target: 'inverse-laplace',
+      weight: 0.82,
+    },
+    {
+      source: 'fourier-coefficients',
+      target: 'convergence-gibbs',
+      weight: 0.88,
+    },
+    {
+      source: 'fourier-coefficients',
+      target: 'parseval-theorem',
+      weight: 0.84,
+    },
+    {
+      source: 'convergence-gibbs',
+      target: 'parseval-theorem',
+      weight: 0.8,
+    },
+    {
+      source: 'characteristic-equation',
+      target: 'damped-oscillation',
+      weight: 0.92,
+    },
+    {
+      source: 'characteristic-equation',
+      target: 'resonance',
+      weight: 0.86,
+    },
+    {
+      source: 'damped-oscillation',
+      target: 'resonance',
+      weight: 0.83,
+    },
+    {
+      source: 'laplace-derivatives',
+      target: 'characteristic-equation',
+      weight: 0.62,
+    },
+    {
+      source: 'fourier-coefficients',
+      target: 'resonance',
+      weight: 0.57,
+    },
+  ],
+};

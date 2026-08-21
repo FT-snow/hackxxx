@@ -1,13 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useState } from 'react';
 import Squares from '@/components/ui/SquareBg';
 import Navbar from '@/components/Navbar';
 
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [_isMenuOpen, _setIsMenuOpen] = useState(false);
 
   const stats: Array<{ number: string; label: string }> = [
   ];
@@ -89,9 +88,16 @@ export default function Home() {
               <button
                 type="button"
                 className="cursor-pointer bg-white text-black px-6 py-3 sm:px-8 sm:py-4 rounded-full font-medium text-base sm:text-lg hover:bg-gray-200 transition-colors flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto justify-center sm:justify-start"
+                onClick={() => {window.location.href = "/notebook"}}
+              >
+                <span>Digitize my notes</span>
+              </button>
+              <button
+                type="button"
+                className="mt-3 sm:mt-0 sm:ml-4 cursor-pointer bg-transparent text-white border border-gray-600 px-6 py-3 sm:px-8 sm:py-4 rounded-full font-medium text-base sm:text-lg hover:border-[#00ff88] hover:text-[#00ff88] transition-colors flex items-center w-full sm:w-auto justify-center sm:justify-start"
                 onClick={() => {window.location.href = "/paper-checker"}}
               >
-                <span>Start</span>
+                <span>Paper Checker</span>
               </button>
             </motion.div>
 

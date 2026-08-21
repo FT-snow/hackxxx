@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Outfit } from 'next/font/google';
+import ConvexClientProvider from '@/components/ConvexClientProvider';
 import './globals.css';
 
 const outfit = Outfit({ subsets: ['latin'] });
@@ -24,9 +25,11 @@ export default function RootLayout({
         className={`h-full antialiased text-white ${outfit.className}`}
         style={{ backgroundColor: '#000000' }}
       >
-        <div id="root" className="h-full">
-          {children}
-        </div>
+        <ConvexClientProvider>
+          <div id="root" className="h-full">
+            {children}
+          </div>
+        </ConvexClientProvider>
       </body>
     </html>
   );

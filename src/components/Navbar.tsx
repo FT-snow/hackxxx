@@ -41,6 +41,18 @@ export default function Navbar() {
             >
               Source Code
             </Link>
+            <Link
+              href="/paper-checker"
+              className="text-white hover:text-[#00ff88] transition-colors text-sm xl:text-base"
+            >
+              Paper Checker
+            </Link>
+            <Link
+              href="/notebook"
+              className="text-white hover:text-[#00ff88] transition-colors text-sm xl:text-base"
+            >
+              Notes
+            </Link>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -112,6 +124,13 @@ export default function Navbar() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Paper Checker
+              </Link>
+              <Link
+                href="/notebook"
+                className="text-gray-300 hover:text-[#00ff88] transition-colors px-3 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Notes
               </Link>
             </div>
           </motion.div>
