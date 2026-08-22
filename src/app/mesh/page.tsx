@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery } from 'convex/react';
+import { useAction, useMutation, useQuery } from 'convex/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -153,6 +153,24 @@ function NotesSection({ conceptId }: { conceptId: string }) {
 export default function MeshPage() {
   const [selected, setSelected] = useState<MeshNode | null>(null);
   const payload = useQuery(api.concepts.meshPayload, {});
+  const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
+  const [rebuilding, setRebuilding] = useState(false);
+  const [rebuildMsg, setRebuildMsg] = useState<string | null>(null);
+
+  const handleRebuild = () => {
+    if (rebuilding) return;
+    setRebuilding(true);
+    setRebuildMsg(null);
+    rebuildConcepts({})
+      .then(() => {
+        setRebuildMsg('Mesh rebuilt');
+        setTimeout(() => setRebuildMsg(null), 2500);
+      })
+      .catch(() => {
+        setRebuildMsg('Rebuild failed — digitize pages first');
+      })
+      .finally(() => setRebuilding(false));
+  };
 
   const active = payload && payload.nodes.length > 0 ? payload : null;
 
@@ -226,6 +244,21 @@ export default function MeshPage() {
                       {label}
                     </span>
                   ))}
+                </div>
+                <div className="absolute right-4 bottom-4 z-30 flex items-center gap-3">
+                  {rebuildMsg && (
+                    <span className="label-meta text-[#E9C468]">
+                      {rebuildMsg}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleRebuild}
+                    disabled={rebuilding}
+                    className="label-meta cursor-pointer rounded-md border border-[#E9C468]/40 bg-black/70 px-4 py-2 text-xs text-[#E9C468] backdrop-blur transition-colors hover:bg-[#E9C468]/10 disabled:cursor-wait disabled:opacity-60"
+                  >
+                    {rebuilding ? 'Rebuilding…' : 'Rebuild mesh'}
+                  </button>
                 </div>
               </>
             )}

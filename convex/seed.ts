@@ -3,7 +3,7 @@ import { action } from './_generated/server';
 import { api, internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { requireUser } from './helpers';
-import { callOpenRouter } from './openrouter';
+import { callOpenRouter, parseJsonLoose } from './openrouter';
 import { MODELS, TaggingResult } from '../src/lib/types';
 
 const QM_MASTER = `QUANTUM MECHANICS: foundations of the microscopic world.
@@ -180,7 +180,7 @@ export const seedQuantumDemo = action({
         [{ role: 'user', content: TAG_PROMPT(texts) }],
         { json: true, temperature: 0.2, maxTokens: 8192 },
       );
-      tagged = TaggingResult.parse(JSON.parse(raw)).chunks;
+      tagged = TaggingResult.parse(parseJsonLoose(raw)).chunks;
     } catch {
       tagged = [];
     }

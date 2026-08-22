@@ -35,11 +35,11 @@ const STATUS_STYLES: Record<PageStatus, { chip: string; label: string }> = {
     label: 'OCR',
   },
   embedding: {
-    chip: 'bg-blue-500/10 border-blue-400/40 text-blue-300',
+    chip: 'bg-amber-500/10 border-amber-400/40 text-amber-300',
     label: 'Embedding',
   },
   tagged: {
-    chip: 'bg-purple-500/10 border-purple-400/40 text-purple-300',
+    chip: 'bg-orange-500/10 border-orange-400/40 text-orange-300',
     label: 'Tagged',
   },
   done: {

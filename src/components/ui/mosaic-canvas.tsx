@@ -16,7 +16,7 @@ const PARAMS = {
   contrast: 115, // percent
   saturation: 100,
   grayscale: 0,
-  tint: '#3ca6ff',
+  tint: '#E9C468',
   tintOpacity: 0,
   pfx: {
     vignette: { enabled: true, intensity: 38 },

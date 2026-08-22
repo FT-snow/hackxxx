@@ -18,7 +18,10 @@ interface ParsedSection {
 }
 
 function parseResult(text: string): ParsedSection[] {
-  const lines = text.split('\n').filter((line) => line.trim());
+  const lines = text
+    .split('\n')
+    .filter((line) => line.trim())
+    .filter((line) => !/^total marks scored:/i.test(line.trim()));
   const sections: ParsedSection[] = [];
 
   let currentSection = {

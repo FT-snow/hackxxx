@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import NavHeader from '@/components/ui/nav-header';
 
 const LINKS = [
   { href: '/', label: 'Home' },
@@ -27,24 +28,13 @@ export default function Navbar() {
   const router = useRouter();
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black/40 backdrop-blur-xl">
+    <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="relative flex h-16 items-center justify-between">
           <div />
 
-          <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-9 lg:flex">
-            {LINKS.map((l) => (
-              <Link
-                key={l.label}
-                href={l.href}
-                {...('external' in l && l.external
-                  ? { target: '_blank', rel: 'noreferrer' }
-                  : {})}
-                className="font-display text-sm tracking-wide text-gray-400 uppercase transition-colors duration-200 hover:text-[#E9C468]"
-              >
-                {l.label}
-              </Link>
-            ))}
+          <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+            <NavHeader />
           </div>
 
           <div className="z-10 hidden items-center gap-3 lg:flex">

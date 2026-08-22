@@ -2,7 +2,7 @@ import { v } from 'convex/values';
 import { action } from './_generated/server';
 import { api, internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
-import { callOpenRouter, callVision } from './openrouter';
+import { callOpenRouter, callVision, parseJsonLoose } from './openrouter';
 import { requireUser } from './helpers';
 import { MODELS, TaggingResult } from '../src/lib/types';
 
@@ -75,7 +75,7 @@ async function tagAndEmbed(
       [{ role: 'user', content: TAG_PROMPT(texts) }],
       { json: true, temperature: 0.2, maxTokens: 8192 },
     );
-    tagged = TaggingResult.parse(JSON.parse(tagRaw)).chunks;
+    tagged = TaggingResult.parse(parseJsonLoose(tagRaw)).chunks;
   } catch {
     tagged = [];
   }

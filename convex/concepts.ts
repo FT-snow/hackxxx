@@ -6,11 +6,11 @@ import { requireUser } from './helpers';
 
 const PALETTE = [
   '#E9C468',
-  '#8CB0C4',
+  '#F0D284',
   '#D4A574',
-  '#C48CB0',
-  '#B0C48C',
-  '#8C84C4',
+  '#C8A45C',
+  '#E0A32E',
+  '#B08D57',
 ];
 
 interface ChunkDoc {

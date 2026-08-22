@@ -34,16 +34,29 @@ export type TaggingResult = z.infer<typeof TaggingResult>;
 
 export const EvaluationItem = z.object({
   question: z.string(),
-  studentAnswer: z.string(),
-  score: z.number(),
-  maxScore: z.number(),
-  feedback: z.string(),
+  studentAnswer: z.string().default(''),
+  score: z.coerce.number(),
+  maxScore: z.coerce.number(),
+  feedback: z.string().default(''),
 });
-export const EvaluationResultSchema = z.object({
-  items: z.array(EvaluationItem),
-  totalAchieved: z.number(),
-  totalPossible: z.number(),
-});
+export const EvaluationResultSchema = z
+  .object({
+    items: z.array(EvaluationItem),
+    totalAchieved: z.coerce.number().default(0),
+    totalPossible: z.coerce.number().default(0),
+  })
+  .transform((r) => ({
+    ...r,
+    totalAchieved:
+      r.totalAchieved ||
+      r.items.reduce((s, i) => s + (Number.isFinite(i.score) ? i.score : 0), 0),
+    totalPossible:
+      r.totalPossible ||
+      r.items.reduce(
+        (s, i) => s + (Number.isFinite(i.maxScore) ? i.maxScore : 0),
+        0,
+      ),
+  }));
 export type EvaluationResultData = z.infer<typeof EvaluationResultSchema>;
 
 export interface MeshNode {

@@ -4,7 +4,7 @@ import { action } from './_generated/server';
 import type { ActionCtx } from './_generated/server';
 import { api } from './_generated/api';
 import { requireUser } from './helpers';
-import { callOpenRouter } from './openrouter';
+import { callOpenRouter, parseJsonLoose } from './openrouter';
 import { MODELS, EvaluationResultSchema } from '../src/lib/types';
 
 interface ConceptLike {
@@ -52,7 +52,7 @@ export const generateQuestion = action({
       ],
       { json: true, temperature: 0.7, maxTokens: 1024 },
     );
-    return GeneratedQuestion.parse(JSON.parse(raw));
+    return GeneratedQuestion.parse(parseJsonLoose(raw));
   },
 });
 
@@ -92,7 +92,7 @@ export const generateQuizSet = action({
     );
     const parsed = z
       .object({ items: z.array(QuizSetItem).min(1) })
-      .parse(JSON.parse(raw));
+      .parse(parseJsonLoose(raw));
     return parsed.items.slice(0, n);
   },
 });
@@ -121,6 +121,6 @@ export const gradeAnswer = action({
       ],
       { json: true, temperature: 0.2, maxTokens: 4096 },
     );
-    return EvaluationResultSchema.parse(JSON.parse(raw));
+    return EvaluationResultSchema.parse(parseJsonLoose(raw));
   },
 });
