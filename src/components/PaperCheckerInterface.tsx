@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, FileText, Sparkles, Zap } from 'lucide-react';
 import { useQuery } from 'convex/react';
+import { useAuthToken } from '@convex-dev/auth/react';
 import { useEffect, useState } from 'react';
 import EvaluationResult from '@/components/EvaluationResult';
 import { api } from '@/convex/_generated/api';
@@ -41,6 +42,7 @@ interface PaperCheckerInterfaceProps {
 export default function PaperCheckerInterface({
   onStepChange,
 }: PaperCheckerInterfaceProps) {
+  const authToken = useAuthToken();
   const [state, setState] = useState<PaperCheckerState>({
     questionPaper: '',
     answerKey: '',
@@ -77,7 +79,7 @@ export default function PaperCheckerInterface({
     try {
       const res = await fetch('/api/quiz', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
         body: JSON.stringify({ topics }),
       });
       const data = await res.json();
@@ -100,6 +102,7 @@ export default function PaperCheckerInterface({
       files.forEach((f) => fd.append('files', f));
       const res = await fetch('/api/ingest-sheet', {
         method: 'POST',
+        headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
         body: fd,
       });
       const data = await res.json();
@@ -117,7 +120,10 @@ export default function PaperCheckerInterface({
     try {
       const res = await fetch('/api/grade-auto', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        },
         body: JSON.stringify({
           questions: state.quiz,
           answersText: state.answersText,
@@ -190,6 +196,9 @@ export default function PaperCheckerInterface({
 
         const response = await fetch('/api/process-file', {
           method: 'POST',
+          headers: authToken
+            ? { Authorization: `Bearer ${authToken}` }
+            : undefined,
           body: formData,
         });
 
@@ -246,6 +255,7 @@ export default function PaperCheckerInterface({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
         },
         body: JSON.stringify({
           questionPaper: state.questionPaper,

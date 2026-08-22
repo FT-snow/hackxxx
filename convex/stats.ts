@@ -2,6 +2,11 @@ import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { requireUser } from './helpers';
 
+export const me = query({
+  args: {},
+  handler: async (ctx) => ({ id: await requireUser(ctx) }),
+});
+
 export const recordAttempt = mutation({
   args: {
     subjectId: v.optional(v.id('subjects')),

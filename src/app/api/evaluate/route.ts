@@ -1,7 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireUserFromRequest } from '@/lib/serverAuth';
 import { MODELS } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
+  const user = await requireUserFromRequest(request);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
   try {

@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireUserFromRequest } from '@/lib/serverAuth';
 
 const FREEIMAGE_API_KEY = '6d207e02198a847aa98d0a2a901485a5';
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
@@ -105,6 +106,10 @@ async function processPdfFile(file: File): Promise<string> {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await requireUserFromRequest(request);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;

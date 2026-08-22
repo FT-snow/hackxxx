@@ -7,6 +7,7 @@ import { BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useAction, useMutation, useQuery } from 'convex/react';
+import { useAuthToken } from '@convex-dev/auth/react';
 import FileUploader from '@/components/FileUploader';
 import PageCard, { type NotebookPage } from '@/components/PageCard';
 import { isPdf, splitPdfToImages } from '@/lib/pdfSplit';
@@ -58,6 +59,7 @@ function PageEmbedder({ pageId }: { pageId: Id<'pages'> }) {
     | undefined;
   const setEmbedding = useMutation(api.chunks.setEmbedding);
   const updateStatus = useMutation(api.pages.updateStatus);
+  const authToken = useAuthToken();
   const startedRef = useRef(false);
   const [_state, setState] = useState<EmbedState>('waiting');
 
@@ -80,7 +82,10 @@ function PageEmbedder({ pageId }: { pageId: Id<'pages'> }) {
       try {
         const res = await fetch('/api/embed', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+          },
           body: JSON.stringify({ texts: missing.map((c) => c.text) }),
         });
         if (!res.ok) throw new Error(`Embed request failed (${res.status})`);

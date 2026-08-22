@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireUserFromRequest } from '@/lib/serverAuth';
 import { callOpenRouter } from '@/../convex/openrouter';
 import { MODELS } from '@/lib/types';
 
@@ -39,6 +40,10 @@ Use \\n after every line. End with:
 Total Marks Scored: x/y`;
 
 export async function POST(request: NextRequest) {
+  const user = await requireUserFromRequest(request);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const { questions, answersText } = (await request.json()) as {
       questions?: QuizQuestion[];

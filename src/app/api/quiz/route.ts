@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireUserFromRequest } from '@/lib/serverAuth';
 import { callOpenRouter } from '@/../convex/openrouter';
 import { MODELS } from '@/lib/types';
 
@@ -15,6 +16,10 @@ Return ONLY JSON:
 {"questions":[{"question":"...","expectedAnswer":"model answer in 3-6 sentences","marks":10}]}`;
 
 export async function POST(request: NextRequest) {
+  const user = await requireUserFromRequest(request);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const { topics } = (await request.json()) as { topics?: string[] };
     if (!Array.isArray(topics) || topics.length === 0) {

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import AuthGate from '@/components/AuthGate';
 import MeshCanvas from '@/components/mesh/MeshCanvas';
+import ConceptQuiz from '@/components/mesh/ConceptQuiz';
 import Navbar from '@/components/Navbar';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
@@ -179,8 +180,9 @@ export default function MeshPage() {
                     {selected.size} pages linked
                   </span>
                 </div>
-                <NotesSection conceptId={selected.id} />
-              </motion.aside>
+              <NotesSection conceptId={selected.id} />
+              <ConceptQuiz conceptId={selected.id} />
+            </motion.aside>
             )}
           </div>
         </div>

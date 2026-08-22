@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireUserFromRequest } from '@/lib/serverAuth';
 import { extractText, getDocumentProxy } from 'unpdf';
 
 const OCR_PROMPT = `Transcribe ALL text from this handwritten answer sheet page.
@@ -35,6 +36,10 @@ async function ocrImage(file: File): Promise<string> {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await requireUserFromRequest(request);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const contentType = request.headers.get('content-type') ?? '';
     if (!contentType.includes('multipart/form-data')) {

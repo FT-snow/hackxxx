@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireUserFromRequest } from '@/lib/serverAuth';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -22,6 +23,10 @@ const Body = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const user = await requireUserFromRequest(request);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const parsed = Body.safeParse(await request.json());
     if (!parsed.success) {
