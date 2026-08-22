@@ -1,5 +1,5 @@
 export async function splitPdfToImages(file: File): Promise<File[]> {
-  const pdfjs = await import('pdfjs-dist');
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
   const data = await file.arrayBuffer();

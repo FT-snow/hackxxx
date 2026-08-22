@@ -129,6 +129,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   const [rebuilding, setRebuilding] = useState(false);
   const [meshReady, setMeshReady] = useState(false);
   const [rebuildError, setRebuildError] = useState<string | null>(null);
+  const [pdfPageCounts, setPdfPageCounts] = useState<Record<string, number>>({});
 
   const processFile = useAction(api.ingest.processFile);
   const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
@@ -150,6 +151,41 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      for (const f of files) {
+        if (!isPdf(f) || pdfPageCounts[f.name] !== undefined) continue;
+        try {
+          const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+          pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+          const doc = await pdfjs.getDocument({ data: await f.arrayBuffer() })
+            .promise;
+          if (!cancelled) {
+            setPdfPageCounts((prev) => ({ ...prev, [f.name]: doc.numPages }));
+          }
+        } catch {
+          if (!cancelled) {
+            setPdfPageCounts((prev) => ({ ...prev, [f.name]: 1 }));
+          }
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files]);
+
+  const totalUnits =
+    files.length === 0
+      ? 0
+      : files.reduce(
+          (n, f) =>
+            n + (isPdf(f) ? (pdfPageCounts[f.name] ?? 1) : 1),
+          0,
+        );
 
   const handleSubmit = async () => {
     if (files.length === 0 || submitting) return;
@@ -202,9 +238,21 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
 
     const failures = results.filter((r) => r.status === 'rejected');
     if (failures.length > 0) {
+      const firstMsg = failures[0].status === 'rejected'
+        ? (failures[0] as PromiseRejectedResult).reason?.message ?? ''
+        : '';
       setBatchError(
-        `${failures.length} of ${units.length} page(s) failed to upload. Check the cards below for details.`,
+        `${failures.length} of ${units.length} page(s) failed.${firstMsg ? ` e.g. ${firstMsg}` : ''}`,
       );
+    }
+
+    if (failures.length < results.length) {
+      try {
+        await rebuildConcepts({});
+        setMeshReady(true);
+      } catch {
+        setRebuildError('Auto mesh rebuild failed — use the button below.');
+      }
     }
     setSubmitting(false);
   };
@@ -274,7 +322,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
             <span className="text-sm">
               {files.length > 0 && !subjectId
                 ? 'Select a subject first'
-                : `Digitize ${files.length > 0 ? `${files.length} ` : ''}Page${files.length !== 1 ? 's' : ''}`}
+                : `Digitize ${totalUnits} page${totalUnits !== 1 ? 's' : ''}`}
             </span>
           )}
         </motion.button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -8,7 +9,6 @@ import type { Id } from '@/convex/_generated/dataModel';
 import Navbar from '@/components/Navbar';
 import AuthGate from '@/components/AuthGate';
 import MeshCanvas from '@/components/mesh/MeshCanvas';
-import { DEMO_MESH } from '@/lib/demoMesh';
 import type { MeshNode } from '@/lib/types';
 
 type ConceptNotesResult = {
@@ -77,11 +77,10 @@ export default function MeshPage() {
   const payload = useQuery(api.concepts.meshPayload, {});
 
   const active = payload && payload.nodes.length > 0 ? payload : null;
-  const usingDemo = !payload || payload.nodes.length === 0;
 
   const legend = [
     ...new Map(
-      (active?.nodes ?? DEMO_MESH.nodes).map((n) => [n.color, n.label]),
+      (active?.nodes ?? []).map((n) => [n.color, n.label]),
     ).entries(),
   ];
 
@@ -123,15 +122,26 @@ export default function MeshPage() {
                 Indexing your notes…
               </p>
             </div>
+          ) : payload.nodes.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center px-6 text-center">
+              <h3 className="font-display text-xl text-white">
+                Your mesh is empty
+              </h3>
+              <p className="mt-2 max-w-sm text-sm leading-relaxed text-gray-500">
+                Digitize a few notebook pages or PDFs and your concepts will
+                appear here, linked by similarity.
+              </p>
+              <Link
+                href="/notebook"
+                className="label-meta mt-6 rounded-md bg-[#5FD6C4] px-5 py-2.5 text-xs text-black transition-colors hover:bg-[#4FC2B1]"
+              >
+                Digitize notes →
+              </Link>
+            </div>
           ) : (
             <>
-              {usingDemo && (
-                <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-md border border-white/[0.08] bg-black/70 px-4 py-1.5 label-meta text-gray-400">
-                  Demo data — upload notebook pages to populate your mesh
-                </div>
-              )}
               <MeshCanvas
-                payload={active ?? DEMO_MESH}
+                payload={active!}
                 onNodeClick={setSelected}
               />
               <div className="absolute bottom-4 left-4 z-30 flex flex-wrap gap-2">

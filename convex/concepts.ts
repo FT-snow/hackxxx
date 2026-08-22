@@ -214,7 +214,7 @@ export const meshPayload = query({
     for (let i = 0; i < withEmb.length; i++) {
       for (let j = i + 1; j < withEmb.length; j++) {
         const score = cosine(withEmb[i].embedding, withEmb[j].embedding);
-        if (score < 0.55) continue;
+        if (score < 0.45) continue;
         const a = chunkToConcept.get(withEmb[i]._id) ?? '';
         const b = chunkToConcept.get(withEmb[j]._id) ?? '';
         if (!a || !b || a === b) continue;
