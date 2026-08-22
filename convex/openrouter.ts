@@ -31,20 +31,32 @@ export async function callOpenRouter(
   };
   if (opts.json) body.response_format = { type: 'json_object' };
 
-  const res = await fetch(OPENROUTER_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${key}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    throw new Error(`OpenRouter ${res.status}: ${await res.text()}`);
+  let lastErr = '';
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, attempt * 2000));
+    let res: Response;
+    try {
+      res = await fetch(OPENROUTER_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    } catch {
+      lastErr = 'network error';
+      continue;
+    }
+    if (!res.ok) {
+      lastErr = `OpenRouter ${res.status}: ${await res.text()}`;
+      if (res.status === 429 || res.status >= 500) continue;
+      throw new Error(lastErr);
+    }
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content ?? '';
   }
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content ?? '';
+  throw new Error(lastErr || 'OpenRouter request failed');
 }
 
 export async function callVision(
