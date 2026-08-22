@@ -1,9 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useAuthActions } from '@convex-dev/auth/react';
 import { useConvexAuth } from 'convex/react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -27,24 +27,12 @@ export default function Navbar() {
   const router = useRouter();
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black/90 backdrop-blur-md">
+    <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black/40 backdrop-blur-xl">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex h-16 items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-2.5"
-          >
-            <Link
-              href="/"
-              className="font-display flex items-center gap-2 text-lg tracking-[0.18em] text-white hover:text-[#E9C468]"
-            >
-              <span className="text-[#E9C468]">ᛗ</span> MIMIR
-            </Link>
-          </motion.div>
+        <div className="relative flex h-16 items-center justify-between">
+          <div />
 
-          <div className="hidden items-center gap-8 lg:flex">
+          <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-9 lg:flex">
             {LINKS.map((l) => (
               <Link
                 key={l.label}
@@ -52,15 +40,18 @@ export default function Navbar() {
                 {...('external' in l && l.external
                   ? { target: '_blank', rel: 'noreferrer' }
                   : {})}
-                className="label-meta text-gray-400 hover:text-white"
+                className="label-meta text-gray-400 transition-colors duration-200 hover:text-[#E9C468]"
               >
                 {l.label}
               </Link>
             ))}
+          </div>
+
+          <div className="z-10 hidden items-center gap-3 lg:flex">
             <motion.button
               whileTap={{ scale: 0.98 }}
               type="button"
-              className="label-meta cursor-pointer rounded-md border border-white/[0.14] bg-transparent px-4 py-2 text-white hover:border-white/30"
+              className="label-meta cursor-pointer rounded-md border border-[#E9C468]/40 bg-[#E9C468]/10 px-4 py-2 text-[#E9C468] transition-colors duration-200 hover:border-[#E9C468]/70 hover:bg-[#E9C468]/20"
               onClick={() => {
                 window.location.href = isAuthenticated ? '/notebook' : '/login';
               }}

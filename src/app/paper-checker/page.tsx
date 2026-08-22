@@ -36,13 +36,6 @@ export default function PaperCheckerPage() {
               transition={{ duration: 0.6 }}
               className="mb-10 max-w-2xl"
             >
-              <div className="mb-5 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#E9C468]" />
-                <span className="label-meta text-gray-400">
-                  AI paper evaluation
-                </span>
-              </div>
-
               <h1 className="font-display mb-4 text-4xl leading-tight sm:text-5xl">
                 Answer-sheet <span className="text-gray-400">checker</span>
               </h1>

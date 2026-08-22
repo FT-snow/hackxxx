@@ -79,7 +79,7 @@ function heatClass(count: number, future: boolean): string {
 
 function scoreTier(avgScore: number): { bar: string; text: string } {
   if (avgScore >= 75) return { bar: 'bg-[#E9C468]', text: 'text-[#E9C468]' };
-  if (avgScore >= 50) return { bar: 'bg-[#5FD6C4]', text: 'text-[#5FD6C4]' };
+  if (avgScore >= 50) return { bar: 'bg-[#E9C468]', text: 'text-[#E9C468]' };
   if (avgScore > 0) return { bar: 'bg-white/30', text: 'text-gray-400' };
   return { bar: 'bg-white/[0.08]', text: 'text-gray-500' };
 }
@@ -138,10 +138,6 @@ export default function ProfilePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="mb-4 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#E9C468]" />
-              <span className="label-meta text-gray-400">03 · Progress</span>
-            </div>
             <h1 className="font-display mb-2 text-3xl sm:text-5xl">
               Study <span className="text-gray-400">Stats</span>
             </h1>

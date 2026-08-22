@@ -100,10 +100,6 @@ export default function MeshPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="mb-4 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
-                <span className="label-meta text-gray-400">02 · Connect</span>
-              </div>
               <h1 className="font-display mb-2 text-3xl sm:text-5xl">
                 Concept <span className="text-gray-400">Mesh</span>
               </h1>
@@ -132,7 +128,7 @@ export default function MeshPage() {
                 </p>
                 <Link
                   href="/notebook"
-                  className="label-meta mt-6 rounded-md bg-[#5FD6C4] px-5 py-2.5 text-xs text-black transition-colors hover:bg-[#4FC2B1]"
+                  className="label-meta mt-6 rounded-md bg-[#E9C468] px-5 py-2.5 text-xs text-black transition-colors hover:bg-[#F0D284]"
                 >
                   Digitize notes →
                 </Link>
@@ -173,7 +169,7 @@ export default function MeshPage() {
                 </button>
                 <h3 className="font-display pr-4 text-lg">{selected.label}</h3>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className="rounded-md bg-[#5FD6C4]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#5FD6C4] uppercase">
+                  <span className="rounded-md bg-[#E9C468]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#E9C468] uppercase">
                     {selected.kind}
                   </span>
                   <span className="text-xs text-gray-400">
