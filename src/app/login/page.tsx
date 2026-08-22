@@ -23,8 +23,8 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      await signIn(flow === 'signUp' ? 'signUp' : 'signIn', {
-        provider: 'password',
+      await signIn('password', {
+        flow: flow === 'signUp' ? 'signUp' : 'signIn',
         email,
         password,
         name: email.split('@')[0],
