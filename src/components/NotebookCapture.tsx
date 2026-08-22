@@ -114,15 +114,44 @@ interface NotebookCaptureProps {
   subjectId: Id<'subjects'> | null;
 }
 
-function PageNotesWriter({ pageId }: { pageId: Id<'pages'> }) {
+function NotesWriterRow({ pageId }: { pageId: Id<'pages'> }) {
   const generate = useAction(api.notes.generateForPage);
+  const [state, setState] = useState<'idle' | 'busy' | 'done' | 'failed'>(
+    'idle',
+  );
   const startedRef = useRef(false);
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
-    generate({ pageId }).catch(() => {});
+    setState('busy');
+    generate({ pageId })
+      .then(() => setState('done'))
+      .catch(() => setState('failed'));
   }, [generate, pageId]);
-  return null;
+  const run = () => {
+    setState('busy');
+    generate({ pageId })
+      .then(() => setState('done'))
+      .catch(() => setState('failed'));
+  };
+  if (state === 'done') return null;
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-lg border border-white/[0.08] bg-black px-4 py-3">
+      <span className="text-sm text-gray-400">
+        {state === 'failed'
+          ? 'Revision notes failed for this page.'
+          : 'Revision notes pending…'}
+      </span>
+      <button
+        type="button"
+        onClick={run}
+        disabled={state === 'busy'}
+        className="label-meta cursor-pointer rounded-md bg-[#E9C468] px-3 py-1.5 text-xs text-black transition-colors hover:bg-[#F0D284] disabled:cursor-wait disabled:opacity-60"
+      >
+        {state === 'busy' ? 'Writing…' : 'Generate notes'}
+      </button>
+    </div>
+  );
 }
 
 export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
@@ -481,11 +510,14 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
             <PageEmbedder key={page._id} pageId={page._id as Id<'pages'>} />
           ))}
 
-          {/* Auto revision-note writers for finished pages */}
+          {/* Revision-note writers for tagged/done pages */}
           {pageList
-            .filter((p) => p.status === 'done' && !p.notes)
+            .filter(
+              (p) =>
+                ['done', 'tagged'].includes(p.status) && !p.notes,
+            )
             .map((p) => (
-              <PageNotesWriter key={`notes-${p._id}`} pageId={p._id as Id<'pages'>} />
+              <NotesWriterRow key={`notes-${p._id}`} pageId={p._id as Id<'pages'>} />
             ))}
         </motion.div>
       )}

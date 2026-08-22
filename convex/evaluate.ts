@@ -56,6 +56,47 @@ export const generateQuestion = action({
   },
 });
 
+const QuizSetItem = z.object({
+  question: z.string().min(1),
+  answer: z.string().min(1),
+  maxScore: z.number().int().positive(),
+});
+
+export const generateQuizSet = action({
+  args: {
+    count: v.number(),
+    subjectId: v.optional(v.id('subjects')),
+  },
+  handler: async (ctx, { count, subjectId }) => {
+    await requireUser(ctx);
+    const n = Math.max(1, Math.min(20, Math.round(count)));
+    const chunks = await ctx.runQuery(api.chunks.allForOwner, {});
+    const pool = subjectId
+      ? chunks.filter((c) => c.subjectId === subjectId)
+      : chunks;
+    if (!pool.length)
+      throw new Error('No digitized notes found to build questions from');
+    const source = pool
+      .map((c) => c.text)
+      .join('\n---\n')
+      .slice(0, 12000);
+    const raw = await callOpenRouter(
+      MODELS.utility,
+      [
+        {
+          role: 'user',
+          content: `Create exactly ${n} exam-style practice questions strictly answerable from ONLY these notes. Vary difficulty. Each item: {"question": string, "answer": string (model answer for grading reference), "maxScore": number of marks}. Return ONLY JSON: {"items": [...]} with ${n} items.\n\nNotes:\n${source}`,
+        },
+      ],
+      { json: true, temperature: 0.6, maxTokens: 4096 },
+    );
+    const parsed = z
+      .object({ items: z.array(QuizSetItem).min(1) })
+      .parse(JSON.parse(raw));
+    return parsed.items.slice(0, n);
+  },
+});
+
 export const gradeAnswer = action({
   args: {
     conceptId: v.id('concepts'),

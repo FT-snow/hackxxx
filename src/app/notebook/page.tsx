@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAction, useQuery } from 'convex/react';
 import { motion } from 'framer-motion';
@@ -18,7 +18,16 @@ export default function NotebookPage() {
   const me = useQuery(api.stats.me, {}) as
     | { id: string; email: string | null }
     | undefined;
+  const subjects = useQuery(api.subjects.listMine, {}) as
+    | Array<{ _id: Id<'subjects'>; name: string }>
+    | undefined;
   const seedQuantumDemo = useAction(api.seed.seedQuantumDemo);
+
+  useEffect(() => {
+    if (!subjectId && subjects && subjects.length > 0) {
+      setSubjectId(subjects[0]._id);
+    }
+  }, [subjectId, subjects]);
 
   const handleSeed = async () => {
     if (seedBusy) return;

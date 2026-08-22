@@ -20,21 +20,21 @@ const STEPS = [
   {
     n: '01',
     title: 'Capture',
-    body: 'Photograph any notebook page. Handwriting, derivations, diagrams — transcribed with structure and LaTeX intact.',
+    body: 'Photograph any notebook page. Your handwriting comes back as clean, structured text.',
     href: '/notebook',
     cta: 'Upload pages',
   },
   {
     n: '02',
     title: 'Connect',
-    body: 'Pages are chunked, tagged, and embedded. Notes on the same topic link across days into concept threads.',
+    body: 'Pages are chunked, tagged, and embedded. Work on the same topic links across days into concepts.',
     href: '/mesh',
     cta: 'Open the mesh',
   },
   {
     n: '03',
     title: 'Recall',
-    body: 'Browse the concept mesh or test yourself — practice questions generated from your own linked notes.',
+    body: 'Browse the concept mesh or test yourself with practice questions generated from your own pages.',
     href: '/paper-checker',
     cta: 'Test me',
   },
@@ -126,7 +126,7 @@ export default function Home() {
                     transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
                   },
                 }}
-                className={`mr-[0.28em] inline-block ${muted ? 'text-gray-400' : ''}`}
+                className={`mr-[0.28em] inline-block ${muted ? 'text-[#E9C468]' : ''}`}
               >
                 {word}
               </motion.span>
@@ -195,17 +195,6 @@ export default function Home() {
             ))}
           </BentoGrid>
 
-          <div className="mt-14 overflow-hidden border-t border-white/[0.08] pt-5">
-            <div className="rune-marquee-track flex w-max whitespace-nowrap">
-              <span className="label-meta pr-8 text-gray-700">
-                {MARQUEE.repeat(4)}
-              </span>
-              <span className="label-meta pr-8 text-gray-700">
-                {MARQUEE.repeat(4)}
-              </span>
-            </div>
-          </div>
-
           <div className="mt-24">
             <span className="label-meta text-[#C8A45C]">What Mimir does</span>
             <h2 className="font-display mt-3 mb-8 text-2xl sm:text-3xl">
@@ -236,6 +225,17 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <footer className="relative z-20 overflow-hidden border-t border-white/[0.08] py-5">
+        <div className="rune-marquee-track flex w-max whitespace-nowrap">
+          <span className="label-meta pr-8 text-[#E9C468]">
+            {MARQUEE.repeat(4)}
+          </span>
+          <span className="label-meta pr-8 text-[#E9C468]">
+            {MARQUEE.repeat(4)}
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }

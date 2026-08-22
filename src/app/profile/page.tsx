@@ -206,33 +206,33 @@ export default function ProfilePage() {
                       <span>Fri</span>
                       <span>Sun</span>
                     </div>
-                    <div className="flex flex-1 gap-[3px] overflow-x-auto">
+                    <div className="flex flex-1 gap-1 overflow-x-auto">
                       {weeks.map((week, wi) => (
                         <div
                           key={`week-${wi}`}
-                          className="flex flex-col gap-[3px]"
+                          className="flex flex-col gap-1"
                         >
                           {week.map((cell) => (
                             <div
                               key={cell.key}
                               title={`${cell.key}: ${cell.count}`}
-                              className={`h-3 w-3 rounded-[3px] ${heatClass(cell.count, cell.future)}`}
+                              className={`h-4 w-4 rounded-[4px] ${heatClass(cell.count, cell.future)}`}
                             />
                           ))}
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="mt-4 flex items-center justify-end gap-1.5 text-[10px] text-gray-500">
-                    <span>Less</span>
-                    {[0, 1, 4, 7, 10].map((n) => (
-                      <span
-                        key={n}
-                        className={`h-2.5 w-2.5 rounded-[2px] ${heatClass(n, false)}`}
-                      />
-                    ))}
-                    <span>More</span>
-                  </div>
+                    <div className="mt-5 flex items-center justify-end gap-1.5 text-[10px] text-gray-500">
+                      <span>Less</span>
+                      {[0, 1, 4, 7, 10].map((n) => (
+                        <span
+                          key={n}
+                          className={`h-3 w-3 rounded-[3px] ${heatClass(n, false)}`}
+                        />
+                      ))}
+                      <span>More</span>
+                    </div>
                 </div>
               </section>
 

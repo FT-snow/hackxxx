@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import PaperCheckerInterface from '@/components/PaperCheckerInterface';
+import QuestionForge from '@/components/QuestionForge';
 import AuthGate from '@/components/AuthGate';
 
 export default function PaperCheckerPage() {
@@ -55,6 +56,15 @@ export default function PaperCheckerPage() {
             className="relative"
           >
             <PaperCheckerInterface onStepChange={setCurrentStep} />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="relative mt-12"
+          >
+            <QuestionForge />
           </motion.div>
         </div>
       </div>

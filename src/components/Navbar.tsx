@@ -40,7 +40,7 @@ export default function Navbar() {
                 {...('external' in l && l.external
                   ? { target: '_blank', rel: 'noreferrer' }
                   : {})}
-                className="label-meta text-gray-400 transition-colors duration-200 hover:text-[#E9C468]"
+                className="font-display text-sm tracking-wide text-gray-400 uppercase transition-colors duration-200 hover:text-[#E9C468]"
               >
                 {l.label}
               </Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
             <motion.button
               whileTap={{ scale: 0.98 }}
               type="button"
-              className="label-meta cursor-pointer rounded-md border border-[#E9C468]/40 bg-[#E9C468]/10 px-4 py-2 text-[#E9C468] transition-colors duration-200 hover:border-[#E9C468]/70 hover:bg-[#E9C468]/20"
+              className="font-display cursor-pointer rounded-md border border-[#E9C468]/40 bg-[#E9C468]/10 px-4 py-2 text-xs tracking-wider text-[#E9C468] uppercase transition-colors duration-200 hover:border-[#E9C468]/70 hover:bg-[#E9C468]/20"
               onClick={() => {
                 window.location.href = isAuthenticated ? '/notebook' : '/login';
               }}
@@ -62,7 +62,7 @@ export default function Navbar() {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                className="label-meta cursor-pointer rounded-md bg-[#E9C468] px-4 py-2 text-black hover:bg-[#F0D284]"
+                className="font-display cursor-pointer rounded-md bg-[#E9C468] px-4 py-2 text-xs tracking-wider text-black uppercase hover:bg-[#F0D284]"
                 onClick={async () => {
                   await signOut();
                   router.push('/');
@@ -117,7 +117,7 @@ export default function Navbar() {
                   {...('external' in l && l.external
                     ? { target: '_blank', rel: 'noreferrer' }
                     : {})}
-                  className="label-meta rounded-md px-3 py-2.5 text-gray-300 hover:bg-white/5 hover:text-white"
+                  className="font-display rounded-md px-3 py-2.5 text-sm tracking-wide text-gray-300 uppercase hover:bg-white/5 hover:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {l.label}
