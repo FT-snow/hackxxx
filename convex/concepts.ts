@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { action, internalMutation, query } from './_generated/server';
+import { action, internalMutation, mutation, query } from './_generated/server';
 import { api, internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { requireUser } from './helpers';
@@ -152,6 +152,30 @@ export const listConcepts = query({
       .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
       .order('desc')
       .collect();
+  },
+});
+
+export const renameConcept = mutation({
+  args: { conceptId: v.id('concepts'), label: v.string() },
+  handler: async (ctx, { conceptId, label }) => {
+    const ownerId = await requireUser(ctx);
+    const clean = label.trim().slice(0, 60);
+    if (!clean) throw new Error('Label cannot be empty');
+    const concept = await ctx.db.get(conceptId);
+    if (!concept || concept.ownerId !== ownerId)
+      throw new Error('Concept not found');
+    const oldLabel = concept.label;
+    await ctx.db.patch(conceptId, { label: clean });
+    const chunks = await ctx.db
+      .query('chunks')
+      .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
+      .collect();
+    for (const c of chunks) {
+      if (c.conceptLabel === oldLabel) {
+        await ctx.db.patch(c._id, { conceptLabel: clean });
+      }
+    }
+    return clean;
   },
 });
 

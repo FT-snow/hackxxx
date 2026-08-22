@@ -1,108 +1,68 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { requireUserFromRequest } from '@/lib/serverAuth';
 
-const FREEIMAGE_API_KEY = '6d207e02198a847aa98d0a2a901485a5';
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
-async function uploadImage(file: File): Promise<string | null> {
-  try {
-    const formData = new FormData();
-    formData.append('source', file);
-    formData.append('key', FREEIMAGE_API_KEY);
-    formData.append('format', 'json');
+const OCR_PROMPT = `Extract ALL text from this image exactly as written.
+Rules:
+- This may be a question paper, answer key, or handwritten student answers.
+- Preserve structure: headings, numbered questions, line breaks.
+- Write math as plain text (e.g. x^2 + 2x = 5).
+- If a word is illegible write [?].
+Return only the extracted text, no commentary.`;
 
-    const response = await fetch('https://freeimage.host/api/1/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      if (result.status_code === 200) {
-        return result.image.url;
-      }
-    }
-    return null;
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    return null;
-  }
-}
-
-async function detectTextWithQwen(imageUrl: string): Promise<string> {
+async function detectText(file: File): Promise<string> {
   if (!OPENROUTER_API_KEY) {
     throw new Error('OpenRouter API key not configured');
   }
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const dataUri = `data:${file.type || 'image/png'};base64,${buffer.toString('base64')}`;
 
-  const messages = [
-    {
-      role: 'user',
-      content: [
+  let lastErr = 'vision failed';
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, 4000));
+    try {
+      const response = await fetch(
+        'https://openrouter.ai/api/v1/chat/completions',
         {
-          type: 'text',
-          text: 'Extract all text from this image. Return only the text content without any descriptions or commentary. If there is handwriting, convert it to typed text maintaining the original structure and formatting.',
-        },
-        {
-          type: 'image_url',
-          image_url: {
-            url: imageUrl,
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            model: 'qwen/qwen3-vl-8b-instruct',
+            max_tokens: 4096,
+            temperature: 0.1,
+            messages: [
+              {
+                role: 'user',
+                content: [
+                  { type: 'text', text: OCR_PROMPT },
+                  { type: 'image_url', image_url: { url: dataUri } },
+                ],
+              },
+            ],
+          }),
         },
-      ],
-    },
-  ];
-
-  try {
-    const response = await fetch(
-      'https://openrouter.ai/api/v1/chat/completions',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'qwen/qwen3-vl-8b-instruct',
-          messages,
-          max_tokens: 4096,
-          temperature: 0.1,
-          top_p: 0.9,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`OpenRouter API error: ${response.statusText}`);
+      );
+      if (!response.ok) {
+        lastErr = `OCR service error (${response.status})`;
+        if (response.status === 429 || response.status >= 500) continue;
+        break;
+      }
+      const result = await response.json();
+      const text = result.choices?.[0]?.message?.content;
+      if (!text) {
+        lastErr = 'No text could be read from this image — try a sharper photo';
+        continue;
+      }
+      return text.trim();
+    } catch {
+      lastErr = 'network error contacting OCR service';
     }
-
-    const result = await response.json();
-    return result.choices[0]?.message?.content || 'No text detected';
-  } catch (error) {
-    console.error('Error processing image with Qwen:', error);
-    throw error;
   }
-}
-
-async function processImageFile(file: File): Promise<string> {
-  const imageUrl = await uploadImage(file);
-
-  if (!imageUrl) {
-    throw new Error('Failed to upload image');
-  }
-
-  return await detectTextWithQwen(imageUrl);
-}
-
-async function processPdfFile(file: File): Promise<string> {
-  try {
-    const _buffer = await file.arrayBuffer();
-    return 'PDF processing: Please convert PDF pages to images for better text extraction with handwriting recognition. Alternatively, if this is a text-based PDF, please copy and paste the content directly.';
-  } catch (error) {
-    console.error('Error processing PDF:', error);
-    return 'Error processing PDF file. Please convert to images for handwriting recognition.';
-  }
+  throw new Error(lastErr);
 }
 
 export async function POST(request: NextRequest) {
@@ -112,7 +72,7 @@ export async function POST(request: NextRequest) {
   }
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
+    const file = formData.get('file') as File | null;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -120,16 +80,21 @@ export async function POST(request: NextRequest) {
 
     let extractedText: string;
 
-    if (file.type === 'application/pdf') {
-      extractedText = await processPdfFile(file);
-    } else if (file.type.startsWith('image/')) {
-      extractedText = await processImageFile(file);
+    if (file.type.startsWith('image/')) {
+      extractedText = await detectText(file);
+    } else if (
+      file.type === 'application/pdf' ||
+      file.type === 'text/plain' ||
+      /\.(txt|md)$/i.test(file.name)
+    ) {
+      const raw = await file.text();
+      extractedText = raw.slice(0, 20000);
+      if (!extractedText.trim()) {
+        throw new Error('This PDF has no extractable text — upload page photos instead');
+      }
     } else {
       return NextResponse.json(
-        {
-          error:
-            'Unsupported file type. Please upload images (PNG, JPG) or PDFs.',
-        },
+        { error: 'Unsupported file type. Please upload images (PNG, JPG, WEBP), text files, or paste the content directly.' },
         { status: 400 },
       );
     }
@@ -139,7 +104,10 @@ export async function POST(request: NextRequest) {
     console.error('Error processing file:', error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Could not read this file — try a clearer photo',
       },
       { status: 500 },
     );

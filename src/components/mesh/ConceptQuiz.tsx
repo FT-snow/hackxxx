@@ -94,13 +94,13 @@ export default function ConceptQuiz({ conceptId }: { conceptId: string }) {
             onChange={(e) => setAnswer(e.target.value)}
             placeholder="Write your answer from memory…"
             rows={4}
-            className="w-full resize-none rounded-md border border-white/[0.08] bg-black p-2.5 font-mono text-xs text-gray-200 outline-none focus:border-[#5FD6C4]/40"
+            className="w-full resize-none rounded-md border border-white/[0.08] bg-black p-2.5 font-mono text-xs text-gray-200 outline-none focus:border-[#E9C468]/40"
           />
           <button
             type="button"
             onClick={submit}
             disabled={busy || !answer.trim()}
-            className="label-meta w-full cursor-pointer rounded-md bg-[#5FD6C4] px-3 py-2 text-xs text-black transition-colors hover:bg-[#4FC2B1] disabled:cursor-not-allowed disabled:opacity-50"
+            className="label-meta w-full cursor-pointer rounded-md bg-[#E9C468] px-3 py-2 text-xs text-black transition-colors hover:bg-[#F0D284] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {busy ? 'Grading…' : 'Submit for grading'}
           </button>
@@ -116,7 +116,7 @@ export default function ConceptQuiz({ conceptId }: { conceptId: string }) {
                 /{result.totalPossible}
               </span>
             </span>
-            <span className="label-meta text-[#5FD6C4]">
+            <span className="label-meta text-[#E9C468]">
               {result.totalPossible > 0
                 ? Math.round((result.totalAchieved / result.totalPossible) * 100)
                 : 0}

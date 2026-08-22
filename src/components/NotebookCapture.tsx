@@ -381,7 +381,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
           disabled={files.length === 0 || submitting}
           className={`label-meta mt-6 flex w-full items-center justify-center space-x-3 rounded-md py-4 transition-colors duration-300 ${
             files.length > 0 && !submitting
-              ? 'bg-[#E9C468] text-black hover:bg-[#4FC2B1] cursor-pointer'
+              ? 'bg-[#E9C468] text-black hover:bg-[#F0D284] cursor-pointer'
               : 'bg-[#0c0f0d] border border-white/[0.08] text-gray-500 cursor-not-allowed'
           }`}
         >
@@ -557,7 +557,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
               className={`label-meta flex items-center space-x-2 rounded-md px-5 py-2.5 text-xs transition-colors ${
                 rebuilding
                   ? 'bg-[#141a17] text-gray-400 cursor-wait'
-                  : 'bg-[#E9C468] text-black hover:bg-[#4FC2B1] cursor-pointer'
+                  : 'bg-[#E9C468] text-black hover:bg-[#F0D284] cursor-pointer'
               }`}
             >
               {rebuilding && <RuneSpinner />}

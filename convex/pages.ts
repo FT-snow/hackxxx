@@ -74,6 +74,27 @@ export const get = query({
   handler: async (ctx, { id }) => ctx.db.get(id),
 });
 
+export const removePage = mutation({
+  args: { id: v.id('pages') },
+  handler: async (ctx, { id }) => {
+    const userId = await requireUser(ctx);
+    const page = await ctx.db.get(id);
+    if (!page || page.ownerId !== userId) throw new Error('Page not found');
+    const chunks = await ctx.db
+      .query('chunks')
+      .withIndex('by_page', (q) => q.eq('pageId', id))
+      .collect();
+    for (const c of chunks) await ctx.db.delete(c._id);
+    try {
+      await ctx.storage.delete(page.storageId);
+    } catch {
+      // storage object may already be gone
+    }
+    await ctx.db.delete(id);
+    return { deletedChunks: chunks.length };
+  },
+});
+
 export const listBySession = query({
   args: { sessionId: v.string() },
   handler: async (ctx, { sessionId }) =>

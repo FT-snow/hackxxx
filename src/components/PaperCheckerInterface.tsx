@@ -33,6 +33,8 @@ interface PaperCheckerState {
   answersText: string;
   sheetFiles: File[];
   readingSheet: boolean;
+  sheetError: string | null;
+  fileError: string | null;
 }
 
 interface PaperCheckerInterfaceProps {
@@ -62,6 +64,8 @@ export default function PaperCheckerInterface({
     answersText: '',
     sheetFiles: [],
     readingSheet: false,
+    sheetError: null,
+    fileError: null,
   });
 
   const chunkTopics = useQuery(api.chunks.allForOwner, {});
@@ -94,23 +98,45 @@ export default function PaperCheckerInterface({
   };
 
   const handleSheetChange = async (files: File[]) => {
-    updateState({ sheetFiles: files });
+    updateState({ sheetFiles: files, sheetError: null });
     if (files.length === 0) return;
     updateState({ readingSheet: true });
     try {
-      const fd = new FormData();
-      files.forEach((f) => fd.append('files', f));
-      const res = await fetch('/api/ingest-sheet', {
-        method: 'POST',
-        headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined,
-        body: fd,
+      let combined = '';
+      for (const file of files) {
+        if (/\.(txt|md)$/i.test(file.name)) {
+          combined += `${await file.text()}\n`;
+          continue;
+        }
+        if (/\.pdf$/i.test(file.name) || file.type === 'application/pdf') {
+          throw new Error(
+            'PDFs cannot be read here — upload photos of your answer sheet or a text file',
+          );
+        }
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/process-file', {
+          method: 'POST',
+          headers: authToken
+            ? { Authorization: `Bearer ${authToken}` }
+            : undefined,
+          body: fd,
+        });
+        const data = await res.json();
+        if (!res.ok)
+          throw new Error(data.error || 'Could not read this image');
+        combined += `${data.text}\n`;
+      }
+      updateState({
+        answersText: combined.trim(),
+        readingSheet: false,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Could not read sheet');
-      updateState({ answersText: data.text, readingSheet: false });
     } catch (e) {
-      console.error(e);
-      updateState({ readingSheet: false });
+      updateState({
+        sheetError:
+          e instanceof Error ? e.message : 'Could not read the answer sheet',
+        readingSheet: false,
+      });
     }
   };
 
@@ -203,6 +229,11 @@ export default function PaperCheckerInterface({
         });
 
         const result = await response.json();
+        if (!response.ok) {
+          throw new Error(
+            result.error || 'Could not read this file — try a clearer photo',
+          );
+        }
         if (result.text) {
           extractedText += `${result.text}\n`;
         }
@@ -212,6 +243,7 @@ export default function PaperCheckerInterface({
         isProcessing: false,
         uploadingType: null,
         lastUpdated: type,
+        fileError: null,
       };
 
       switch (type) {
@@ -232,10 +264,13 @@ export default function PaperCheckerInterface({
         updateState({ lastUpdated: null });
       }, 2000);
     } catch (error) {
-      console.error('Error processing files:', error);
       updateState({
         isProcessing: false,
         uploadingType: null,
+        fileError:
+          error instanceof Error
+            ? error.message
+            : 'Could not read this file — try a clearer photo',
       });
     }
   };
@@ -304,6 +339,8 @@ export default function PaperCheckerInterface({
       answersText: '',
       sheetFiles: [],
       readingSheet: false,
+      sheetError: null,
+      fileError: null,
     });
   };
 
@@ -494,6 +531,9 @@ export default function PaperCheckerInterface({
               {state.readingSheet && (
                 <p className="label-meta mt-4 text-gray-400">Reading sheet…</p>
               )}
+              {state.sheetError && (
+                <p className="mt-4 text-sm text-red-300">{state.sheetError}</p>
+              )}
               {state.answersText && (
                 <>
                   <textarea
@@ -541,6 +581,11 @@ export default function PaperCheckerInterface({
                   well judge.
                 </p>
               </div>
+              {state.fileError && (
+                <p className="mb-4 rounded-md border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+                  {state.fileError}
+                </p>
+              )}
 
               <Tabs defaultValue="question" className="w-full">
                 <TabsList className="grid w-full grid-cols-1 gap-1 rounded-lg border border-white/[0.08] bg-black p-1 sm:grid-cols-3 sm:gap-0">

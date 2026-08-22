@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -18,6 +18,82 @@ type ConceptNotesResult = {
   subjectId: string | null;
   notes: Array<{ pageId: string; fileName: string; notes: string }>;
 } | null;
+
+function RenameLabel({
+  conceptId,
+  initial,
+}: {
+  conceptId: string;
+  initial: string;
+}) {
+  const rename = useMutation(api.concepts.renameConcept);
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(initial);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  if (!editing) {
+    return (
+      <div className="flex items-start justify-between gap-2 pr-4">
+        <h3 className="font-display text-lg">{initial}</h3>
+        <button
+          type="button"
+          onClick={() => {
+            setValue(initial);
+            setEditing(true);
+          }}
+          className="label-meta mt-1 cursor-pointer text-gray-500 transition-colors hover:text-[#E9C468]"
+          aria-label="Rename concept"
+        >
+          Rename
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pr-4">
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') void e;
+        }}
+        maxLength={60}
+        autoFocus
+        className="font-display w-full rounded-md border border-[#E9C468]/40 bg-black px-2 py-1.5 text-base text-white outline-none focus:border-[#E9C468]"
+        placeholder="Concept name"
+      />
+      {error && <p className="mt-1.5 text-xs text-red-300">{error}</p>}
+      <div className="mt-2 flex gap-2">
+        <button
+          type="button"
+          disabled={busy || !value.trim()}
+          onClick={() => {
+            setBusy(true);
+            setError(null);
+            rename({ conceptId: conceptId as Id<'concepts'>, label: value })
+              .then(() => setEditing(false))
+              .catch((e) =>
+                setError(e instanceof Error ? e.message : 'Rename failed'),
+              )
+              .finally(() => setBusy(false));
+          }}
+          className="label-meta cursor-pointer rounded-md bg-[#E9C468] px-3 py-1.5 text-xs text-black hover:bg-[#F0D284] disabled:opacity-60"
+        >
+          {busy ? 'Saving…' : 'Save'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setEditing(false)}
+          className="label-meta cursor-pointer rounded-md border border-white/[0.08] px-3 py-1.5 text-xs text-gray-400 hover:text-white"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function NotesSection({ conceptId }: { conceptId: string }) {
   const data = useQuery(api.concepts.conceptNotes, {
@@ -91,7 +167,7 @@ export default function MeshPage() {
         <div
           className="pointer-events-none absolute inset-0 z-10 opacity-5"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235FD6C4' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%235FD6C4'%3E%E1%9B%97%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E9C468' fill-opacity='0.1'%3E%3Ctext x='10' y='30' font-size='8' fill='%23E9C468'%3E%E1%9B%97%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
         <div className="relative z-20 pt-20">
@@ -168,7 +244,10 @@ export default function MeshPage() {
                 >
                   ×
                 </button>
-                <h3 className="font-display pr-4 text-lg">{selected.label}</h3>
+                <RenameLabel
+                  conceptId={selected.id}
+                  initial={selected.label}
+                />
                 <div className="mt-2 flex items-center gap-2">
                   <span className="rounded-md bg-[#E9C468]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#E9C468] uppercase">
                     {selected.kind}

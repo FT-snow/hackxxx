@@ -1,9 +1,11 @@
 'use client';
 
+import { useMutation } from 'convex/react';
 import { motion } from 'framer-motion';
-import { FileImage, NotebookPen } from 'lucide-react';
+import { FileImage, NotebookPen, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import RichText from '@/components/RichText';
+import { api } from '@/convex/_generated/api';
 
 export type PageStatus =
   | 'queued'
@@ -58,6 +60,21 @@ interface PageCardProps {
 export default function PageCard({ page, previewUrl }: PageCardProps) {
   const status = STATUS_STYLES[page.status] ?? STATUS_STYLES.queued;
   const [showNotes, setShowNotes] = useState(false);
+  const removePage = useMutation(api.pages.removePage);
+  const [removing, setRemoving] = useState(false);
+  const [removeError, setRemoveError] = useState<string | null>(null);
+
+  const handleRemove = () => {
+    if (removing) return;
+    if (!window.confirm(`Delete "${page.fileName}" and all its data?`)) return;
+    setRemoving(true);
+    setRemoveError(null);
+    removePage({ id: page._id as never })
+      .catch((e) =>
+        setRemoveError(e instanceof Error ? e.message : 'Delete failed'),
+      )
+      .finally(() => setRemoving(false));
+  };
 
   return (
     <motion.div
@@ -96,6 +113,16 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
             {status.label}
           </span>
         </div>
+
+        <button
+          type="button"
+          onClick={handleRemove}
+          disabled={removing}
+          aria-label={`Delete ${page.fileName}`}
+          className="cursor-pointer rounded-md p-1.5 text-gray-600 transition-colors hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
+        >
+          <Trash2 className={`h-4 w-4 ${removing ? 'animate-pulse' : ''}`} />
+        </button>
       </div>
 
       {page.status === 'error' && page.error && (
@@ -106,6 +133,10 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
         >
           {page.error}
         </motion.p>
+      )}
+
+      {removeError && (
+        <p className="mt-2 text-xs text-red-300">{removeError}</p>
       )}
 
       {page.status === 'done' && page.ocrText && (
