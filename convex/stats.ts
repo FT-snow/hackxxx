@@ -4,7 +4,11 @@ import { requireUser } from './helpers';
 
 export const me = query({
   args: {},
-  handler: async (ctx) => ({ id: await requireUser(ctx) }),
+  handler: async (ctx) => {
+    const id = await requireUser(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+    return { id, email: identity?.email ?? null };
+  },
 });
 
 export const recordAttempt = mutation({

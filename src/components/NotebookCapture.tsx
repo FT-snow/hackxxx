@@ -137,6 +137,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   const [pdfPageCounts, setPdfPageCounts] = useState<Record<string, number>>({});
 
   const processFile = useAction(api.ingest.processFile);
+  const processTextPage = useAction(api.ingest.processTextPage);
   const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
 
   const sessionPages = useQuery(
@@ -230,6 +231,15 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
 
     const results = await Promise.allSettled(
       units.map(async (file) => {
+        if (/\.(txt|md)$/i.test(file.name)) {
+          const text = await file.text();
+          return processTextPage({
+            fileName: file.name,
+            sessionId: sid,
+            text,
+            subjectId,
+          });
+        }
         const base64Image = await fileToBase64(file);
         return processFile({
           base64Image,
@@ -279,8 +289,36 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   const pageList = pages ?? [];
   const doneCount = pageList.filter((p) => p.status === 'done').length;
   const taggedPages = pageList.filter((p) => p.status === 'tagged');
-  const hasResults = sessionId !== null && pageList.length > 0;
+  const hasResults = pageList.length > 0;
   const showSkeletons = submitting && pageList.length === 0;
+
+  useEffect(() => {
+    if (!subjectId || rebuilding || meshReady || doneCount === 0) return;
+    if (
+      pageList.some((p) =>
+        ['queued', 'ocr', 'embedding', 'tagged'].includes(p.status),
+      )
+    ) {
+      return;
+    }
+    setRebuilding(true);
+    setRebuildError(null);
+    void rebuildConcepts({
+      subjectId,
+    })
+      .then(() => setMeshReady(true))
+      .catch(() => {
+        setRebuildError('Auto mesh rebuild failed — use the button below.');
+      })
+      .finally(() => setRebuilding(false));
+  }, [
+    doneCount,
+    meshReady,
+    pageList,
+    rebuildConcepts,
+    rebuilding,
+    subjectId,
+  ]);
 
   return (
     <div className="space-y-6 lg:space-y-8">
@@ -301,7 +339,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
         <FileUploader
           files={files}
           onFilesChange={setFiles}
-          accept="image/png,image/jpeg,image/webp,.pdf,application/pdf"
+          accept="image/png,image/jpeg,image/webp,.pdf,application/pdf,.txt,.md,text/plain,text/markdown"
           multiple
           label="Upload notebook page photos or full PDFs"
         />

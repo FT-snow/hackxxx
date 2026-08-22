@@ -157,6 +157,11 @@ export const processFile = action({
         ownerId,
         ocrConfidence,
       );
+      try {
+        await ctx.scheduler.runAfter(0, api.notes.generateForPage, { pageId });
+      } catch {
+        // notes are best-effort
+      }
       return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {
@@ -221,6 +226,11 @@ export const processTextPage = action({
         args.subjectId,
         ownerId,
       );
+      try {
+        await ctx.scheduler.runAfter(0, api.notes.generateForPage, { pageId });
+      } catch {
+        // notes are best-effort
+      }
       return { pageId, chunkCount };
     } catch (err) {
       await ctx.runMutation(api.pages.updateStatus, {

@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 
+import { useAction, useQuery } from 'convex/react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import NotebookCapture from '@/components/NotebookCapture';
 import SubjectPicker from '@/components/SubjectPicker';
@@ -11,9 +13,32 @@ import AuthGate from '@/components/AuthGate';
 
 export default function NotebookPage() {
   const [subjectId, setSubjectId] = useState<Id<'subjects'> | null>(null);
+  const [seedBusy, setSeedBusy] = useState(false);
+  const [seedError, setSeedError] = useState<string | null>(null);
+  const me = useQuery(api.stats.me, {}) as
+    | { id: string; email: string | null }
+    | undefined;
+  const seedQuantumDemo = useAction(api.seed.seedQuantumDemo);
+
+  const handleSeed = async () => {
+    if (seedBusy) return;
+    setSeedBusy(true);
+    setSeedError(null);
+    try {
+      const res = await seedQuantumDemo({});
+      setSubjectId(res.subjectId as Id<'subjects'>);
+    } catch (e) {
+      setSeedError(
+        e instanceof Error ? e.message : 'Could not load quantum mechanics demo',
+      );
+    } finally {
+      setSeedBusy(false);
+    }
+  };
+
   return (
     <AuthGate>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <Navbar />
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5 z-10">
@@ -57,6 +82,39 @@ export default function NotebookPage() {
           {/* Subject selection */}
           <SubjectPicker value={subjectId} onChange={setSubjectId} />
 
+          {me?.email?.toLowerCase() === 'boiz.prakhar@gmail.com' && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12, duration: 0.45 }}
+              className="mt-6 rounded-lg border border-[#E9C468]/20 bg-[#241d10]/40 p-5"
+            >
+              <span className="label-meta text-[#C8A45C]">Quantum Demo</span>
+              <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="font-display text-lg text-white">
+                    Load a seeded Quantum Mechanics notebook
+                  </h2>
+                  <p className="mt-1 max-w-xl text-sm text-gray-400">
+                    One click creates a Physics subject, a master QM notes page,
+                    revision notes, and the concept graph base under your own ID.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSeed}
+                  disabled={seedBusy}
+                  className="label-meta cursor-pointer rounded-md bg-[#E9C468] px-4 py-2.5 text-xs text-black transition-colors hover:bg-[#F0D284] disabled:cursor-wait disabled:opacity-60"
+                >
+                  {seedBusy ? 'Loading QM…' : 'Load QM Demo →'}
+                </button>
+              </div>
+              {seedError && (
+                <p className="mt-3 text-sm text-red-300">{seedError}</p>
+              )}
+            </motion.div>
+          )}
+
           {/* Notebook Capture Interface */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -68,7 +126,7 @@ export default function NotebookPage() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
     </AuthGate>
   );
 }

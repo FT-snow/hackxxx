@@ -30,7 +30,7 @@ export const generateForPage = action({
     const chunks = await ctx.runQuery(api.chunks.chunksByPage, { pageId });
 
     const chunkLines = chunks
-      .map((c) => `[${c.kind}${c.conceptLabel ? ` · ${c.conceptLabel}` : ''}] ${c.text}`)
+      .map((c: { kind: string; conceptLabel?: string; text: string }) => `[${c.kind}${c.conceptLabel ? ` · ${c.conceptLabel}` : ''}] ${c.text}`)
       .join('\n\n');
 
     const raw = await callOpenRouter(

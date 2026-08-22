@@ -18,6 +18,7 @@ import type * as ingest from "../ingest.js";
 import type * as notes from "../notes.js";
 import type * as openrouter from "../openrouter.js";
 import type * as pages from "../pages.js";
+import type * as seed from "../seed.js";
 import type * as stats from "../stats.js";
 import type * as subjects from "../subjects.js";
 
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   notes: typeof notes;
   openrouter: typeof openrouter;
   pages: typeof pages;
+  seed: typeof seed;
   stats: typeof stats;
   subjects: typeof subjects;
 }>;
