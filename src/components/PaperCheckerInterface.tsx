@@ -355,7 +355,7 @@ export default function PaperCheckerInterface({
             transition={{ delay: 0.3 }}
             className="space-y-4"
           >
-            <h2 className="text-3xl font-bold text-[#E9C468]">
+            <h2 className="font-display text-3xl text-white">
               AI Analysis in Progress
             </h2>
             <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
