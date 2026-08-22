@@ -42,6 +42,9 @@ export const updateStatus = mutation({
     error: v.optional(v.string()),
   },
   handler: async (ctx, { id, status, error }) => {
+    const userId = await requireUser(ctx);
+    const page = await ctx.db.get(id);
+    if (!page || page.ownerId !== userId) throw new Error('Not found');
     const patch: Record<string, unknown> = { status };
     if (error !== undefined) patch.error = error;
     await ctx.db.patch(id, patch);
@@ -55,6 +58,9 @@ export const setOcr = mutation({
     ocrConfidence: v.optional(v.number()),
   },
   handler: async (ctx, { id, ocrText, ocrConfidence }) => {
+    const userId = await requireUser(ctx);
+    const page = await ctx.db.get(id);
+    if (!page || page.ownerId !== userId) throw new Error('Not found');
     await ctx.db.patch(id, {
       ocrText,
       ocrConfidence,

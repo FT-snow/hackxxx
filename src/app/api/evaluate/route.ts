@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { MODELS } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
@@ -70,7 +71,7 @@ Feedback: xyz
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'openai/gpt-oss-20b:free',
+          model: MODELS.grading,
           messages,
           max_tokens: 10000,
           temperature: 0.3,

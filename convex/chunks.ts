@@ -58,6 +58,9 @@ function normalizeKind(k: string): Kind {
 export const setEmbedding = mutation({
   args: { chunkId: v.id('chunks'), embedding: v.array(v.number()) },
   handler: async (ctx, { chunkId, embedding }) => {
+    const userId = await requireUser(ctx);
+    const chunk = await ctx.db.get(chunkId);
+    if (!chunk || chunk.ownerId !== userId) throw new Error('Not found');
     await ctx.db.patch(chunkId, { embedding });
   },
 });
