@@ -4,10 +4,72 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import type { Id } from '@/convex/_generated/dataModel';
 import Navbar from '@/components/Navbar';
 import MeshCanvas from '@/components/mesh/MeshCanvas';
 import { DEMO_MESH } from '@/lib/demoMesh';
 import type { MeshNode } from '@/lib/types';
+
+type ConceptNotesResult = {
+  label: string;
+  subjectId: string | null;
+  notes: Array<{ pageId: string; fileName: string; notes: string }>;
+} | null;
+
+function NotesSection({ conceptId }: { conceptId: string }) {
+  const data = useQuery(api.concepts.conceptNotes, {
+    conceptId: conceptId as Id<'concepts'>,
+  }) as ConceptNotesResult | undefined;
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  if (data === undefined) {
+    return (
+      <p className="label-meta mt-4 animate-pulse text-gray-500">
+        Loading notes…
+      </p>
+    );
+  }
+  if (data === null) {
+    return <p className="label-meta mt-4 text-gray-600">Unavailable.</p>;
+  }
+  if (data.notes.length === 0) {
+    return (
+      <p className="label-meta mt-4 text-gray-600">
+        No revision notes yet for this topic.
+      </p>
+    );
+  }
+  return (
+    <div className="mt-4 space-y-2">
+      <span className="label-meta text-[#C8A45C]">Revision notes</span>
+      {data.notes.map((n) => {
+        const open = Boolean(expanded[n.pageId]);
+        return (
+          <div
+            key={n.pageId}
+            className="rounded-md border border-white/[0.08] bg-[#0c0f0d] p-3"
+          >
+            <p className="label-meta truncate text-gray-400">{n.fileName}</p>
+            <pre
+              className={`mt-2 whitespace-pre-wrap font-mono text-xs leading-relaxed text-gray-300 ${open ? '' : 'line-clamp-6'}`}
+            >
+              {n.notes}
+            </pre>
+            <button
+              type="button"
+              onClick={() =>
+                setExpanded((e) => ({ ...e, [n.pageId]: !e[n.pageId] }))
+              }
+              className="label-meta mt-2 cursor-pointer text-gray-500 transition-colors hover:text-[#E9C468]"
+            >
+              {open ? 'Show less −' : 'Show more +'}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function MeshPage() {
   const [selected, setSelected] = useState<MeshNode | null>(null);
@@ -91,17 +153,16 @@ export default function MeshPage() {
             <motion.aside
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
-              className="absolute top-1/4 right-4 z-30 w-72 rounded-lg border border-white/[0.08] bg-black/80 p-4 backdrop-blur"
+              className="absolute top-20 right-4 z-30 max-h-[70vh] w-80 overflow-y-auto rounded-lg border border-white/[0.08] bg-black/80 p-4 backdrop-blur"
             >
               <button
-                type="button"
-                onClick={() => setSelected(null)}
+                type="button" onClick={() => setSelected(null)}
                 className="absolute top-2 right-3 text-gray-500 hover:text-white"
                 aria-label="Close"
               >
                 ×
               </button>
-              <h3 className="pr-4 text-lg font-semibold">{selected.label}</h3>
+              <h3 className="font-display pr-4 text-lg">{selected.label}</h3>
               <div className="mt-2 flex items-center gap-2">
                 <span className="rounded-md bg-[#5FD6C4]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#5FD6C4] uppercase">
                   {selected.kind}
@@ -110,13 +171,7 @@ export default function MeshPage() {
                   {selected.size} pages linked
                 </span>
               </div>
-              <button
-                type="button"
-                disabled
-                className="mt-4 w-full cursor-not-allowed rounded-md border border-white/[0.08] px-3 py-2 text-sm text-gray-500"
-              >
-                Drill-in view coming soon
-              </button>
+              <NotesSection conceptId={selected.id} />
             </motion.aside>
           )}
         </div>

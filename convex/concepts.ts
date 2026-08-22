@@ -238,6 +238,36 @@ function majorityKind(m?: Map<string, number>): string {
   return [...m.entries()].sort((a, b) => b[1] - a[1])[0][0];
 }
 
+export const conceptNotes = query({
+  args: { conceptId: v.id('concepts') },
+  handler: async (ctx, { conceptId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const concept = await ctx.db.get(conceptId);
+    if (!concept || concept.ownerId !== ownerId) {
+      return null;
+    }
+    const pageIds = new Set<string>();
+    for (const cid of concept.chunkIds) {
+      const chunk = await ctx.db.get(cid);
+      if (chunk) pageIds.add(chunk.pageId);
+    }
+    const notes: Array<{ pageId: string; fileName: string; notes: string }> =
+      [];
+    for (const pid of pageIds) {
+      const page = await ctx.db.get(pid as Id<'pages'>);
+      if (page?.notes) {
+        notes.push({
+          pageId: page._id,
+          fileName: page.fileName,
+          notes: page.notes,
+        });
+      }
+    }
+    return { label: concept.label, subjectId: concept.subjectId ?? null, notes };
+  },
+});
+
 function cosine(a: number[], b: number[]): number {
   let dot = 0;
   for (let i = 0; i < a.length; i++) dot += a[i] * b[i];

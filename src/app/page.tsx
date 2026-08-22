@@ -137,20 +137,20 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24 }}
-            className="flex w-full max-w-lg flex-col gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] sm:flex-row"
+            className="flex w-full max-w-md flex-col gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] sm:flex-row"
           >
             <button
               type="button"
               onClick={() => {
                 window.location.href = '/notebook';
               }}
-              className="group flex-1 cursor-pointer bg-black p-6 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
+              className="group flex-1 cursor-pointer bg-black p-4 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
             >
               <span className="label-meta text-[#C8A45C]">01</span>
-              <span className="font-display mt-2 block text-lg text-white">
+              <span className="font-display mt-1 block text-sm text-white">
                 Digitize my notes
               </span>
-              <span className="label-meta mt-4 inline-block text-gray-500 transition-colors group-hover:text-[#E9C468]">
+              <span className="label-meta mt-2 inline-block text-gray-500 transition-colors group-hover:text-[#E9C468]">
                 Start →
               </span>
             </button>
@@ -159,13 +159,13 @@ export default function Home() {
               onClick={() => {
                 window.location.href = '/mesh';
               }}
-              className="group flex-1 cursor-pointer bg-black p-6 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
+              className="group flex-1 cursor-pointer bg-black p-4 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
             >
               <span className="label-meta text-[#C8A45C]">02</span>
-              <span className="font-display mt-2 block text-lg text-white">
+              <span className="font-display mt-1 block text-sm text-white">
                 Explore the mesh
               </span>
-              <span className="label-meta mt-4 inline-block text-gray-500 transition-colors group-hover:text-[#E9C468]">
+              <span className="label-meta mt-2 inline-block text-gray-500 transition-colors group-hover:text-[#E9C468]">
                 Open →
               </span>
             </button>
