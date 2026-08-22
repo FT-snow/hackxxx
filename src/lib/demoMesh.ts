@@ -7,7 +7,7 @@ export const DEMO_MESH: MeshPayload = {
       label: 'Laplace of derivatives',
       kind: 'subject',
       size: 5,
-      color: '#5FD6C4',
+      color: '#E9C468',
       clusterId: 0,
     },
     {
@@ -15,7 +15,7 @@ export const DEMO_MESH: MeshPayload = {
       label: 'Laplace of integrals',
       kind: 'subject',
       size: 3,
-      color: '#5FD6C4',
+      color: '#E9C468',
       clusterId: 0,
     },
     {
@@ -23,7 +23,7 @@ export const DEMO_MESH: MeshPayload = {
       label: 'Inverse Laplace',
       kind: 'subject',
       size: 2,
-      color: '#5FD6C4',
+      color: '#E9C468',
       clusterId: 0,
     },
     {

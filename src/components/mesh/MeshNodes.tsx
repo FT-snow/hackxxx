@@ -162,11 +162,11 @@ export default function MeshNodes({
               center
               distanceFactor={14}
             >
-              <div className="pointer-events-none rounded-lg border border-[#5FD6C4]/40 bg-black/85 px-3 py-1.5 text-center whitespace-nowrap">
+              <div className="pointer-events-none rounded-lg border border-[#E9C468]/40 bg-black/85 px-3 py-1.5 text-center whitespace-nowrap">
                 <div className="text-sm font-medium text-white">
                   {hovered.label}
                 </div>
-                <div className="text-[10px] tracking-wide text-[#5FD6C4] uppercase">
+                <div className="text-[10px] tracking-wide text-[#E9C468] uppercase">
                   {hovered.kind} · {hovered.size} pages
                 </div>
               </div>

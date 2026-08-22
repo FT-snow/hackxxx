@@ -15,7 +15,7 @@ const RUNE_COUNT = 3;
 const CELL_CSS_PX = 11;
 const ASCII_CACHE_MAX = 40;
 const INK = '#f2f2ec';
-const RUNE_INK = '#7de8d8';
+const RUNE_INK = '#F0D284';
 
 interface ScrollSequenceProps {
   children?: React.ReactNode;
@@ -283,7 +283,7 @@ export default function ScrollSequence({ children }: ScrollSequenceProps) {
             </span>
             <div className="h-px w-60 overflow-hidden bg-white/[0.12]">
               <div
-                className="h-full bg-[#5FD6C4] transition-all duration-300"
+                className="h-full bg-[#E9C468] transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>

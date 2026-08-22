@@ -5,8 +5,8 @@ import * as THREE from 'three';
 import type { MeshPayload } from '@/lib/types';
 import { computeLayout } from './layout';
 
-const STRONG = { color: '#5FD6C4', opacity: 0.55 };
-const WEAK = { color: '#5FD6C4', opacity: 0.18 };
+const STRONG = { color: '#E9C468', opacity: 0.55 };
+const WEAK = { color: '#E9C468', opacity: 0.18 };
 
 export function MeshEdges({ payload }: { payload: MeshPayload }) {
   const layout = useMemo(() => computeLayout(payload), [payload]);

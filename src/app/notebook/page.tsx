@@ -1,12 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import type { Id } from '@/convex/_generated/dataModel';
 import NotebookCapture from '@/components/NotebookCapture';
 import SubjectPicker from '@/components/SubjectPicker';
+import type { Id } from '@/convex/_generated/dataModel';
 
 export default function NotebookPage() {
   const [subjectId, setSubjectId] = useState<Id<'subjects'> | null>(null);
@@ -33,13 +32,6 @@ export default function NotebookPage() {
             transition={{ duration: 0.6 }}
             className="mb-10 max-w-2xl"
           >
-            <div className="mb-5 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
-              <span className="label-meta text-gray-400">
-                Handwritten notes digitizer
-              </span>
-            </div>
-
             <h1 className="font-display mb-4 text-4xl leading-tight sm:text-5xl">
               Capture a page.
               <br />

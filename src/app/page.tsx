@@ -2,9 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-import Squares from '@/components/ui/SquareBg';
-import { AsciiArt } from '@/components/ui/vignette-bloom';
 import { BentoCard, BentoGrid } from '@/components/ui/Bento';
+import MosaicCanvas from '@/components/ui/mosaic-canvas';
+import Squares from '@/components/ui/SquareBg';
 
 const HERO_WORDS: Array<[string, boolean]> = [
   ['Your', false],
@@ -94,7 +94,7 @@ export default function Home() {
       </div>
 
       <section className="relative flex h-screen items-center overflow-hidden">
-        <AsciiArt className="absolute inset-0" />
+        <MosaicCanvas className="absolute inset-0 h-full w-full" />
         <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-black/90 via-black/50 to-black/15" />
         <div className="absolute inset-x-0 bottom-0 z-[2] h-40 bg-gradient-to-t from-black to-transparent" />
 
@@ -137,14 +137,14 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24 }}
-            className="flex w-full max-w-md flex-col gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] sm:flex-row"
+            className="flex w-full max-w-md flex-col gap-4 sm:flex-row sm:gap-5"
           >
             <button
               type="button"
               onClick={() => {
                 window.location.href = '/notebook';
               }}
-              className="group flex-1 cursor-pointer bg-black p-4 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
+              className="group flex-1 cursor-pointer rounded-lg bg-black/25 px-6 py-7 text-left backdrop-blur-xl transition-colors duration-300 hover:bg-black/50"
             >
               <span className="label-meta text-[#C8A45C]">01</span>
               <span className="font-display mt-1 block text-sm text-white">
@@ -159,7 +159,7 @@ export default function Home() {
               onClick={() => {
                 window.location.href = '/mesh';
               }}
-              className="group flex-1 cursor-pointer bg-black p-4 text-left transition-colors duration-300 hover:bg-[#0a0f0c]"
+              className="group flex-1 cursor-pointer rounded-lg bg-black/25 px-6 py-7 text-left backdrop-blur-xl transition-colors duration-300 hover:bg-black/50"
             >
               <span className="label-meta text-[#C8A45C]">02</span>
               <span className="font-display mt-1 block text-sm text-white">
@@ -220,7 +220,9 @@ export default function Home() {
                   transition={{ duration: 0.5 }}
                 >
                   <div className="flex h-full flex-col bg-black p-6">
-                    <span className="mb-3 text-lg text-[#5FD6C4]">{f.rune}</span>
+                    <span className="mb-3 text-lg text-[#E9C468]">
+                      {f.rune}
+                    </span>
                     <h3 className="font-display text-base text-white">
                       {f.title}
                     </h3>

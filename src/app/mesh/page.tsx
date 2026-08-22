@@ -1,12 +1,12 @@
 'use client';
 
+import { useQuery } from 'convex/react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { useQuery } from 'convex/react';
+import MeshCanvas from '@/components/mesh/MeshCanvas';
+import Navbar from '@/components/Navbar';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
-import Navbar from '@/components/Navbar';
-import MeshCanvas from '@/components/mesh/MeshCanvas';
 import { DEMO_MESH } from '@/lib/demoMesh';
 import type { MeshNode } from '@/lib/types';
 
@@ -100,10 +100,6 @@ export default function MeshPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="mb-4 inline-flex items-center gap-2.5 rounded-md border border-white/[0.08] px-3 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#5FD6C4]" />
-              <span className="label-meta text-gray-400">02 · Connect</span>
-            </div>
             <h1 className="font-display mb-2 text-3xl sm:text-5xl">
               Concept <span className="text-gray-400">Mesh</span>
             </h1>
@@ -156,7 +152,8 @@ export default function MeshPage() {
               className="absolute top-20 right-4 z-30 max-h-[70vh] w-80 overflow-y-auto rounded-lg border border-white/[0.08] bg-black/80 p-4 backdrop-blur"
             >
               <button
-                type="button" onClick={() => setSelected(null)}
+                type="button"
+                onClick={() => setSelected(null)}
                 className="absolute top-2 right-3 text-gray-500 hover:text-white"
                 aria-label="Close"
               >
@@ -164,7 +161,7 @@ export default function MeshPage() {
               </button>
               <h3 className="font-display pr-4 text-lg">{selected.label}</h3>
               <div className="mt-2 flex items-center gap-2">
-                <span className="rounded-md bg-[#5FD6C4]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#5FD6C4] uppercase">
+                <span className="rounded-md bg-[#E9C468]/10 px-2 py-0.5 text-[10px] tracking-wide text-[#E9C468] uppercase">
                   {selected.kind}
                 </span>
                 <span className="text-xs text-gray-400">
