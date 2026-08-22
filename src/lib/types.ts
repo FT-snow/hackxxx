@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const MODELS = {
   ocr: 'qwen/qwen3-vl-8b-instruct',
-  utility: 'google/gemma-4-31b-it:free',
-  grading: 'google/gemma-4-31b-it:free',
+  utility: 'openai/gpt-oss-20b',
+  grading: 'openai/gpt-oss-20b',
 } as const;
 
 export const EMBEDDING_DIMS = 384;
