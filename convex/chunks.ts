@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { internalMutation, mutation, query } from './_generated/server';
-import { DEMO_USER_ID } from './consts';
+import { requireUser } from './helpers';
 
 const chunkShape = {
   text: v.string(),
@@ -64,18 +64,21 @@ export const setEmbedding = mutation({
 
 export const chunksByPage = query({
   args: { pageId: v.id('pages') },
-  handler: async (ctx, { pageId }) =>
-    ctx.db
+  handler: async (ctx, { pageId }) => {
+    const userId = await requireUser(ctx);
+    const page = await ctx.db.get(pageId);
+    if (!page || page.ownerId !== userId) return [];
+    return ctx.db
       .query('chunks')
       .withIndex('by_page', (q) => q.eq('pageId', pageId))
-      .collect(),
+      .collect();
+  },
 });
 
 export const allForOwner = query({
-  args: { ownerId: v.optional(v.string()) },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = args.ownerId ?? identity?.subject ?? DEMO_USER_ID;
+  args: {},
+  handler: async (ctx) => {
+    const ownerId = await requireUser(ctx);
     return ctx.db
       .query('chunks')
       .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
@@ -85,9 +88,13 @@ export const allForOwner = query({
 
 export const allForSubject = query({
   args: { subjectId: v.id('subjects') },
-  handler: async (ctx, { subjectId }) =>
-    ctx.db
+  handler: async (ctx, { subjectId }) => {
+    const userId = await requireUser(ctx);
+    const subject = await ctx.db.get(subjectId);
+    if (!subject || subject.userId !== userId) return [];
+    return ctx.db
       .query('chunks')
       .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
-      .collect(),
+      .collect();
+  },
 });

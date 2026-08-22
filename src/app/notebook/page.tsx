@@ -7,10 +7,12 @@ import Navbar from '@/components/Navbar';
 import type { Id } from '@/convex/_generated/dataModel';
 import NotebookCapture from '@/components/NotebookCapture';
 import SubjectPicker from '@/components/SubjectPicker';
+import AuthGate from '@/components/AuthGate';
 
 export default function NotebookPage() {
   const [subjectId, setSubjectId] = useState<Id<'subjects'> | null>(null);
   return (
+    <AuthGate>
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <Navbar />
       {/* Background Pattern */}
@@ -67,5 +69,6 @@ export default function NotebookPage() {
         </div>
       </div>
     </div>
+    </AuthGate>
   );
 }

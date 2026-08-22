@@ -3,7 +3,7 @@ import { action } from './_generated/server';
 import { api, internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { callOpenRouter, callVision } from './openrouter';
-import { DEMO_USER_ID } from './consts';
+import { requireUser } from './helpers';
 import { MODELS, TaggingResult } from '../src/lib/types';
 
 const OCR_PROMPT = `Transcribe ALL text from this handwritten notebook page.
@@ -56,9 +56,9 @@ async function tagAndEmbed(
   ctx: { runMutation: Function },
   pageId: Id<'pages'>,
   ocrText: string,
+  subjectId: Id<'subjects'> | undefined,
+  ownerId: string,
   ocrConfidence?: number,
-  subjectId?: Id<'subjects'>,
-  ownerId: string = DEMO_USER_ID,
 ) {
   const texts = splitChunks(ocrText);
   let tagged: Array<{
@@ -111,8 +111,7 @@ export const processFile = action({
     subjectId: v.optional(v.id('subjects')),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const ownerId = await requireUser(ctx);
     const bin = atob(args.base64Image);
     const bytes = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -154,9 +153,9 @@ export const processFile = action({
         ctx,
         pageId,
         ocrText,
-        ocrConfidence,
         args.subjectId,
         ownerId,
+        ocrConfidence,
       );
       return { pageId, chunkCount };
     } catch (err) {
@@ -194,8 +193,7 @@ export const processTextPage = action({
     subjectId: v.optional(v.id('subjects')),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const ownerId = await requireUser(ctx);
     const storageId = await ctx.storage.store(
       new Blob([args.text], { type: 'text/plain' }),
     );
@@ -220,7 +218,6 @@ export const processTextPage = action({
         ctx,
         pageId,
         args.text,
-        undefined,
         args.subjectId,
         ownerId,
       );

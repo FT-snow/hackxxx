@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { DEMO_USER_ID } from './consts';
+import { requireUser } from './helpers';
 
 export const createPage = mutation({
   args: {
@@ -11,10 +11,10 @@ export const createPage = mutation({
     subjectId: v.optional(v.id('subjects')),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const ownerId = await requireUser(ctx);
     return ctx.db.insert('pages', {
       ...args,
-      ownerId: identity?.subject ?? DEMO_USER_ID,
+      ownerId,
       capturedAt: Date.now(),
       status: 'queued',
     });
@@ -23,12 +23,16 @@ export const createPage = mutation({
 
 export const listBySubject = query({
   args: { subjectId: v.id('subjects') },
-  handler: async (ctx, { subjectId }) =>
-    ctx.db
+  handler: async (ctx, { subjectId }) => {
+    const userId = await requireUser(ctx);
+    const subject = await ctx.db.get(subjectId);
+    if (!subject || subject.userId !== userId) return [];
+    return ctx.db
       .query('pages')
       .withIndex('by_subject', (q) => q.eq('subjectId', subjectId))
       .order('desc')
-      .take(200),
+      .take(200);
+  },
 });
 
 export const updateStatus = mutation({

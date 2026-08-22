@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAction, useMutation, useQuery } from 'convex/react';
 import FileUploader from '@/components/FileUploader';
 import PageCard, { type NotebookPage } from '@/components/PageCard';
+import { isPdf, splitPdfToImages } from '@/lib/pdfSplit';
 
 const RUNE_CYCLE = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ'];
 
@@ -130,7 +131,6 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
   const [rebuildError, setRebuildError] = useState<string | null>(null);
 
   const processFile = useAction(api.ingest.processFile);
-  const processTextPage = useAction(api.ingest.processTextPage);
   const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
 
   const sessionPages = useQuery(
@@ -162,41 +162,38 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
     const batchFiles = files;
 
     setSessionId(sid);
-    setPreviews(
-      batchFiles.map((f) => ({ name: f.name, url: URL.createObjectURL(f) })),
-    );
     setBatchError(null);
     setSubmitting(true);
     setFiles([]);
 
-    const results = await Promise.allSettled(
-      batchFiles.map(async (file) => {
-        if (
-          file.type === 'application/pdf' ||
-          file.name.toLowerCase().endsWith('.pdf')
-        ) {
-          const fd = new FormData();
-          fd.append('file', file);
-          const res = await fetch('/api/extract-pdf', {
-            method: 'POST',
-            body: fd,
-          });
-          const data = (await res.json()) as { text?: string; error?: string };
-          if (!res.ok || !data.text) {
-            throw new Error(data.error ?? 'PDF extraction failed');
-          }
-          return processTextPage({
-            fileName: file.name,
-            sessionId: sid,
-            text: data.text,
-            subjectId,
-          });
+    let units: File[];
+    try {
+      units = [];
+      for (const f of batchFiles) {
+        if (isPdf(f)) {
+          const imgs = await splitPdfToImages(f);
+          units.push(...imgs);
+        } else {
+          units.push(f);
         }
+      }
+    } catch (err) {
+      setBatchError(
+        `Could not read a PDF: ${err instanceof Error ? err.message : 'unknown error'}`,
+      );
+      setSubmitting(false);
+      return;
+    }
+
+    setPreviews(units.map((f) => ({ name: f.name, url: URL.createObjectURL(f) })));
+
+    const results = await Promise.allSettled(
+      units.map(async (file) => {
         const base64Image = await fileToBase64(file);
         return processFile({
           base64Image,
           fileName: file.name,
-          mimeType: file.type,
+          mimeType: file.type || 'image/png',
           sessionId: sid,
           subjectId,
         });
@@ -206,7 +203,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
     const failures = results.filter((r) => r.status === 'rejected');
     if (failures.length > 0) {
       setBatchError(
-        `${failures.length} of ${batchFiles.length} page(s) failed to upload. Check the cards below for details.`,
+        `${failures.length} of ${units.length} page(s) failed to upload. Check the cards below for details.`,
       );
     }
     setSubmitting(false);
@@ -253,7 +250,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
           onFilesChange={setFiles}
           accept="image/png,image/jpeg,image/webp,.pdf,application/pdf"
           multiple
-          label="Upload notebook page photos"
+          label="Upload notebook page photos or full PDFs"
         />
 
         <motion.button

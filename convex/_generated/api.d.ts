@@ -11,7 +11,6 @@
 import type * as auth from "../auth.js";
 import type * as chunks from "../chunks.js";
 import type * as concepts from "../concepts.js";
-import type * as consts from "../consts.js";
 import type * as evaluate from "../evaluate.js";
 import type * as helpers from "../helpers.js";
 import type * as http from "../http.js";
@@ -32,7 +31,6 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   chunks: typeof chunks;
   concepts: typeof concepts;
-  consts: typeof consts;
   evaluate: typeof evaluate;
   helpers: typeof helpers;
   http: typeof http;

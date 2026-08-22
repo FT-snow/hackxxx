@@ -2,7 +2,7 @@ import { v } from 'convex/values';
 import { action, internalMutation, query } from './_generated/server';
 import { api, internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
-import { DEMO_USER_ID } from './consts';
+import { requireUser } from './helpers';
 
 const PALETTE = [
   '#E9C468',
@@ -32,15 +32,15 @@ interface Cluster {
 export const rebuildConcepts = action({
   args: { subjectId: v.optional(v.id('subjects')) },
   handler: async (ctx, { subjectId }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const ownerId = await requireUser(ctx);
     const chunks = subjectId
       ? ((await ctx.runQuery(api.chunks.allForSubject, {
           subjectId,
         })) as ChunkDoc[])
-      : ((await ctx.runQuery(api.chunks.allForOwner, {
-          ownerId,
-        })) as ChunkDoc[]);
+      : ((await ctx.runQuery(
+          api.chunks.allForOwner,
+          {},
+        )) as ChunkDoc[]);
     const embedded = chunks.filter((c) => c.embedding);
 
     const parent = new Map<string, string>();
@@ -144,10 +144,9 @@ export const upsertConcepts = internalMutation({
 });
 
 export const listConcepts = query({
-  args: { ownerId: v.optional(v.string()) },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = args.ownerId ?? identity?.subject ?? DEMO_USER_ID;
+  args: {},
+  handler: async (ctx) => {
+    const ownerId = await requireUser(ctx);
     return ctx.db
       .query('concepts')
       .withIndex('by_owner', (q) => q.eq('ownerId', ownerId))
@@ -159,8 +158,11 @@ export const listConcepts = query({
 export const meshPayload = query({
   args: { subjectId: v.optional(v.id('subjects')) },
   handler: async (ctx, { subjectId }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const ownerId = await requireUser(ctx);
+    if (subjectId) {
+      const subject = await ctx.db.get(subjectId);
+      if (!subject || subject.userId !== ownerId) return { nodes: [], edges: [] };
+    }
     const concepts = subjectId
       ? await ctx.db
           .query('concepts')
@@ -241,8 +243,7 @@ function majorityKind(m?: Map<string, number>): string {
 export const conceptNotes = query({
   args: { conceptId: v.id('concepts') },
   handler: async (ctx, { conceptId }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const ownerId = identity?.subject ?? DEMO_USER_ID;
+    const ownerId = await requireUser(ctx);
     const concept = await ctx.db.get(conceptId);
     if (!concept || concept.ownerId !== ownerId) {
       return null;

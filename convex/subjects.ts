@@ -1,16 +1,11 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { DEMO_USER_ID } from './consts';
-
-async function currentUserId(ctx: any): Promise<string> {
-  const identity = await ctx.auth.getUserIdentity();
-  return identity?.subject ?? DEMO_USER_ID;
-}
+import { requireUser } from './helpers';
 
 export const add = mutation({
   args: { name: v.string() },
   handler: async (ctx, { name }) => {
-    const userId = await currentUserId(ctx);
+    const userId = await requireUser(ctx);
     const clean = name.trim().slice(0, 60);
     if (!clean) throw new Error('Subject name required');
     const dupe = await ctx.db
@@ -30,7 +25,7 @@ export const add = mutation({
 export const listMine = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await currentUserId(ctx);
+    const userId = await requireUser(ctx);
     return ctx.db
       .query('subjects')
       .withIndex('by_user', (q) => q.eq('userId', userId))
@@ -41,7 +36,7 @@ export const listMine = query({
 export const remove = mutation({
   args: { id: v.id('subjects') },
   handler: async (ctx, { id }) => {
-    const userId = await currentUserId(ctx);
+    const userId = await requireUser(ctx);
     const doc = await ctx.db.get(id);
     if (!doc || doc.userId !== userId) throw new Error('Not found');
     await ctx.db.delete(id);

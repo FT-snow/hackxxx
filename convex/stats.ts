@@ -1,11 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { DEMO_USER_ID } from './consts';
-
-async function currentUserId(ctx: any): Promise<string> {
-  const identity = await ctx.auth.getUserIdentity();
-  return identity?.subject ?? DEMO_USER_ID;
-}
+import { requireUser } from './helpers';
 
 export const recordAttempt = mutation({
   args: {
@@ -16,7 +11,7 @@ export const recordAttempt = mutation({
     totalMarks: v.number(),
   },
   handler: async (ctx, a) => {
-    const userId = await currentUserId(ctx);
+    const userId = await requireUser(ctx);
     const pct =
       a.totalMarks > 0 ? Math.round((a.score / a.totalMarks) * 100) : 0;
     const id = await ctx.db.insert('quizAttempts', {
@@ -47,7 +42,7 @@ export const recordAttempt = mutation({
 export const bumpStudyDay = mutation({
   args: {},
   handler: async (ctx) => {
-    const userId = await currentUserId(ctx);
+    const userId = await requireUser(ctx);
     const day = new Date().toISOString().slice(0, 10);
     const existing = await ctx.db
       .query('studyDays')
@@ -62,7 +57,7 @@ export const bumpStudyDay = mutation({
 export const dashboard = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await currentUserId(ctx);
+    const userId = await requireUser(ctx);
 
     const [subjects, pages, attempts, _days] = await Promise.all([
       ctx.db

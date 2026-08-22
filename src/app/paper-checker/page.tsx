@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import PaperCheckerInterface from '@/components/PaperCheckerInterface';
+import AuthGate from '@/components/AuthGate';
 
 export default function PaperCheckerPage() {
   const [currentStep, setCurrentStep] = useState<
@@ -11,6 +12,7 @@ export default function PaperCheckerPage() {
   >('input');
 
   return (
+    <AuthGate>
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <Navbar />
       {/* Background Pattern */}
@@ -64,5 +66,6 @@ export default function PaperCheckerPage() {
         </div>
       </div>
     </div>
+    </AuthGate>
   );
 }

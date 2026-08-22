@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import Navbar from '@/components/Navbar';
+import AuthGate from '@/components/AuthGate';
 
 type Dashboard = {
   email: string | null;
@@ -127,6 +128,7 @@ export default function ProfilePage() {
   ];
 
   return (
+    <AuthGate>
     <div className="relative min-h-screen overflow-x-clip bg-black text-white">
       <Navbar />
       <div className="relative z-20 pt-20">
@@ -347,5 +349,6 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+    </AuthGate>
   );
 }

@@ -6,6 +6,7 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import Navbar from '@/components/Navbar';
+import AuthGate from '@/components/AuthGate';
 import MeshCanvas from '@/components/mesh/MeshCanvas';
 import { DEMO_MESH } from '@/lib/demoMesh';
 import type { MeshNode } from '@/lib/types';
@@ -85,6 +86,7 @@ export default function MeshPage() {
   ];
 
   return (
+    <AuthGate>
     <div className="relative min-h-screen overflow-x-clip bg-black text-white">
       <Navbar />
       <div
@@ -177,5 +179,6 @@ export default function MeshPage() {
         </div>
       </div>
     </div>
+    </AuthGate>
   );
 }

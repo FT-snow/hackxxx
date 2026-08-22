@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { action } from './_generated/server';
 import type { ActionCtx } from './_generated/server';
 import { api } from './_generated/api';
-import { DEMO_USER_ID } from './consts';
+import { requireUser } from './helpers';
 import { callOpenRouter } from './openrouter';
 import { MODELS, EvaluationResultSchema } from '../src/lib/types';
 
@@ -20,17 +20,14 @@ async function conceptTexts(
   ctx: ActionCtx,
   conceptId: string,
 ): Promise<string[]> {
-  const identity = await ctx.auth.getUserIdentity();
-  const ownerId = identity?.subject ?? DEMO_USER_ID;
+  await requireUser(ctx);
   const concepts: ConceptLike[] = await ctx.runQuery(
     api.concepts.listConcepts,
-    { ownerId },
+    {},
   );
   const target = concepts.find((c) => c._id === conceptId);
   if (!target) throw new Error('Concept not found');
-  const chunks: ChunkLike[] = await ctx.runQuery(api.chunks.allForOwner, {
-    ownerId,
-  });
+  const chunks: ChunkLike[] = await ctx.runQuery(api.chunks.allForOwner, {});
   const ids = new Set<string>(target.chunkIds);
   return chunks.filter((c) => ids.has(c._id)).map((c) => c.text);
 }
