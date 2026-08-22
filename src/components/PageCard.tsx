@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { FileImage, NotebookPen } from 'lucide-react';
 import { useState } from 'react';
+import RichText from '@/components/RichText';
 
 export type PageStatus =
   | 'queued'
@@ -136,13 +137,13 @@ export default function PageCard({ page, previewUrl }: PageCardProps) {
             Revision notes {showNotes ? '−' : '+'}
           </button>
           {showNotes && (
-            <motion.pre
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="mt-2 whitespace-pre-wrap font-mono text-xs leading-relaxed text-gray-300"
+              className="mt-2 font-mono text-xs leading-relaxed text-gray-300 [&_.katex]:text-[0.95rem]"
             >
-              {page.notes}
-            </motion.pre>
+              <RichText text={page.notes} />
+            </motion.div>
           )}
         </div>
       )}

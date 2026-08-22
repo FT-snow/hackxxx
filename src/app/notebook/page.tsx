@@ -15,9 +15,6 @@ export default function NotebookPage() {
   const [subjectId, setSubjectId] = useState<Id<'subjects'> | null>(null);
   const [seedBusy, setSeedBusy] = useState(false);
   const [seedError, setSeedError] = useState<string | null>(null);
-  const me = useQuery(api.stats.me, {}) as
-    | { id: string; email: string | null }
-    | undefined;
   const subjects = useQuery(api.subjects.listMine, {}) as
     | Array<{ _id: Id<'subjects'>; name: string }>
     | undefined;
@@ -84,13 +81,12 @@ export default function NotebookPage() {
           {/* Subject selection */}
           <SubjectPicker value={subjectId} onChange={setSubjectId} />
 
-          {me?.email?.toLowerCase() === 'boiz.prakhar@gmail.com' && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.12, duration: 0.45 }}
-              className="mt-6 rounded-lg border border-[#E9C468]/20 bg-[#241d10]/40 p-5"
-            >
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.45 }}
+            className="mt-6 rounded-lg border border-[#E9C468]/20 bg-[#241d10]/40 p-5"
+          >
               <span className="label-meta text-[#C8A45C]">Quantum Demo</span>
               <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -115,7 +111,6 @@ export default function NotebookPage() {
                 <p className="mt-3 text-sm text-red-300">{seedError}</p>
               )}
             </motion.div>
-          )}
 
           {/* Notebook Capture Interface */}
           <motion.div

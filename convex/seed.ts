@@ -129,10 +129,6 @@ export const seedQuantumDemo = action({
   args: {},
   handler: async (ctx): Promise<{ subjectId: Id<'subjects'>; pageId: Id<'pages'>; skipped: boolean }> => {
     const ownerId = await requireUser(ctx);
-    const identity = await ctx.auth.getUserIdentity();
-    if ((identity?.email ?? '').toLowerCase() !== 'boiz.prakhar@gmail.com') {
-      throw new Error('Forbidden');
-    }
 
     const existingPages = await ctx.runQuery(api.pages.listAll, {});
     const subjects = await ctx.runQuery(api.subjects.listMine, {});

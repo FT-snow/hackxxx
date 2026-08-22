@@ -8,6 +8,7 @@ import AuthGate from '@/components/AuthGate';
 import MeshCanvas from '@/components/mesh/MeshCanvas';
 import ConceptQuiz from '@/components/mesh/ConceptQuiz';
 import Navbar from '@/components/Navbar';
+import RichText from '@/components/RichText';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import type { MeshNode } from '@/lib/types';
@@ -52,11 +53,11 @@ function NotesSection({ conceptId }: { conceptId: string }) {
             className="rounded-md border border-white/[0.08] bg-[#0c0f0d] p-3"
           >
             <p className="label-meta truncate text-gray-400">{n.fileName}</p>
-            <pre
-              className={`mt-2 whitespace-pre-wrap font-mono text-xs leading-relaxed text-gray-300 ${open ? '' : 'line-clamp-6'}`}
+            <div
+              className={`mt-2 font-mono text-xs leading-relaxed text-gray-300 [&_.katex]:text-[0.95rem] ${open ? '' : 'line-clamp-6'}`}
             >
-              {n.notes}
-            </pre>
+              <RichText text={n.notes} />
+            </div>
             <button
               type="button"
               onClick={() =>
