@@ -1,6 +1,8 @@
 'use client';
 
 import { useAction, useMutation, useQuery } from 'convex/react';
+import { useAuthToken } from '@convex-dev/auth/react';
+import AskNotes from '@/components/AskNotes';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -152,6 +154,7 @@ function NotesSection({ conceptId }: { conceptId: string }) {
 
 export default function MeshPage() {
   const [selected, setSelected] = useState<MeshNode | null>(null);
+  const authToken = useAuthToken();
   const payload = useQuery(api.concepts.meshPayload, {});
   const rebuildConcepts = useAction(api.concepts.rebuildConcepts);
   const [rebuilding, setRebuilding] = useState(false);
@@ -291,6 +294,7 @@ export default function MeshPage() {
                 </div>
               <NotesSection conceptId={selected.id} />
               <ConceptQuiz conceptId={selected.id} />
+              <AskNotes authToken={authToken ?? undefined} />
             </motion.aside>
             )}
           </div>
