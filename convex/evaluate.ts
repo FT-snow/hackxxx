@@ -47,10 +47,10 @@ export const generateQuestion = action({
       [
         {
           role: 'user',
-          content: `Create ONE exam-style practice question strictly answerable from ONLY these notes. Return JSON {"question": string, "maxScore": number}.\n\nNotes:\n${texts.join('\n---\n')}`,
+          content: `Create ONE exam-style practice question strictly answerable from ONLY these notes. Return JSON {"question": string, "maxScore": number}.\n\nNotes:\n${texts.join('\n---\n').slice(0, 6000)}`,
         },
       ],
-      { json: true, temperature: 0.7, maxTokens: 1024 },
+      { json: true, temperature: 0.7, maxTokens: 3072 },
     );
     return GeneratedQuestion.parse(parseJsonLoose(raw));
   },
@@ -79,7 +79,7 @@ export const generateQuizSet = action({
     const source = pool
       .map((c) => c.text)
       .join('\n---\n')
-      .slice(0, 12000);
+      .slice(0, 8000);
     const raw = await callOpenRouter(
       MODELS.utility,
       [
@@ -116,7 +116,7 @@ export const gradeAnswer = action({
         },
         {
           role: 'user',
-          content: `Question (${args.maxScore} marks): ${args.question}\n\nReference notes:\n${texts.join('\n---\n')}\n\nStudent answer: ${args.studentAnswer}\n\nReturn JSON {"items":[{"question","studentAnswer","score","maxScore","feedback"}],"totalAchieved","totalPossible"}`,
+          content: `Question (${args.maxScore} marks): ${args.question}\n\nReference notes:\n${texts.join('\n---\n').slice(0, 8000)}\n\nStudent answer: ${args.studentAnswer}\n\nReturn JSON {"items":[{"question","studentAnswer","score","maxScore","feedback"}],"totalAchieved","totalPossible"}`,
         },
       ],
       { json: true, temperature: 0.2, maxTokens: 4096 },

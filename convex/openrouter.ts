@@ -13,6 +13,8 @@ export interface OROpts {
   maxTokens?: number;
   temperature?: number;
   json?: boolean;
+  /** Reasoning effort for thinking models ('low' keeps responses fast). */
+  reasoningEffort?: 'low' | 'medium' | 'high';
 }
 
 export async function callOpenRouter(
@@ -28,9 +30,10 @@ export async function callOpenRouter(
     messages,
     max_tokens: opts.maxTokens ?? 4096,
     temperature: opts.temperature ?? 0.3,
-    // gpt-oss and other reasoning models leak their analysis channel into
-    // content unless the reasoning output is explicitly excluded.
-    reasoning: { exclude: true },
+    reasoning: {
+      exclude: true,
+      effort: opts.reasoningEffort ?? 'low',
+    },
   };
   if (opts.json) body.response_format = { type: 'json_object' };
 
@@ -52,7 +55,18 @@ export async function callOpenRouter(
         break;
       }
       const data = await res.json();
-      return data.choices?.[0]?.message?.content ?? '';
+      const choice = data.choices?.[0];
+      const content: string = choice?.message?.content ?? '';
+      // Reasoning models can burn the whole completion budget thinking and
+      // return empty or truncated content — treat both as retryable.
+      if (!content.trim() || choice?.finish_reason === 'length') {
+        lastErr =
+          choice?.finish_reason === 'length'
+            ? 'model hit the token limit mid-output'
+            : 'empty model response';
+        continue;
+      }
+      return content;
     } catch {
       lastErr = 'network error';
     }

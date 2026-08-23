@@ -26,7 +26,10 @@ export const askNotes = action({
       filter: (q) => q.eq('ownerId', ownerId),
     })) as unknown as ChunkHit[];
 
-    const context = hits.map((h, i) => `[${i + 1}] ${h.text}`).join('\n---\n');
+    const context = hits
+      .map((h, i) => `[${i + 1}] ${h.text}`)
+      .join('\n---\n')
+      .slice(0, 6000);
     if (!context.trim()) {
       throw new Error(
         'No digitized notes found yet — capture a few pages first',
