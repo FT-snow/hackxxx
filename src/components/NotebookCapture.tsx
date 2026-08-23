@@ -531,7 +531,7 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <AskNotes authToken={authToken ?? undefined} />
+          <AskNotes authToken={authToken ?? undefined} subjectId={subjectId} />
         </motion.div>
       )}
 
