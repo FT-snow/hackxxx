@@ -110,3 +110,4 @@ export const listAll = query({
   handler: async (ctx) =>
     ctx.db.query('pages').withIndex('by_owner').order('desc').take(100),
 });
+

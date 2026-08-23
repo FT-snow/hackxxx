@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as ask from "../ask.js";
 import type * as auth from "../auth.js";
 import type * as chunks from "../chunks.js";
 import type * as concepts from "../concepts.js";
@@ -29,6 +30,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  ask: typeof ask;
   auth: typeof auth;
   chunks: typeof chunks;
   concepts: typeof concepts;

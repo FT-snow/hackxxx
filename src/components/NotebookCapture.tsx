@@ -10,6 +10,7 @@ import { useAction, useMutation, useQuery } from 'convex/react';
 import { useAuthToken } from '@convex-dev/auth/react';
 import FileUploader from '@/components/FileUploader';
 import PageCard, { type NotebookPage } from '@/components/PageCard';
+import AskNotes from '@/components/AskNotes';
 import { isPdf, splitPdfToImages } from '@/lib/pdfSplit';
 
 const RUNE_CYCLE = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ'];
@@ -155,6 +156,7 @@ function NotesWriterRow({ pageId }: { pageId: Id<'pages'> }) {
 }
 
 export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
+  const authToken = useAuthToken();
   const [files, setFiles] = useState<File[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [previews, setPreviews] = useState<LocalPreview[]>([]);
@@ -519,6 +521,17 @@ export default function NotebookCapture({ subjectId }: NotebookCaptureProps) {
             .map((p) => (
               <NotesWriterRow key={`notes-${p._id}`} pageId={p._id as Id<'pages'>} />
             ))}
+        </motion.div>
+      )}
+
+      {/* Ask your notes */}
+      {hasResults && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <AskNotes authToken={authToken ?? undefined} />
         </motion.div>
       )}
 

@@ -28,20 +28,20 @@ export default function Navbar() {
   const router = useRouter();
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black">
+    <nav className="pointer-events-none fixed top-0 z-50 w-full">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="relative flex h-16 items-center justify-between">
           <div />
 
-          <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
+          <div className="pointer-events-auto absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
             <NavHeader />
           </div>
 
-          <div className="z-10 hidden items-center gap-3 lg:flex">
+          <div className="pointer-events-auto z-10 hidden items-center gap-3 lg:flex">
             <motion.button
               whileTap={{ scale: 0.98 }}
               type="button"
-              className="font-display cursor-pointer rounded-md border border-[#E9C468]/40 bg-[#E9C468]/10 px-4 py-2 text-xs tracking-wider text-[#E9C468] uppercase transition-colors duration-200 hover:border-[#E9C468]/70 hover:bg-[#E9C468]/20"
+              className="cursor-pointer rounded-md border border-[#E9C468]/40 bg-[#E9C468]/10 px-4 py-2 text-xs font-bold tracking-wider text-[#E9C468] uppercase transition-colors duration-200 hover:border-[#E9C468]/70 hover:bg-[#E9C468]/20"
               onClick={() => {
                 window.location.href = isAuthenticated ? '/notebook' : '/login';
               }}
@@ -52,7 +52,7 @@ export default function Navbar() {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                className="font-display cursor-pointer rounded-md bg-[#E9C468] px-4 py-2 text-xs tracking-wider text-black uppercase hover:bg-[#F0D284]"
+                className="cursor-pointer rounded-md bg-[#E9C468] px-4 py-2 text-xs font-bold tracking-wider text-black uppercase hover:bg-[#F0D284]"
                 onClick={async () => {
                   await signOut();
                   router.push('/');
@@ -64,7 +64,7 @@ export default function Navbar() {
           </div>
 
           <button
-            className="p-1 text-white lg:hidden"
+            className="pointer-events-auto p-1 text-white lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             type="button"
             aria-label="Toggle menu"
@@ -97,7 +97,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="border-t border-white/[0.08] py-4 lg:hidden"
+            className="pointer-events-auto mt-2 rounded-lg border border-white/[0.1] bg-[#0c0f0d] py-3 lg:hidden"
           >
             <div className="flex flex-col gap-1">
               {LINKS.map((l) => (
@@ -107,7 +107,7 @@ export default function Navbar() {
                   {...('external' in l && l.external
                     ? { target: '_blank', rel: 'noreferrer' }
                     : {})}
-                  className="font-display rounded-md px-3 py-2.5 text-sm tracking-wide text-gray-300 uppercase hover:bg-white/5 hover:text-white"
+                  className="rounded-md px-3 py-2.5 text-sm font-bold tracking-wide text-gray-300 uppercase hover:bg-white/5 hover:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {l.label}

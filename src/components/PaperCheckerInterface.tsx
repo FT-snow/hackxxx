@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle, FileText, Sparkles, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle, FileText, Sparkles } from 'lucide-react';
 import { useQuery } from 'convex/react';
 import { useAuthToken } from '@convex-dev/auth/react';
 import { useEffect, useState } from 'react';
@@ -350,93 +350,15 @@ export default function PaperCheckerInterface({
   const canEvaluate =
     state.questionPaper && state.answerKey && state.studentAnswers;
 
-  if (state.currentStep === 'processing') {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center space-y-8"
-        >
-          {/* Animated Logo/Icon */}
-          <div className="relative">
-            <motion.div
-              animate={{
-                rotate: 360,
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                rotate: { duration: 3, repeat: Infinity, ease: 'linear' },
-                scale: { duration: 2, repeat: Infinity },
-              }}
-              className="relative w-24 h-24 mx-auto"
-            >
-              <div className="relative w-24 h-24 border-4 border-[#E9C468] rounded-full">
-                <div className="w-full h-full bg-black rounded-full flex items-center justify-center">
-                  <Zap className="w-8 h-8 text-[#E9C468]" />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Orbiting particles */}
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{ rotate: 360 }}
-                transition={{
-                  duration: 4 + i,
-                  repeat: Infinity,
-                  ease: 'linear',
-                  delay: i * 0.5,
-                }}
-                className="absolute inset-0"
-              >
-                <div className="w-2 h-2 bg-[#E9C468] rounded-full absolute -top-1 left-1/2 transform -translate-x-1/2"></div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="space-y-4"
-          >
-            <h2 className="font-display text-3xl text-white">
-              AI Analysis in Progress
-            </h2>
-            <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
-              Our advanced neural networks are processing your documents with
-              precision and care
-            </p>
-
-            {/* Progress indicators */}
-            <div className="flex justify-center space-x-2 pt-4">
-              {[...Array(4)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 1, 0.3],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    delay: i * 0.2,
-                  }}
-                  className="w-2 h-2 bg-[#E9C468] rounded-full"
-                />
-              ))}
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-8 sm:py-12">
+        {state.isProcessing && (
+          <p className="label-meta mb-8 text-center text-[#E9C468]">
+            Evaluating your answers…
+          </p>
+        )}
+
         {/* Mode toggle */}
         <div className="mb-8 inline-flex rounded-md border border-white/[0.08] bg-black p-1">
           {(['auto', 'manual'] as const).map((m) => (
@@ -873,18 +795,7 @@ export default function PaperCheckerInterface({
               }`}
             >
               {state.isProcessing ? (
-                <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                    className="h-4 w-4 animate-spin"
-                  />
-                  <span>Evaluating…</span>
-                </div>
+                <span>Evaluating your answers…</span>
               ) : (
                 <div className="flex items-center justify-center space-x-2.5">
                   <Sparkles className="h-4 w-4" />
